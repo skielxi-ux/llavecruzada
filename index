@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Llave Cruzada · Red de Inmobiliarias</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -153,7 +154,8 @@
   .pill.pill-brick{color:#FFFFFF;background:var(--brick);border-color:var(--brick);}
 
   /* ---------- key motif ---------- */
-  .key-mark{width:22px;height:22px;flex-shrink:0;}
+  .key-mark{width:34px;height:34px;flex-shrink:0;object-fit:contain;}
+  .brand .key-mark{width:46px;height:46px;}
 
   /* ================= LANDING ================= */
   #view-landing{display:block;background:#f5f5f5;}
@@ -656,7 +658,7 @@
 <div id="view-landing">
   <div class="landing-nav">
     <div class="brand">
-      <svg class="key-mark" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="5" stroke="#5B4FE0" stroke-width="1.6"/><path d="M12 12L20 20M20 20L20 15M20 20L15 20" stroke="#5B4FE0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <img class="key-mark" src="data:image/png;base64,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" alt="Llave Cruzada">
       <div>Llave Cruzada<small>Red de Inmobiliarias · NOA</small></div>
     </div>
     <div class="landing-nav-actions">
@@ -738,7 +740,7 @@
       <div class="plan-card">
         <button class="plan-vermas-btn" onclick="openPlanDetail('pro')" title="Ver más detalles">Ver más</button>
         <h3>Plan Pro</h3>
-        <div class="price">$90.000<span> /mes</span></div>
+        <div class="price">$120.000<span> /mes</span></div>
         <ul>
           <li>Incluye 2 usuarios</li>
           <li>Carga de propiedades de forma independiente</li>
@@ -753,7 +755,7 @@
         <div class="badge">Más elegido</div>
         <button class="plan-vermas-btn" onclick="openPlanDetail('premium')" title="Ver más detalles">Ver más</button>
         <h3>Plan Premium</h3>
-        <div class="price">$290.000<span> /mes</span></div>
+        <div class="price">$400.000<span> /mes</span></div>
         <ul>
           <li>Incluye 5 usuarios</li>
           <li>Nuestro equipo carga tu cartera inicial (máximo 30 propiedades)</li>
@@ -952,7 +954,7 @@
   <div class="app-shell">
     <div class="sidebar">
       <div class="sidebar-brand">
-        <svg class="key-mark" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="5" stroke="#5B4FE0" stroke-width="1.6"/><path d="M12 12L20 20M20 20L20 15M20 20L15 20" stroke="#5B4FE0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <img class="key-mark" src="data:image/png;base64,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" alt="Llave Cruzada">
         Llave Cruzada
       </div>
 
@@ -982,6 +984,7 @@
       <div class="nav-group">
         <div class="nav-group-label">Cuenta</div>
         <div class="nav-item" data-view="perfil" onclick="showApp('perfil')"><i class="fa-solid fa-user-gear"></i> Mi Perfil</div>
+        <div class="nav-item" data-view="usuarios" onclick="showApp('usuarios')"><i class="fa-solid fa-users-gear"></i> Usuarios</div>
         <div class="nav-item" data-view="faqapp" onclick="showApp('faqapp')"><i class="fa-solid fa-circle-question"></i> FAQs</div>
         <div class="nav-item" data-view="precios" onclick="showApp('precios')"><i class="fa-solid fa-tag"></i> Precios</div>
         <div class="nav-item" data-view="soporte" onclick="showApp('soporte')"><i class="fa-solid fa-headset"></i> Soporte</div>
@@ -1003,17 +1006,18 @@
   <div class="app-shell">
     <div class="sidebar">
       <div class="sidebar-brand">
-        <svg class="key-mark" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="5" stroke="#5B4FE0" stroke-width="1.6"/><path d="M12 12L20 20M20 20L20 15M20 20L15 20" stroke="#5B4FE0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <img class="key-mark" src="data:image/png;base64,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" alt="Llave Cruzada">
         Llave Cruzada <span style="font-weight:400;color:var(--paper-dim);font-size:12px;">· Admin</span>
       </div>
       <div class="nav-group">
         <div class="nav-group-label">Panel</div>
         <div class="nav-item active" data-aview="dashboard" onclick="showAdmin('dashboard')"><i class="fa-solid fa-gauge"></i> Dashboard</div>
-        <div class="nav-item" data-aview="inmobiliarias" onclick="showAdmin('inmobiliarias')"><i class="fa-solid fa-building"></i> Inmobiliarias</div>
-        <div class="nav-item" data-aview="denuncias" onclick="showAdmin('denuncias')"><i class="fa-solid fa-flag"></i> Denuncias <span class="dot" id="reportdot"></span></div>
+        <div class="nav-item" data-aview="ingresos" onclick="showAdmin('ingresos')"><i class="fa-solid fa-sack-dollar"></i> Ingresos</div>
         <div class="nav-item" data-aview="codigos" onclick="showAdmin('codigos')"><i class="fa-solid fa-key"></i> Códigos de invitación</div>
         <div class="nav-item" data-aview="matches" onclick="showAdmin('matches')"><i class="fa-solid fa-link"></i> Matches</div>
-        <div class="nav-item" data-aview="ingresos" onclick="showAdmin('ingresos')"><i class="fa-solid fa-sack-dollar"></i> Ingresos</div>
+        <div class="nav-item" data-aview="inmobiliarias" onclick="showAdmin('inmobiliarias')"><i class="fa-solid fa-building"></i> Inmobiliarias</div>
+        <div class="nav-item" data-aview="denuncias" onclick="showAdmin('denuncias')"><i class="fa-solid fa-flag"></i> Denuncias <span class="dot" id="reportdot"></span></div>
+        <div class="nav-item" data-aview="planes" onclick="showAdmin('planes')"><i class="fa-solid fa-arrows-rotate"></i> Planes <span class="dot" id="planesdot"></span></div>
         <div class="nav-item" data-aview="pagospendientes" onclick="showAdmin('pagospendientes')"><i class="fa-solid fa-file-invoice-dollar"></i> Pagos pendientes <span class="dot" id="pagosdot"></span></div>
         <div class="nav-item" data-aview="soporte" onclick="showAdmin('soporte')"><i class="fa-solid fa-headset"></i> Soporte <span class="dot" id="ticketdot"></span></div>
       </div>
@@ -2690,6 +2694,21 @@ firebase.initializeApp(firebaseConfig);
 const fbAuth = firebase.auth();
 const db = firebase.firestore();
 
+/* ---------------- usuarios por inmobiliaria (multi-login compartiendo los mismos datos) ---------------- */
+let CURRENT_USER_UID = null;   // uid real de Firebase Auth de quién está logueado
+let CURRENT_USER_ROLE = 'owner'; // 'owner' | 'colaborador' — el owner es quien registró la inmobiliaria
+let agencyUsersList = [];
+let unsubscribeAgencyUsers = null;
+let secondaryFbApp = null;
+function getSecondaryAuth(){
+  // App secundaria de Firebase: crea el login del usuario invitado sin cerrar la sesión de quien lo está invitando.
+  if(!secondaryFbApp){
+    secondaryFbApp = firebase.apps.find(a=>a.name==='Secondary') || firebase.initializeApp(firebaseConfig, 'Secondary');
+  }
+  return secondaryFbApp.auth();
+}
+function userSeatLimit(){ return AGENCY.plan==='Premium' ? 5 : 2; }
+
 function showAuthError(elId, message){
   const el = document.getElementById(elId);
   el.textContent = message;
@@ -2778,6 +2797,11 @@ async function realSignup(){
       status:'Pendiente', ops:0, rating:0, phone: document.getElementById('act-telefono').value.trim(),
       favoriteProps:[],
     });
+    await db.collection('agencyUsers').doc(cred.user.uid).set({
+      agencyId: cred.user.uid,
+      name: (document.getElementById('act-nombre').value.trim()+' '+document.getElementById('act-apellido').value.trim()).trim(),
+      email, role:'owner', status:'Activo', invitedAt:new Date().toISOString(),
+    });
     await db.runTransaction(async (tx)=>{
       const freshCodeDoc = await tx.get(codeRef);
       if(freshCodeDoc.exists && freshCodeDoc.data().status==='Activo'){
@@ -2793,6 +2817,8 @@ async function realSignup(){
 function logout(){
   fbAuth.signOut();
   detachDataListeners();
+  CURRENT_USER_UID = null;
+  CURRENT_USER_ROLE = 'owner';
   document.getElementById('view-app').style.display='none';
   document.getElementById('view-landing').style.display='block';
 }
@@ -2800,17 +2826,48 @@ fbAuth.onAuthStateChanged(async (user)=>{
   if(!user) return;
   try{
     Object.keys(AGENCY).forEach(k=>delete AGENCY[k]);
-    const doc = await db.collection('agencies').doc(user.uid).get();
+    const memberDoc = await db.collection('agencyUsers').doc(user.uid).get();
+    let agencyId = user.uid;
+    let role = 'owner';
+    if(memberDoc.exists){
+      const m = memberDoc.data();
+      if(m.status!=='Activo'){
+        await fbAuth.signOut();
+        toast('Tu acceso a esta cuenta fue revocado. Contactate con tu inmobiliaria.');
+        return;
+      }
+      agencyId = m.agencyId;
+      role = m.role;
+    }
+    CURRENT_USER_UID = user.uid;
+    CURRENT_USER_ROLE = role;
+    const doc = await db.collection('agencies').doc(agencyId).get();
     if(doc.exists) Object.assign(AGENCY, doc.data());
-    AGENCY.uid = user.uid;
+    AGENCY.uid = agencyId;
     favoriteProps = (doc.exists && doc.data().favoriteProps) || [];
+    if(!memberDoc.exists){
+      // Cuenta creada antes de que existiera este sistema de usuarios: se registra como dueño para consistencia futura.
+      // Se usa una transacción para no pisar el doc real si justo se está creando en paralelo (ej. alta recién hecha).
+      try{
+        await db.runTransaction(async (tx)=>{
+          const memberRef = db.collection('agencyUsers').doc(user.uid);
+          const freshDoc = await tx.get(memberRef);
+          if(!freshDoc.exists){
+            tx.set(memberRef, {
+              agencyId: user.uid, name: AGENCY.name||'', email: AGENCY.email||user.email||'',
+              role:'owner', status:'Activo', invitedAt:new Date().toISOString(),
+            });
+          }
+        });
+      }catch(e){ console.error('Error creando registro de usuario dueño:', e); }
+    }
   }catch(e){ console.error('Error cargando perfil:', e); }
   document.querySelectorAll('.modal-backdrop').forEach(m=>m.classList.add('hidden'));
   document.getElementById('view-landing').style.display='none';
   document.getElementById('view-app').style.display='block';
   goStep(1);
   updateSidebarAgencyInfo();
-  attachDataListeners(user.uid);
+  attachDataListeners(AGENCY.uid);
   showApp('dashboard');
   const loginBtn = document.getElementById('login-submit-btn');
   if(loginBtn){ loginBtn.disabled=false; loginBtn.textContent='Ingresar al sistema'; }
@@ -2829,6 +2886,7 @@ let ADMIN_AGENCIES = [];
 let submittedReports = [];
 let inviteCodes = [];
 let supportTickets = [];
+let planChangeRequests = [];
 function confirmResetDemo(){
   openModal('confirmreset');
 }
@@ -2852,6 +2910,13 @@ async function resetDemo(){
       reviewsWrittenSnap.forEach(doc=>batch.delete(doc.ref));
       const reviewsReceivedSnap = await db.collection('reviews').where('targetAgencyUid','==',AGENCY.uid).get();
       reviewsReceivedSnap.forEach(doc=>batch.delete(doc.ref));
+      const planReqSnap = await db.collection('planChangeRequests').where('agencyId','==',AGENCY.uid).get();
+      planReqSnap.forEach(doc=>batch.delete(doc.ref));
+      const agencyUsersSnap = await db.collection('agencyUsers').where('agencyId','==',AGENCY.uid).get();
+      agencyUsersSnap.forEach(doc=>{
+        // Nunca borramos el registro del dueño (id === agencyId) ni el de quien está ejecutando el reset ahora mismo.
+        if(doc.id!==AGENCY.uid && doc.id!==CURRENT_USER_UID) batch.delete(doc.ref);
+      });
       await batch.commit();
       await db.collection('agencies').doc(AGENCY.uid).update({favoriteProps:[]});
     }catch(err){ toast('Error al borrar datos de Firestore: '+err.message); }
@@ -2880,7 +2945,7 @@ async function resetDemo(){
   else showApp('dashboard');
 }
 
-let unsubAdminAgencies = null, unsubReports = null, unsubCodes = null, unsubTickets = null, unsubAdminProps = null, unsubAdminClients = null, unsubSubPayments = null;
+let unsubAdminAgencies = null, unsubReports = null, unsubCodes = null, unsubTickets = null, unsubAdminProps = null, unsubAdminClients = null, unsubSubPayments = null, unsubPlanRequests = null;
 let adminTotalProps = 0, adminTotalClients = 0;
 let subscriptionPayments = [];
 function attachAdminListeners(){
@@ -2905,6 +2970,10 @@ function attachAdminListeners(){
     if(document.getElementById('view-admin').style.display==='block') showAdmin(document.querySelector('#view-admin .nav-item.active')?.dataset.aview || 'dashboard');
     updateNotifDot();
   }, err=>console.error('Error escuchando supportTickets:', err));
+  unsubPlanRequests = db.collection('planChangeRequests').onSnapshot(snap=>{
+    planChangeRequests = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(b.requestedAt)-new Date(a.requestedAt));
+    if(document.getElementById('view-admin').style.display==='block') showAdmin(document.querySelector('#view-admin .nav-item.active')?.dataset.aview || 'dashboard');
+  }, err=>console.error('Error escuchando planChangeRequests:', err));
   unsubAdminProps = db.collection('properties').onSnapshot(snap=>{
     adminTotalProps = snap.size;
     if(document.getElementById('view-admin').style.display==='block') showAdmin(document.querySelector('#view-admin .nav-item.active')?.dataset.aview || 'dashboard');
@@ -2915,8 +2984,8 @@ function attachAdminListeners(){
   }, err=>console.error('Error escuchando clients (admin):', err));
 }
 function detachAdminListeners(){
-  [unsubAdminAgencies, unsubReports, unsubCodes, unsubTickets, unsubAdminProps, unsubAdminClients, unsubSubPayments].forEach(u=>u&&u());
-  unsubAdminAgencies = unsubReports = unsubCodes = unsubTickets = unsubSubPayments = null;
+  [unsubAdminAgencies, unsubReports, unsubCodes, unsubTickets, unsubAdminProps, unsubAdminClients, unsubSubPayments, unsubPlanRequests].forEach(u=>u&&u());
+  unsubAdminAgencies = unsubReports = unsubCodes = unsubTickets = unsubSubPayments = unsubPlanRequests = null;
 }
 function adminEnterApp(){
   document.querySelectorAll('.modal-backdrop').forEach(m=>m.classList.add('hidden'));
@@ -2943,6 +3012,9 @@ function showAdmin(view){
   const overduePayments = ADMIN_AGENCIES.filter(a=>a.status!=='Suspendida' && dueDateInPeriod(a, prevPeriod) && paymentStatusForAgency(a.id, prevPeriod)==='vencido').length;
   const pagosDot = document.getElementById('pagosdot');
   if(pagosDot) pagosDot.style.display = overduePayments ? 'block' : 'none';
+  const pendingPlanRequests = planChangeRequests.filter(r=>r.status==='Pendiente').length;
+  const planesDot = document.getElementById('planesdot');
+  if(planesDot) planesDot.style.display = pendingPlanRequests ? 'block' : 'none';
 }
 async function setAgencyStatus(id, status){
   try{
@@ -2960,6 +3032,33 @@ async function dismissReport(id){
   try{
     await db.collection('reports').doc(id).update({status:'Desestimada'});
     toast('Denuncia desestimada');
+  }catch(err){ toast('Error: '+err.message); }
+}
+async function approvePlanRequest(id){
+  try{
+    const req = planChangeRequests.find(r=>r.id===id);
+    if(!req) return;
+    if(req.type==='baja'){
+      await db.collection('agencies').doc(req.agencyId).update({status:'Suspendida'});
+      await addNotificationFor(req.agencyId, 'fa-ban', 'red', 'Cuenta dada de baja', 'Tu solicitud de baja fue aprobada. Tu cuenta quedó suspendida en la red.');
+    } else {
+      await db.collection('agencies').doc(req.agencyId).update({plan:req.requestedPlan});
+      await addNotificationFor(req.agencyId, 'fa-star', 'green', 'Cambio de plan aprobado', `Tu cambio al Plan ${req.requestedPlan} fue aprobado y ya está activo.`);
+    }
+    await db.collection('planChangeRequests').doc(id).update({status:'Aprobada', resolvedAt:new Date().toISOString()});
+    toast('Solicitud aprobada');
+  }catch(err){ toast('Error: '+err.message); }
+}
+async function rejectPlanRequest(id){
+  try{
+    const req = planChangeRequests.find(r=>r.id===id);
+    if(!req) return;
+    await db.collection('planChangeRequests').doc(id).update({status:'Rechazada', resolvedAt:new Date().toISOString()});
+    const text = req.type==='baja'
+      ? 'Tu solicitud de baja fue rechazada. Contactate con soporte si tenés dudas.'
+      : `Tu solicitud de cambio al Plan ${req.requestedPlan} fue rechazada. Contactate con soporte si tenés dudas.`;
+    await addNotificationFor(req.agencyId, 'fa-xmark', 'red', 'Solicitud rechazada', text);
+    toast('Solicitud rechazada');
   }catch(err){ toast('Error: '+err.message); }
 }
 async function generateInviteCode(){
@@ -2987,6 +3086,8 @@ function adminStatusPill(status, label){
     'Desestimada':'background:var(--ink-3);color:var(--paper-dim);border-color:var(--line-strong);',
     'Activo':'background:#f0fdf4;color:#166534;border-color:#bbf7d0;',
     'Usado':'background:var(--ink-3);color:var(--paper-dim);border-color:var(--line-strong);',
+    'Aprobada':'background:#f0fdf4;color:#166534;border-color:#bbf7d0;',
+    'Rechazada':'background:#FDEDEC;color:#A32D2D;border-color:#F7C1C1;',
   };
   return `<span class="pill" style="${map[status]||''}">${label||status}</span>`;
 }
@@ -3125,7 +3226,7 @@ const KPI_INFO = {
 const PLAN_INFO = {
   pro: {
     title: 'Plan Pro',
-    price: '$90.000 /mes',
+    price: '$120.000 /mes',
     items: [
       {label:'2 usuarios', text:'Hasta dos personas de tu equipo pueden operar la cuenta de tu inmobiliaria en la red.'},
       {label:'Carga de propiedades de forma independiente', text:'Vos y tu equipo cargan, editan y actualizan la cartera y las búsquedas cuando quieran, sin depender de nuestro equipo.'},
@@ -3137,7 +3238,7 @@ const PLAN_INFO = {
   },
   premium: {
     title: 'Plan Premium',
-    price: '$290.000 /mes',
+    price: '$400.000 /mes',
     items: [
       {label:'5 usuarios', text:'Hasta cinco personas de tu equipo pueden operar la cuenta de tu inmobiliaria en la red.'},
       {label:'Nuestro equipo carga tu cartera inicial (máximo 30 propiedades)', text:'Al activar el plan, nuestro equipo releva y carga por vos hasta 30 propiedades de tu cartera existente, para que arranques sin trabajo manual.'},
@@ -3178,8 +3279,8 @@ function adminKpi(key, iconClass, label, valHtml, valClass){
 
 /* ---------------- pagos pendientes (suscripción mensual por inmobiliaria) ---------------- */
 function planAmount(plan){
-  if(plan==='Pro') return 90000;
-  if(plan==='Premium') return 290000;
+  if(plan==='Pro') return 120000;
+  if(plan==='Premium') return 400000;
   return 0;
 }
 function monthPeriodKey(date){ return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0'); }
@@ -3242,7 +3343,7 @@ const adminRenderers = {
     const totalOps = ADMIN_AGENCIES.reduce((s,a)=>s+a.ops,0);
     const proCountDash = ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.plan==='Pro').length;
     const premiumCountDash = ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.plan==='Premium').length;
-    const mrr = proCountDash*90000 + premiumCountDash*290000;
+    const mrr = proCountDash*120000 + premiumCountDash*400000;
     const atRisk = agenciesAtRisk();
     const nuevas = newAgencies();
     const opsPendientes = matches.filter(m=>['nuevos','acordado','seguimiento','visita'].includes(m.status)).length;
@@ -3361,7 +3462,7 @@ const adminRenderers = {
     const verified = ADMIN_AGENCIES.filter(a=>a.status==='Verificada');
     const proCount = verified.filter(a=>a.plan==='Pro').length;
     const premiumCount = verified.filter(a=>a.plan==='Premium').length;
-    const mrrReal = proCount*90000 + premiumCount*290000;
+    const mrrReal = proCount*120000 + premiumCount*400000;
     return `
     <div class="main-head"><div><h1>Ingresos</h1><p class="sub">Facturación por suscripciones de la red</p></div></div>
     <div class="kpi-grid">
@@ -3374,7 +3475,7 @@ const adminRenderers = {
     <table>
       <thead><tr><th>Inmobiliaria</th><th>Plan</th><th>Ingreso mensual</th></tr></thead>
       <tbody>
-        ${verified.map(a=>`<tr><td>${a.name}</td><td>${a.plan}</td><td class="mono">${fmtARS(a.plan==='Pro'?90000:290000)}</td></tr>`).join('')}
+        ${verified.map(a=>`<tr><td>${a.name}</td><td>${a.plan}</td><td class="mono">${fmtARS(a.plan==='Pro'?120000:400000)}</td></tr>`).join('')}
       </tbody>
     </table>
     <p style="font-size:12.5px;color:var(--ink);margin-top:14px;display:flex;align-items:flex-start;gap:8px;"><i class="fa-solid fa-bell" style="margin-top:2px;color:var(--brass);"></i><span>MRR y el desglose por inmobiliaria se calculan en base a los planes reales asignados. "Ingresos totales" es un acumulado ilustrativo (6 meses de MRR), ya que el prototipo no lleva un historial de facturación real.</span></p>
@@ -3460,6 +3561,27 @@ const adminRenderers = {
     `).join('') : `<div class="card"><p style="color:var(--paper-dim);margin:0;">No hay consultas de soporte todavía.</p></div>`}
   `;
   },
+  planes: ()=>`
+    <div class="main-head"><div><h1>Planes</h1><p class="sub">Solicitudes de cambio de plan y de baja enviadas por las inmobiliarias</p></div></div>
+    ${planChangeRequests.length ? planChangeRequests.map(r=>`
+      <div class="card" style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+          <div>
+            <strong style="font-size:14px;">${r.agencyName}</strong>
+            <div style="font-size:12px;color:var(--paper-dim);margin-top:2px;">${formatDateTime(r.requestedAt)}</div>
+          </div>
+          ${adminStatusPill(r.status)}
+        </div>
+        <p style="font-size:13px;margin:0 0 14px;">${r.type==='baja'
+          ? 'Solicita dar de baja su cuenta en la red.'
+          : `Solicita cambiar del <strong>Plan ${r.currentPlan}</strong> al <strong>Plan ${r.requestedPlan}</strong>.`}</p>
+        ${r.status==='Pendiente' ? `<div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-sm whatsapp-btn" onclick="approvePlanRequest('${r.id}')"><i class="fa-solid fa-check"></i> Aprobar</button>
+          <button class="btn btn-sm btn-eliminar-pastel" onclick="rejectPlanRequest('${r.id}')"><i class="fa-solid fa-xmark"></i> Rechazar</button>
+        </div>` : ''}
+      </div>
+    `).join('') : `<div class="card"><p style="color:var(--paper-dim);margin:0;">No hay solicitudes de cambio de plan.</p></div>`}
+  `,
 };
 
 function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
@@ -3667,11 +3789,72 @@ async function saveProfileChanges(){
   }
   showApp('perfil');
 }
-function choosePlan(plan){
-  AGENCY.plan = plan;
-  updateSidebarAgencyInfo();
-  toast('Plan actualizado a '+plan);
+async function choosePlan(plan){
+  if(CURRENT_USER_ROLE!=='owner'){ toast('Solo el dueño de la cuenta puede cambiar el plan'); return; }
+  if(AGENCY.plan===plan){ toast('Ya estás en el Plan '+plan); return; }
+  try{
+    await db.collection('planChangeRequests').add({
+      agencyId: AGENCY.uid, agencyName: AGENCY.name, type:'cambio',
+      currentPlan: AGENCY.plan, requestedPlan: plan,
+      status:'Pendiente', requestedAt: new Date().toISOString(), resolvedAt:null,
+    });
+    toast('Solicitud de cambio de plan enviada al equipo');
+  }catch(err){
+    toast('Error al enviar la solicitud: '+err.message);
+  }
   showApp('perfil');
+}
+async function requestBaja(){
+  if(CURRENT_USER_ROLE!=='owner'){ toast('Solo el dueño de la cuenta puede solicitar la baja'); return; }
+  try{
+    await db.collection('planChangeRequests').add({
+      agencyId: AGENCY.uid, agencyName: AGENCY.name, type:'baja',
+      currentPlan: AGENCY.plan, requestedPlan:null,
+      status:'Pendiente', requestedAt: new Date().toISOString(), resolvedAt:null,
+    });
+    toast('Solicitud de baja enviada al equipo');
+  }catch(err){
+    toast('Error al enviar la solicitud: '+err.message);
+  }
+  showApp('perfil');
+}
+async function inviteUser(){
+  if(CURRENT_USER_ROLE!=='owner'){ toast('Solo el dueño de la cuenta puede invitar usuarios'); return; }
+  const nameEl = document.getElementById('user-invite-name');
+  const emailEl = document.getElementById('user-invite-email');
+  const passEl = document.getElementById('user-invite-password');
+  if(!nameEl || !emailEl || !passEl) return;
+  const name = nameEl.value.trim();
+  const email = emailEl.value.trim();
+  const password = passEl.value;
+  if(!name || !email || !password){ toast('Completá nombre, email y contraseña'); return; }
+  if(password.length<6){ toast('La contraseña tiene que tener al menos 6 caracteres'); return; }
+  const activeCount = agencyUsersList.filter(u=>u.status==='Activo' && u.role==='colaborador').length;
+  if(activeCount >= userSeatLimit()){ toast('Alcanzaste el límite de usuarios de tu Plan '+AGENCY.plan); return; }
+  const btn = document.getElementById('user-invite-submit-btn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Invitando...'; }
+  try{
+    const secAuth = getSecondaryAuth();
+    const cred = await secAuth.createUserWithEmailAndPassword(email, password);
+    await db.collection('agencyUsers').doc(cred.user.uid).set({
+      agencyId: AGENCY.uid, name, email, role:'colaborador', status:'Activo',
+      invitedAt: new Date().toISOString(), invitedBy: AGENCY.name,
+    });
+    await secAuth.signOut();
+    toast('Usuario invitado correctamente');
+  }catch(err){
+    toast(friendlyAuthError(err));
+  }
+  if(btn){ btn.disabled = false; btn.textContent = 'Invitar'; }
+  showApp('usuarios');
+}
+async function removeUser(uid){
+  if(CURRENT_USER_ROLE!=='owner'){ toast('Solo el dueño de la cuenta puede eliminar usuarios'); return; }
+  if(uid===CURRENT_USER_UID){ toast('No podés eliminarte a vos mismo'); return; }
+  try{
+    await db.collection('agencyUsers').doc(uid).update({status:'Eliminado', removedAt:new Date().toISOString()});
+    toast('Usuario eliminado. Ya no va a poder acceder a la cuenta.');
+  }catch(err){ toast('Error: '+err.message); }
 }
 function updatePassword(){
   const actual = document.getElementById('pw-actual').value;
@@ -4227,6 +4410,13 @@ function attachDataListeners(uid){
   if(unsubscribeAgencies) unsubscribeAgencies();
   unsubscribeAgencies = db.collection('agencies').onSnapshot(snap=>{
     ADMIN_AGENCIES = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    const own = ADMIN_AGENCIES.find(a=>a.id===uid);
+    if(own){
+      const prevPlan = AGENCY.plan;
+      Object.assign(AGENCY, own);
+      AGENCY.uid = uid;
+      if(AGENCY.plan !== prevPlan) updateSidebarAgencyInfo();
+    }
     refreshCurrentView();
   }, err=>console.error('Error escuchando agencies:', err));
   unsubscribeProps = db.collection('properties').onSnapshot(snap=>{
@@ -4262,6 +4452,10 @@ function attachDataListeners(uid){
     reviewsData = snap.docs.map(d=>({id:d.id, ...d.data()}));
     refreshCurrentView();
   }, err=>console.error('Error escuchando reviews:', err));
+  unsubscribeAgencyUsers = db.collection('agencyUsers').where('agencyId','==',uid).onSnapshot(snap=>{
+    agencyUsersList = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(a.invitedAt)-new Date(b.invitedAt));
+    refreshCurrentView();
+  }, err=>console.error('Error escuchando agencyUsers:', err));
   attachMatchesListeners(uid);
 }
 let unsubscribeMatchesAsProp = null, unsubscribeMatchesAsSearch = null;
@@ -4291,6 +4485,7 @@ function detachDataListeners(){
   if(unsubscribeReviews){ unsubscribeReviews(); unsubscribeReviews=null; }
   if(unsubscribeMatchesAsProp){ unsubscribeMatchesAsProp(); unsubscribeMatchesAsProp=null; }
   if(unsubscribeMatchesAsSearch){ unsubscribeMatchesAsSearch(); unsubscribeMatchesAsSearch=null; }
+  if(unsubscribeAgencyUsers){ unsubscribeAgencyUsers(); unsubscribeAgencyUsers=null; }
   myProps = [];
   myClients = [];
   supportTickets = [];
@@ -4298,6 +4493,7 @@ function detachDataListeners(){
   ADMIN_AGENCIES = [];
   exclusivaOpportunities = [];
   reviewsData = [];
+  agencyUsersList = [];
   matchesRemote = {};
   attemptedMatchKeys = new Set();
   matches = [];
@@ -4855,6 +5051,8 @@ perfil: ()=>`
 
     <div class="profile-section-title"><i class="fa-solid fa-star"></i> Plan actual</div>
     <p style="font-size:13px;color:var(--paper-dim);margin:-4px 0 16px;">Plan actual: <strong style="color:var(--ink);">${AGENCY.plan}</strong></p>
+    <p style="font-size:12px;color:var(--paper-dim);margin:-10px 0 16px;">Los cambios de plan y las bajas quedan sujetos a aprobación del equipo de Llave Cruzada. Te avisamos por notificación en cuanto se resuelva.</p>
+    ${CURRENT_USER_ROLE==='owner' ? `
     <div class="plan-choice-row">
       <button class="plan-choice-btn ${AGENCY.plan==='Pro'?'selected':''}" onclick="choosePlan('Pro')">
         <span class="plan-choice-name">Plan Pro</span>
@@ -4864,11 +5062,14 @@ perfil: ()=>`
         <span class="plan-choice-name">Plan Premium</span>
         <span class="plan-choice-desc">Cartera gestionada por nuestro equipo + soporte prioritario</span>
       </button>
-      <button class="plan-choice-btn plan-choice-danger" onclick="toast('Solicitud de baja enviada al equipo')">
+      <button class="plan-choice-btn plan-choice-danger" onclick="requestBaja()">
         <span class="plan-choice-name">Dar de baja</span>
         <span class="plan-choice-desc">Cancelar tu cuenta en la red</span>
       </button>
     </div>
+    ` : `
+    <p style="font-size:13px;color:var(--paper-dim);margin:0 0 16px;">Solo el dueño de la cuenta puede cambiar el plan o dar de baja la cuenta.</p>
+    `}
 
     <div class="profile-section-title"><i class="fa-solid fa-lock"></i> Cambiar contraseña</div>
     <div class="row-3">
@@ -4891,6 +5092,57 @@ perfil: ()=>`
 
   </div>
 `,
+
+usuarios: ()=>{
+  const limit = userSeatLimit();
+  const collaborators = agencyUsersList.filter(u=>u.status==='Activo' && u.role==='colaborador');
+  const overLimit = collaborators.length > limit;
+  return `
+  <div class="main-head"><div><h1>Usuarios</h1><p class="sub">Personas de tu equipo con acceso a esta cuenta</p></div></div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:4px;">Cupo de invitaciones de tu Plan ${AGENCY.plan}</div>
+        <div style="font-family:var(--font-mono);font-size:22px;color:${overLimit?'#A32D2D':'var(--brass-bright)'};">${collaborators.length} / ${limit} usuarios invitados</div>
+        <p style="font-size:11.5px;color:var(--paper-dim);margin:4px 0 0;">No cuenta a vos como dueño, solo a la gente que invitás.</p>
+      </div>
+      ${overLimit ? `<span class="pill" style="background:#FDEDEC;color:#A32D2D;border-color:#F7C1C1;">Superaste el límite de tu plan</span>` : ''}
+    </div>
+    ${overLimit ? `<p style="font-size:12.5px;color:var(--paper-dim);margin:10px 0 0;">Tenés más usuarios invitados de los que permite tu plan actual (puede pasar si bajaste de plan). No vamos a sacar a nadie automáticamente: podés eliminar usuarios desde la lista de abajo, o pedir un cambio a un plan con más cupo desde Mi Perfil.</p>` : ''}
+  </div>
+
+  ${CURRENT_USER_ROLE==='owner' ? `
+  <div class="card" style="max-width:520px;margin-bottom:24px;">
+    <div class="profile-section-title"><i class="fa-solid fa-user-plus"></i> Invitar usuario</div>
+    ${collaborators.length>=limit ? `
+    <p style="font-size:13px;color:var(--paper-dim);margin:0;">Alcanzaste el límite de usuarios de tu Plan ${AGENCY.plan}. Para invitar a alguien más, pedí un cambio de plan desde Mi Perfil.</p>
+    ` : `
+    <div class="field"><label>Nombre y apellido</label><input id="user-invite-name" placeholder="Nombre completo"></div>
+    <div class="field"><label>Email</label><input id="user-invite-email" type="email" placeholder="persona@inmobiliaria.com"></div>
+    <div class="field"><label>Contraseña provisoria</label><input id="user-invite-password" type="password" placeholder="Mínimo 6 caracteres"></div>
+    <button id="user-invite-submit-btn" class="btn btn-solid" onclick="inviteUser()"><i class="fa-solid fa-paper-plane"></i> Invitar</button>
+    `}
+  </div>
+  ` : `
+  <div class="card" style="margin-bottom:24px;"><p style="font-size:13px;color:var(--paper-dim);margin:0;">Solo el dueño de la cuenta puede invitar o eliminar usuarios.</p></div>
+  `}
+
+  <div class="admin-section-title">Usuarios con acceso</div>
+  <table>
+    <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th>${CURRENT_USER_ROLE==='owner' ? '<th></th>' : ''}</tr></thead>
+    <tbody>
+      ${agencyUsersList.filter(u=>u.status!=='Eliminado').length ? agencyUsersList.filter(u=>u.status!=='Eliminado').map(u=>`<tr>
+        <td>${u.name}${u.id===CURRENT_USER_UID ? ' <span style="color:var(--paper-dim);font-size:11px;">(vos)</span>' : ''}</td>
+        <td>${u.email}</td>
+        <td>${u.role==='owner' ? 'Dueño' : 'Colaborador'}</td>
+        <td>${adminStatusPill(u.status==='Activo' ? 'Verificada' : 'Suspendida', u.status)}</td>
+        ${CURRENT_USER_ROLE==='owner' ? `<td>${u.role!=='owner' ? `<button class="btn btn-sm btn-eliminar-pastel" onclick="removeUser('${u.id}')"><i class="fa-solid fa-user-xmark"></i> Eliminar</button>` : ''}</td>` : ''}
+      </tr>`).join('') : `<tr><td colspan="${CURRENT_USER_ROLE==='owner'?5:4}" class="empty-row">No hay usuarios cargados.</td></tr>`}
+    </tbody>
+  </table>
+  `;
+},
 
 faqapp: ()=>`
   <div class="faq-centered-wrap">
@@ -4937,7 +5189,7 @@ precios: ()=>`
   <div class="plans-grid">
     <div class="plan-card ${AGENCY.plan==='Pro'?'featured':''}">
       <button class="plan-vermas-btn" onclick="openPlanDetail('pro')" title="Ver más detalles">Ver más</button>
-      <h3>Plan Pro</h3><div class="price">$90.000<span> /mes</span></div>
+      <h3>Plan Pro</h3><div class="price">$120.000<span> /mes</span></div>
       <ul>
         <li>Incluye 2 usuarios</li>
         <li>Carga de propiedades de forma independiente</li>
@@ -4950,7 +5202,7 @@ precios: ()=>`
     </div>
     <div class="plan-card ${AGENCY.plan==='Premium'?'featured':''}">
       <button class="plan-vermas-btn" onclick="openPlanDetail('premium')" title="Ver más detalles">Ver más</button>
-      <h3>Plan Premium</h3><div class="price">$290.000<span> /mes</span></div>
+      <h3>Plan Premium</h3><div class="price">$400.000<span> /mes</span></div>
       <ul>
         <li>Incluye 5 usuarios</li>
         <li>Nuestro equipo carga tu cartera inicial (máximo 30 propiedades)</li>
