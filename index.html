@@ -896,9 +896,10 @@
     <button class="avatar-modal-close" onclick="closeModal('adminlogin')"><i class="fa-solid fa-xmark"></i></button>
     <h3><i class="fa-solid fa-user-shield" style="color:var(--brass);margin-right:8px;"></i>Acceso administrador</h3>
     <p class="sub">Panel interno del equipo de Llave Cruzada — no es para inmobiliarias.</p>
-    <div class="field"><label>Email</label><input type="email" placeholder="equipo@llavecruzada.com"></div>
-    <div class="field"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
-    <button class="btn btn-solid" style="width:100%;" onclick="adminEnterApp()">Ingresar</button>
+    <div class="field"><label>Email</label><input type="email" id="adminlogin-email" placeholder="equipo@llavecruzada.com"></div>
+    <div class="field"><label>Contraseña</label><input type="password" id="adminlogin-password" placeholder="••••••••"></div>
+    <p id="adminlogin-error" class="auth-error hidden"></p>
+    <button class="btn btn-solid" style="width:100%;" id="adminlogin-submit-btn" onclick="adminLogin()">Ingresar</button>
   </div>
 </div>
 
@@ -2696,6 +2697,7 @@ const db = firebase.firestore();
 
 /* ---------------- usuarios por inmobiliaria (multi-login compartiendo los mismos datos) ---------------- */
 let CURRENT_USER_UID = null;   // uid real de Firebase Auth de quién está logueado
+let CURRENT_ADMIN_UID = null;  // uid real de Firebase Auth de un admin logueado (si corresponde)
 let CURRENT_USER_ROLE = 'owner'; // 'owner' | 'colaborador' — el owner es quien registró la inmobiliaria
 let agencyUsersList = [];
 let unsubscribeAgencyUsers = null;
@@ -2824,6 +2826,16 @@ function logout(){
 }
 fbAuth.onAuthStateChanged(async (user)=>{
   if(!user) return;
+  try{
+    const adminDoc = await db.collection('admins').doc(user.uid).get();
+    if(adminDoc.exists){
+      CURRENT_ADMIN_UID = user.uid;
+      enterAdminView();
+      const adminBtn = document.getElementById('adminlogin-submit-btn');
+      if(adminBtn){ adminBtn.disabled=false; adminBtn.textContent='Ingresar'; }
+      return;
+    }
+  }catch(e){ console.error('Error chequeando si es admin:', e); }
   try{
     Object.keys(AGENCY).forEach(k=>delete AGENCY[k]);
     const memberDoc = await db.collection('agencyUsers').doc(user.uid).get();
@@ -2987,15 +2999,39 @@ function detachAdminListeners(){
   [unsubAdminAgencies, unsubReports, unsubCodes, unsubTickets, unsubAdminProps, unsubAdminClients, unsubSubPayments, unsubPlanRequests].forEach(u=>u&&u());
   unsubAdminAgencies = unsubReports = unsubCodes = unsubTickets = unsubSubPayments = unsubPlanRequests = null;
 }
-function adminEnterApp(){
+function enterAdminView(){
   document.querySelectorAll('.modal-backdrop').forEach(m=>m.classList.add('hidden'));
   document.getElementById('view-landing').style.display='none';
   document.getElementById('view-admin').style.display='block';
   attachAdminListeners();
   showAdmin('dashboard');
 }
+async function adminLogin(){
+  hideAuthError('adminlogin-error');
+  const email = document.getElementById('adminlogin-email').value.trim();
+  const password = document.getElementById('adminlogin-password').value;
+  if(!email || !password){ showAuthError('adminlogin-error','Completá email y contraseña.'); return; }
+  const btn = document.getElementById('adminlogin-submit-btn');
+  btn.disabled = true; btn.textContent = 'Ingresando...';
+  try{
+    const cred = await fbAuth.signInWithEmailAndPassword(email, password);
+    const adminDoc = await db.collection('admins').doc(cred.user.uid).get();
+    if(!adminDoc.exists){
+      await fbAuth.signOut();
+      showAuthError('adminlogin-error', 'Esa cuenta no tiene acceso de administrador.');
+      btn.disabled = false; btn.textContent = 'Ingresar';
+      return;
+    }
+    // onAuthStateChanged se encarga de mostrar la vista de admin.
+  }catch(err){
+    showAuthError('adminlogin-error', friendlyAuthError(err));
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  }
+}
 function adminLogout(){
+  fbAuth.signOut();
   detachAdminListeners();
+  CURRENT_ADMIN_UID = null;
   document.getElementById('view-admin').style.display='none';
   document.getElementById('view-landing').style.display='block';
 }
