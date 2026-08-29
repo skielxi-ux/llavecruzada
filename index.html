@@ -1640,6 +1640,7 @@ async function submitRating(){
     });
     closeModal('calificar');
     addNotification('fa-star','gold','Calificaste a '+agency, 'Tu opinión ya es visible para el resto de la red.');
+    addNotificationFor(ratingTargetAgencyUid, 'fa-star','gold', AGENCY.name+' te calificó', 'Recibiste una nueva reseña (promedio '+overall+'/5). Podés verla en tu perfil.');
     toast('Calificación enviada para '+agency);
   }catch(err){
     toast('Error al guardar la calificación: '+err.message);
@@ -1647,6 +1648,7 @@ async function submitRating(){
 }
 
 /* ---------------- modal denunciar ---------------- */
+let reportTargetAgencyUid = null;
 function openReportModal(agencyName, agencyUid){
   if(!hasClosedOperationWith(agencyUid)){
     const waitingUntil = earliestPendingSettleDate(agencyUid);
@@ -1655,6 +1657,7 @@ function openReportModal(agencyName, agencyUid){
       : 'Solo podés denunciar inmobiliarias con las que cerraste una operación');
     return;
   }
+  reportTargetAgencyUid = agencyUid;
   document.getElementById('report-agency-name').textContent = agencyName;
   document.querySelectorAll('input[name="report-reason"]').forEach(r=>r.checked=false);
   document.getElementById('report-comentario').value = '';
@@ -1724,9 +1727,10 @@ async function submitReport(){
   if(!selected){ toast('Elegí un motivo antes de enviar la denuncia'); return; }
   const comment = document.getElementById('report-comentario').value;
   try{
-    await db.collection('reports').add({agency, reporter:AGENCY.name, reason:selected.value, comment, date:new Date().toISOString(), status:'Abierta'});
+    await db.collection('reports').add({agency, agencyUid: reportTargetAgencyUid, reporter:AGENCY.name, reason:selected.value, comment, date:new Date().toISOString(), status:'Abierta'});
     closeModal('denunciar');
     addNotification('fa-flag','red','Enviaste una denuncia sobre '+agency, 'El equipo de Llave Cruzada la va a revisar. Motivo: '+selected.value);
+    addNotificationFor(reportTargetAgencyUid, 'fa-flag','red','Recibiste una denuncia', 'Una inmobiliaria de la red te denunció. Motivo: '+selected.value+'. El equipo de Llave Cruzada la va a revisar.');
     toast('Denuncia enviada al equipo de Llave Cruzada sobre '+agency);
   }catch(err){
     toast('Error al enviar denuncia: '+err.message);
@@ -3650,7 +3654,13 @@ async function ensureMatchDoc(key, data){
   try{
     const ref = db.collection('matches').doc(key);
     const snap = await ref.get();
-    if(!snap.exists){ await ref.set(data); }
+    if(!snap.exists){
+      await ref.set(data);
+      // Se avisa a las dos partes — este código solo corre para quien "gana"
+      // la carrera de crear el doc primero, así que nunca se duplica el aviso.
+      addNotificationFor(data.propOwnerUid, 'fa-link', 'brass', 'Nuevo match con '+data.searchOwnerName, 'Hay un cruce nuevo entre tu propiedad y una búsqueda de la red. Revisalo en Mis Matches.');
+      addNotificationFor(data.searchOwnerUid, 'fa-link', 'brass', 'Nuevo match con '+data.propOwnerName, 'Hay un cruce nuevo entre tu búsqueda y una propiedad de la red. Revisalo en Mis Matches.');
+    }
   }catch(err){
     console.error('Error creando match:', err);
     attemptedMatchKeys.delete(key); // permite reintentar
@@ -3986,6 +3996,7 @@ async function finalizeOperation(key){
     await db.collection('agencies').doc(m.propOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
     await db.collection('agencies').doc(m.searchOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
     addNotificationFor(otherUid, 'fa-flag-checkered','green','¡Operación finalizada con '+AGENCY.name+'!', 'La operación quedó registrada en Operaciones concretadas.');
+    addNotification('fa-flag-checkered','green','¡Cerraste la operación con '+otherName+'!', 'Quedó registrada en Operaciones concretadas.');
     toast('¡Operación finalizada! La propiedad ya no va a aparecer en Explorar la Red.');
   }catch(err){ toast('Error al finalizar: '+err.message); }
   showApp('matches');
@@ -4000,12 +4011,14 @@ async function dropMatch(key, motivo, comentario){
   const m = matches.find(x=>matchKey(x)===key);
   if(!m) return;
   const otherUid = otherAgencyUid(m);
+  const otherName = matchFlowData(m).otherAgency;
   const nowIso = new Date().toISOString();
   try{
     await db.collection('matches').doc(key).update({
       status:'caidas', dropReason: motivo || null, dropComment: comentario || null, updatedAt:nowIso,
     });
     addNotificationFor(otherUid, 'fa-circle-xmark','red','Match con '+AGENCY.name+' cayó', motivo ? ('Motivo: '+motivo) : 'Podés reabrirlo en cualquier momento desde Operaciones caídas.');
+    addNotification('fa-circle-xmark','red','Diste de baja el match con '+otherName, motivo ? ('Motivo: '+motivo) : 'Podés reabrirlo en cualquier momento desde Operaciones caídas.');
     toast('Match movido a Operaciones caídas');
   }catch(err){ toast('Error: '+err.message); }
   showApp('matches');
