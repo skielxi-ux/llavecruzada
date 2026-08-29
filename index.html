@@ -1701,14 +1701,14 @@ function reviewsForAgency(agencyUid, agencyName){
 function reviewItemHTML(r){
   return `
     <div class="review-item">
-      <div class="review-avatar">${initials(r.name)}</div>
+      <div class="review-avatar">${escapeHtml(initials(r.name))}</div>
       <div class="review-body">
         <div class="review-head">
-          <span class="review-name">${r.name}${r.agency ? ` <span style="font-weight:400;color:var(--paper-dim);font-size:12px;">· ${r.agency}</span>` : ''}</span>
+          <span class="review-name">${escapeHtml(r.name)}${r.agency ? ` <span style="font-weight:400;color:var(--paper-dim);font-size:12px;">· ${escapeHtml(r.agency)}</span>` : ''}</span>
           <span class="review-stars">${starIcons(r.rating)}</span>
         </div>
         <div class="review-date">${r.date}</div>
-        <p class="review-comment">${r.comment}</p>
+        <p class="review-comment">${escapeHtml(r.comment)}</p>
       </div>
     </div>
   `;
@@ -1781,13 +1781,13 @@ function clientAvatarHTML(c){
   if(c.avatar !== null && c.avatar !== undefined && AVATAR_IMAGES[c.avatar]){
     return `<div class="avatar-circle" style="cursor:pointer;" onclick="openAvatarPickerFor('client','${c.id}')" title="Cambiar avatar">${avatarImgHTML(c.avatar)}</div>`;
   }
-  return `<div class="avatar-circle" style="cursor:pointer;" onclick="openAvatarPickerFor('client','${c.id}')" title="Cambiar avatar">${initials(c.nombre)}</div>`;
+  return `<div class="avatar-circle" style="cursor:pointer;" onclick="openAvatarPickerFor('client','${c.id}')" title="Cambiar avatar">${escapeHtml(initials(c.nombre))}</div>`;
 }
 function ownerAvatarHTML(p){
   if(p.avatar !== null && p.avatar !== undefined && AVATAR_IMAGES[p.avatar]){
     return `<div class="avatar-circle" style="cursor:pointer;" onclick="openAvatarPickerFor('prop','${p.id}')" title="Cambiar avatar">${avatarImgHTML(p.avatar)}</div>`;
   }
-  return `<div class="avatar-circle" style="cursor:pointer;" onclick="openAvatarPickerFor('prop','${p.id}')" title="Cambiar avatar">${initials(p.propietario)}</div>`;
+  return `<div class="avatar-circle" style="cursor:pointer;" onclick="openAvatarPickerFor('prop','${p.id}')" title="Cambiar avatar">${escapeHtml(initials(p.propietario))}</div>`;
 }
 let pendingAvatar = null;
 let avatarPickerContext = {mode:'new'};
@@ -2372,9 +2372,9 @@ function exclusivaCardHTML(o){
   return `
     <div class="listing-card">
       <div class="listing-photo">
-        ${photo ? `<img src="${photo}" alt="${o.tipo} en ${o.zona}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--paper-dim);font-size:12px;background:var(--ink-3);">Sin foto</div>`}
-        <span class="listing-type-pill">${o.tipo}</span>
-        <span class="listing-agency-pill"><i class="fa-solid fa-building"></i> ${o.agency}</span>
+        ${photo ? `<img src="${photo}" alt="${escapeHtml(o.tipo)} en ${escapeHtml(o.zona)}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--paper-dim);font-size:12px;background:var(--ink-3);">Sin foto</div>`}
+        <span class="listing-type-pill">${escapeHtml(o.tipo)}</span>
+        <span class="listing-agency-pill"><i class="fa-solid fa-building"></i> ${escapeHtml(o.agency)}</span>
       </div>
       <div class="listing-ribbon"><i class="fa-solid fa-star"></i> Oportunidad Exclusiva</div>
       <div class="listing-body">
@@ -2384,8 +2384,8 @@ function exclusivaCardHTML(o){
             <div class="listing-price">${fmtMoney(o.precioEspecial,o.moneda)}${o.op==='Alquiler'?'<span class="unit">/mes</span>':''}</div>
           </div>
         </div>
-        <div class="listing-title">${o.zona}</div>
-        <div class="listing-addr">${o.ciudad}</div>
+        <div class="listing-title">${escapeHtml(o.zona)}</div>
+        <div class="listing-addr">${escapeHtml(o.ciudad)}</div>
         ${o.mensaje ? `<div class="card" style="background:var(--ink-3);padding:10px 12px;margin:8px 0;"><p style="font-size:12.5px;color:var(--ink);margin:0;font-style:italic;">"${o.mensaje}"</p></div>` : ''}
         <div class="listing-divider"></div>
         <div class="listing-specs">
@@ -2646,14 +2646,14 @@ function listingCard(p){
     : `${fmtMoney(p.precio,p.moneda)}`;
   const posterAgency = ADMIN_AGENCIES.find(a=>a.id===p.ownerUid);
   const posterLogo = posterAgency && posterAgency.logo
-    ? `<img src="${posterAgency.logo}" alt="${p.agency}">`
+    ? `<img src="${posterAgency.logo}" alt="${escapeHtml(p.agency)}">`
     : `<i class="fa-solid fa-building"></i>`;
   return `
     <div class="listing-card">
       <div class="listing-photo">
-        <img src="${p.fotos && p.fotos.length ? p.fotos[0] : `https://picsum.photos/id/${p.photo}/600/400`}" alt="${p.tipo} en ${p.zona}">
-        <span class="listing-type-pill">${p.tipo}</span>
-        <span class="listing-agency-pill"><i class="fa-solid fa-building"></i> ${p.agency}</span>
+        <img src="${p.fotos && p.fotos.length ? p.fotos[0] : `https://picsum.photos/id/${p.photo}/600/400`}" alt="${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}">
+        <span class="listing-type-pill">${escapeHtml(p.tipo)}</span>
+        <span class="listing-agency-pill"><i class="fa-solid fa-building"></i> ${escapeHtml(p.agency)}</span>
       </div>
       ${p.popular ? `<div class="listing-ribbon">${icoSpark} Popular</div>` : ''}
       <div class="listing-body">
@@ -2661,12 +2661,12 @@ function listingCard(p){
           <div class="listing-price">${priceDisplay}</div>
           <button class="listing-heart ${favoriteProps.includes(p.id)?'is-fav':''}" onclick="toggleFavorite('${p.id}')">${favoriteProps.includes(p.id) ? '<i class="fa-solid fa-heart"></i>' : icoHeart}</button>
         </div>
-        <div class="listing-title">${p.zona}, ${p.ciudad}</div>
-        <div class="listing-addr">${p.addr || 'Dirección a confirmar'}</div>
-        <div class="listing-commission"><i class="fa-solid fa-hand-holding-dollar"></i> Comisión referidora: <strong>${p.com}</strong></div>
+        <div class="listing-title">${escapeHtml(p.zona)}, ${escapeHtml(p.ciudad)}</div>
+        <div class="listing-addr">${escapeHtml(p.addr) || 'Dirección a confirmar'}</div>
+        <div class="listing-commission"><i class="fa-solid fa-hand-holding-dollar"></i> Comisión referidora: <strong>${escapeHtml(p.com)}</strong></div>
         <div class="listing-poster">
           <div class="listing-poster-logo">${posterLogo}</div>
-          <span>${p.agency}</span>
+          <span>${escapeHtml(p.agency)}</span>
         </div>
         <div class="listing-divider"></div>
         <div class="listing-specs">
@@ -3153,7 +3153,7 @@ function reportWhatsappBtn(r){
   return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</a>`;
 }
 function adminAgencyRowsHTML(list){
-  return list.length ? list.map(a=>`<tr><td style="color:var(--brass);font-weight:700;">${a.name}</td><td>${a.city}</td><td>${adminStatusPill(a.status)}</td><td>${a.registeredAt}</td><td>${a.plan}</td><td>${a.ops}</td><td style="display:flex;gap:8px;">
+  return list.length ? list.map(a=>`<tr><td style="color:var(--brass);font-weight:700;">${escapeHtml(a.name)}</td><td>${escapeHtml(a.city)}</td><td>${adminStatusPill(a.status)}</td><td>${a.registeredAt}</td><td>${a.plan}</td><td>${a.ops}</td><td style="display:flex;gap:8px;">
     <button class="btn btn-sm btn-editar-violeta btn-hover-fill" onclick="openAgencyDetail('${a.id}')"><i class="fa-solid fa-eye"></i> Ver detalle</button>
     ${a.status==='Pendiente'?`<button class="btn btn-sm whatsapp-btn" onclick="setAgencyStatus('${a.id}','Verificada')"><i class="fa-solid fa-check"></i> Aprobar</button>`:''}
     ${a.status==='Verificada'?`<button class="btn btn-sm btn-eliminar-pastel" onclick="setAgencyStatus('${a.id}','Suspendida')"><i class="fa-solid fa-ban"></i> Suspender</button>`:''}
@@ -3172,8 +3172,8 @@ function openAgencyDetail(agencyId){
   document.getElementById('agencydetail-header').innerHTML = `
     <div class="agency-detail-header">
       <div>
-        <div class="agency-detail-name">${a.name}</div>
-        <div class="agency-detail-meta">${a.city} · Registrada el ${a.registeredAt} (hace ${daysSince(a.registeredAt)} días)</div>
+        <div class="agency-detail-name">${escapeHtml(a.name)}</div>
+        <div class="agency-detail-meta">${escapeHtml(a.city)} · Registrada el ${a.registeredAt} (hace ${daysSince(a.registeredAt)} días)</div>
       </div>
       ${adminStatusPill(a.status)}
     </div>
@@ -3376,7 +3376,9 @@ function setPagosMes(period){
   pagosSelectedPeriod = period;
   showAdmin('pagospendientes');
 }
-async function confirmarPagoInmobiliaria(agencyId, agencyName, period, amount){
+async function confirmarPagoInmobiliaria(agencyId, period, amount){
+  const agency = ADMIN_AGENCIES.find(a=>a.id===agencyId);
+  const agencyName = agency ? agency.name : '';
   try{
     await db.collection('subscriptionPayments').add({
       agencyId, agencyName, period, amount, confirmedAt: new Date().toISOString(),
@@ -3426,7 +3428,7 @@ const adminRenderers = {
       ${adminKpi('inmobiliariasRiesgo', 'fa-solid fa-triangle-exclamation', 'Inmobiliarias en riesgo', atRisk.length, 'kpi-red')}
       ${adminKpi('nuevasRegistradas', 'fa-solid fa-user-plus', 'Nuevas registradas', nuevas.length)}
     </div>
-    ${atRisk.length ? `<div class="card"><div class="eyebrow" style="margin-bottom:12px;">Inmobiliarias en riesgo <span style="font-weight:400;color:var(--paper-dim);">— registradas hace más de 30 días, sin operaciones</span></div><table><tbody>${atRisk.map(a=>`<tr><td>${a.name}</td><td>${a.city}</td><td>Registrada hace ${daysSince(a.registeredAt)} días</td><td>${riskWhatsappBtn(a)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    ${atRisk.length ? `<div class="card"><div class="eyebrow" style="margin-bottom:12px;">Inmobiliarias en riesgo <span style="font-weight:400;color:var(--paper-dim);">— registradas hace más de 30 días, sin operaciones</span></div><table><tbody>${atRisk.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.city)}</td><td>Registrada hace ${daysSince(a.registeredAt)} días</td><td>${riskWhatsappBtn(a)}</td></tr>`).join('')}</tbody></table></div>` : ''}
   `;
   },
   inmobiliarias: ()=>`
@@ -3451,12 +3453,12 @@ const adminRenderers = {
       <div class="card" style="margin-bottom:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
           <div>
-            <strong style="font-size:14px;">${r.reporter} denunció a ${r.agency}</strong>
+            <strong style="font-size:14px;">${escapeHtml(r.reporter)} denunció a ${escapeHtml(r.agency)}</strong>
             <div style="font-size:12px;color:var(--paper-dim);margin-top:2px;">${formatDateTime(r.date)}</div>
           </div>
           ${adminStatusPill(r.status)}
         </div>
-        <p style="font-size:13px;margin:0 0 6px;"><strong>Motivo:</strong> ${r.reason}</p>
+        <p style="font-size:13px;margin:0 0 6px;"><strong>Motivo:</strong> ${escapeHtml(r.reason)}</p>
         <p style="font-size:13px;color:var(--paper-dim);margin:0 0 14px;">${r.comment || 'Sin comentario adicional.'}</p>
         ${r.status==='Abierta' ? `<div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-sm whatsapp-btn" onclick="resolveReport('${r.id}')"><i class="fa-solid fa-check"></i> Marcar resuelta</button>
@@ -3499,7 +3501,7 @@ const adminRenderers = {
       <tbody>
         ${total ? matches.map(m=>{
           const d = matchFlowData(m);
-          return `<tr><td>${AGENCY.name}</td><td>${d.otherAgency}</td><td>${d.clientName}</td><td>${adminStatusPill(m.status==='caidas'?'Suspendida':m.status==='concretadas'?'Verificada':'Pendiente', MATCH_LABELS[m.status])}</td><td>${formatDateTime(m.claimedAt)}</td></tr>`;
+          return `<tr><td>${escapeHtml(AGENCY.name)}</td><td>${escapeHtml(d.otherAgency)}</td><td>${escapeHtml(d.clientName)}</td><td>${adminStatusPill(m.status==='caidas'?'Suspendida':m.status==='concretadas'?'Verificada':'Pendiente', MATCH_LABELS[m.status])}</td><td>${formatDateTime(m.claimedAt)}</td></tr>`;
         }).join('') : `<tr><td colspan="5" class="empty-row">Todavía no hay matches en el sistema.</td></tr>`}
       </tbody>
     </table>
@@ -3523,7 +3525,7 @@ const adminRenderers = {
     <table>
       <thead><tr><th>Inmobiliaria</th><th>Plan</th><th>Ingreso mensual</th></tr></thead>
       <tbody>
-        ${verified.map(a=>`<tr><td>${a.name}</td><td>${a.plan}</td><td class="mono">${fmtARS(a.plan==='Pro'?120000:400000)}</td></tr>`).join('')}
+        ${verified.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${a.plan}</td><td class="mono">${fmtARS(a.plan==='Pro'?120000:400000)}</td></tr>`).join('')}
       </tbody>
     </table>
     <p style="font-size:12.5px;color:var(--ink);margin-top:14px;display:flex;align-items:flex-start;gap:8px;"><i class="fa-solid fa-bell" style="margin-top:2px;color:var(--brass);"></i><span>MRR y el desglose por inmobiliaria se calculan en base a los planes reales asignados. "Ingresos totales" es un acumulado ilustrativo (6 meses de MRR), ya que el prototipo no lleva un historial de facturación real.</span></p>
@@ -3564,13 +3566,13 @@ const adminRenderers = {
       <thead><tr><th>Inmobiliaria</th><th>Plan</th><th>Fecha de registro</th><th>Fecha de pago</th><th>Monto</th><th>Estado</th><th></th></tr></thead>
       <tbody>
       ${rows.length ? rows.map(r=>`<tr>
-        <td>${r.a.name}</td>
+        <td>${escapeHtml(r.a.name)}</td>
         <td>${r.a.plan||'—'}</td>
         <td>${r.a.registeredAt}</td>
         <td>${r.due.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})}</td>
         <td class="mono">${fmtARS(r.amount)}</td>
         <td>${STATUS_PILL[r.status]}</td>
-        <td>${r.status==='pagado' ? '' : `<button class="btn btn-sm whatsapp-btn" onclick="confirmarPagoInmobiliaria('${r.a.id}','${r.a.name.replace(/'/g,"\\'")}','${pagosSelectedPeriod}',${r.amount})"><i class="fa-solid fa-check"></i> Confirmar pago</button>`}</td>
+        <td>${r.status==='pagado' ? '' : `<button class="btn btn-sm whatsapp-btn" onclick="confirmarPagoInmobiliaria('${r.a.id}','${pagosSelectedPeriod}',${r.amount})"><i class="fa-solid fa-check"></i> Confirmar pago</button>`}</td>
       </tr>`).join('') : `<tr><td colspan="7" class="empty-row">Ninguna inmobiliaria tiene un vencimiento en este mes.</td></tr>`}
       </tbody>
     </table>
@@ -3591,13 +3593,13 @@ const adminRenderers = {
       <div class="card" style="margin-bottom:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
           <div>
-            <strong style="font-size:14px;">${t.subject}</strong>
-            <div style="font-size:12px;color:var(--paper-dim);margin-top:2px;">${t.agency} · ${t.category} · ${formatDateTime(t.date)}</div>
+            <strong style="font-size:14px;">${escapeHtml(t.subject)}</strong>
+            <div style="font-size:12px;color:var(--paper-dim);margin-top:2px;">${escapeHtml(t.agency)} · ${t.category} · ${formatDateTime(t.date)}</div>
           </div>
           ${adminStatusPill(t.status)}
         </div>
-        <p style="font-size:13px;color:var(--paper-dim);margin:0 0 14px;">${t.message}</p>
-        ${t.reply ? `<div class="card" style="background:var(--ink-3);margin-bottom:10px;"><div class="eyebrow" style="margin-bottom:6px;">Tu respuesta · ${formatDateTime(t.repliedAt)}</div><p style="font-size:13px;margin:0;">${t.reply}</p></div>` : ''}
+        <p style="font-size:13px;color:var(--paper-dim);margin:0 0 14px;">${escapeHtml(t.message)}</p>
+        ${t.reply ? `<div class="card" style="background:var(--ink-3);margin-bottom:10px;"><div class="eyebrow" style="margin-bottom:6px;">Tu respuesta · ${formatDateTime(t.repliedAt)}</div><p style="font-size:13px;margin:0;">${escapeHtml(t.reply)}</p></div>` : ''}
         ${t.status!=='Cerrado' ? `
           ${!t.reply ? `<div class="field"><textarea id="ticket-reply-${t.id}" rows="2" placeholder="Escribí tu respuesta..."></textarea></div>` : ''}
           <div style="display:flex;gap:8px;">
@@ -3615,7 +3617,7 @@ const adminRenderers = {
       <div class="card" style="margin-bottom:14px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
           <div>
-            <strong style="font-size:14px;">${r.agencyName}</strong>
+            <strong style="font-size:14px;">${escapeHtml(r.agencyName)}</strong>
             <div style="font-size:12px;color:var(--paper-dim);margin-top:2px;">${formatDateTime(r.requestedAt)}</div>
           </div>
           ${adminStatusPill(r.status)}
@@ -3635,6 +3637,18 @@ const adminRenderers = {
 function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
 function toggleFaq(el){el.parentElement.classList.toggle('open');}
 function toggleFaqC(btn){ btn.closest('.faq-c-item').classList.toggle('faq-c-open'); }
+// Escapa cualquier texto que haya escrito un usuario antes de insertarlo en HTML.
+// Sin esto, alguien podría escribir código en un comentario, descripción,
+// nombre, etc. y que se ejecute en la pantalla de otra persona (XSS).
+function escapeHtml(str){
+  if(str===null || str===undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.remove('hidden');
@@ -3822,7 +3836,7 @@ function updateSidebarAgencyInfo(){
   const nameEl = document.getElementById('sidebar-agname');
   const metaEl = document.getElementById('sidebar-agmeta');
   if(nameEl) nameEl.textContent = AGENCY.name;
-  if(metaEl) metaEl.textContent = `${AGENCY.city} · Plan ${AGENCY.plan}`;
+  if(metaEl) metaEl.textContent = `${escapeHtml(AGENCY.city)} · Plan ${AGENCY.plan}`;
 }
 async function saveProfileChanges(){
   AGENCY.name = document.getElementById('perfil-nombre').value || AGENCY.name;
@@ -4043,7 +4057,7 @@ function matchFlowData(m){
       node1Sub: 'Tu inmobiliaria',
       otherAgency: s.agency,
       node2Sub: '(Match con colega)',
-      clientName: `Cliente de ${s.agency}`,
+      clientName: `Cliente de ${escapeHtml(s.agency)}`,
       clientTag: '(Nombre protegido)',
       node3Sub: `${s.op==='Venta'?'Busca comprar':'Busca alquilar'} ${s.tipo.toLowerCase()} en ${s.zona}`
     };
@@ -4072,8 +4086,8 @@ function renderDetailModal(p, opts){
     ? `<div class="propdetail-search-placeholder"><i class="fa-solid fa-magnifying-glass"></i><span>Todavía no hay una propiedad puntual — es lo que este cliente está buscando</span></div>`
     : `<div class="swiper property-swiper">
       <div class="swiper-wrapper">${(p.fotos && p.fotos.length)
-        ? p.fotos.map(src=>`<div class="swiper-slide"><img src="${src}" alt="${p.tipo} en ${p.zona}"></div>`).join('')
-        : [p.photo, p.photo+3, p.photo+7, p.photo+11].map(id=>`<div class="swiper-slide"><img src="https://picsum.photos/id/${id}/900/600" alt="${p.tipo} en ${p.zona}"></div>`).join('')}</div>
+        ? p.fotos.map(src=>`<div class="swiper-slide"><img src="${src}" alt="${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}"></div>`).join('')
+        : [p.photo, p.photo+3, p.photo+7, p.photo+11].map(id=>`<div class="swiper-slide"><img src="https://picsum.photos/id/${id}/900/600" alt="${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}"></div>`).join('')}</div>
       <div class="swiper-pagination"></div>
       <div class="swiper-button-prev"></div>
       <div class="swiper-button-next"></div>
@@ -4092,21 +4106,21 @@ function renderDetailModal(p, opts){
         <div>
           ${p.precioOriginal ? `<div style="font-size:13px;color:var(--paper-dim);text-decoration:line-through;">${fmtMoney(p.precioOriginal,p.moneda)}</div>` : ''}
           <div class="propdetail-price">${fmtMoney(p.precio,p.moneda)}${p.op==='Alquiler'?'<span class="unit">/mes</span>':''}${opts.isSearch?' <span class="unit">(presupuesto)</span>':''}</div>
-          <div class="propdetail-title">${p.tipo} en ${p.zona}</div>
-          <div class="propdetail-addr">${p.addr || 'Dirección a confirmar'}, ${p.ciudad}</div>
+          <div class="propdetail-title">${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}</div>
+          <div class="propdetail-addr">${escapeHtml(p.addr) || 'Dirección a confirmar'}, ${escapeHtml(p.ciudad)}</div>
         </div>
         ${heartBtn}
       </div>
       ${opts.note ? `<div class="card" style="background:var(--ink-3);margin-bottom:16px;"><p style="font-size:13px;margin:0;font-style:italic;">"${opts.note}"</p></div>` : ''}
       <div class="propdetail-grid">
         <div><span class="lbl">Operación</span><span class="val">${p.op}</span></div>
-        <div><span class="lbl">Tipo</span><span class="val">${p.tipo}</span></div>
+        <div><span class="lbl">Tipo</span><span class="val">${escapeHtml(p.tipo)}</span></div>
         ${!opts.isSearch ? `<div><span class="lbl">Superficie</span><span class="val">${p.m2} m²</span></div>` : ''}
         ${p.beds ? `<div><span class="lbl">Ambientes</span><span class="val">${p.beds}</span></div>` : ''}
         ${p.baths ? `<div><span class="lbl">Baños</span><span class="val">${p.baths}</span></div>` : ''}
-        <div><span class="lbl">Ciudad</span><span class="val">${p.ciudad}</span></div>
+        <div><span class="lbl">Ciudad</span><span class="val">${escapeHtml(p.ciudad)}</span></div>
         ${p.op==='Alquiler' && p.expensas ? `<div><span class="lbl">Expensas</span><span class="val">${fmtMoney(p.expensas,'ARS')}/mes</span></div>` : ''}
-        ${!opts.isSearch ? `<div><span class="lbl">Comisión referidora</span><span class="val">${p.com}</span></div>` : ''}
+        ${!opts.isSearch ? `<div><span class="lbl">Comisión referidora</span><span class="val">${escapeHtml(p.com)}</span></div>` : ''}
       </div>
       <div class="propdetail-map-section">
         <div class="propdetail-map-label"><i class="fa-solid fa-map-location-dot"></i> Ubicación aproximada</div>
@@ -4114,7 +4128,7 @@ function renderDetailModal(p, opts){
           <iframe width="100%" height="220" frameborder="0" scrolling="no" style="border:0;" src="${mapSrc}"></iframe>
         </div>
       </div>
-      <div class="propdetail-agency">${opts.isSearch?'Búsqueda cargada por':'Publicada por'} <strong>${p.agency}</strong></div>
+      <div class="propdetail-agency">${opts.isSearch?'Búsqueda cargada por':'Publicada por'} <strong>${escapeHtml(p.agency)}</strong></div>
       ${(!opts.isSearch && p.op==='Alquiler') ? `
       <div class="propdetail-requisitos">
         <div class="propdetail-map-label"><i class="fa-solid fa-clipboard-check"></i> Requisitos para alquilar</div>
@@ -4170,7 +4184,7 @@ function openContactClienteModal(propId){
   document.getElementById('contactcliente-tel').value = '';
   const listEl = document.getElementById('contactcliente-list');
   if(myClients.length){
-    listEl.innerHTML = myClients.map((c,i)=>`<label class="report-reason-opt"><input type="radio" name="contactcliente-radio" value="${c.id}" ${i===0?'checked':''}> ${c.nombre} — busca ${c.op==='Compra'?'comprar':'alquilar'} ${c.tipo.toLowerCase()} en ${c.ciudad}${c.zona&&c.zona!=='—'?', '+c.zona:''}</label>`).join('');
+    listEl.innerHTML = myClients.map((c,i)=>`<label class="report-reason-opt"><input type="radio" name="contactcliente-radio" value="${c.id}" ${i===0?'checked':''}> ${escapeHtml(c.nombre)} — busca ${c.op==='Compra'?'comprar':'alquilar'} ${c.tipo.toLowerCase()} en ${escapeHtml(c.ciudad)}${c.zona&&c.zona!=='—'?', '+escapeHtml(c.zona):''}</label>`).join('');
   } else {
     listEl.innerHTML = `<p style="font-size:13px;color:var(--paper-dim);margin:0;">Todavía no tenés clientes cargados.</p>`;
     document.getElementById('contactcliente-quickadd').classList.remove('hidden');
@@ -4282,7 +4296,7 @@ function negotiationHTML(m, key){
     </div>`;
   }
   return `<div class="commission-proposal commission-proposal-waiting">
-    <div class="commission-proposal-text"><i class="fa-solid fa-paper-plane"></i> Tu propuesta: <strong>${last.value}</strong> — esperando respuesta de ${matchFlowData(m).otherAgency}</div>
+    <div class="commission-proposal-text"><i class="fa-solid fa-paper-plane"></i> Tu propuesta: <strong>${last.value}</strong> — esperando respuesta de ${escapeHtml(matchFlowData(m).otherAgency)}</div>
     <button class="btn btn-sm btn-eliminar-pastel" onclick="dropMatch('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>
   </div>`;
 }
@@ -4343,7 +4357,7 @@ function commissionRowHTML(m, role){
     ? `${label}<span style="display:block;color:var(--paper-dim);font-weight:400;font-size:12px;margin-top:2px;">≈ ${fmtMoney(Math.round(calc.amount), calc.moneda)}</span>`
     : label;
   return `<tr>
-    <td><div class="client-name-cell"><img class="match-property-thumb" style="width:36px;height:36px;" src="${propPhotoSrc}" alt=""><span>${d.otherAgency}</span></div></td>
+    <td><div class="client-name-cell"><img class="match-property-thumb" style="width:36px;height:36px;" src="${propPhotoSrc}" alt=""><span>${escapeHtml(d.otherAgency)}</span></div></td>
     <td>${m.prop.tipo} · ${m.prop.zona}, ${m.prop.ciudad}</td>
     <td class="mono">${montoDisplay}</td>
     <td>${formatDateTime(due.toISOString())}</td>
@@ -4371,7 +4385,7 @@ function matchActionsHTML(m, key){
     if(iOwnProperty){
       primaryBtn = `<button class="btn btn-sm whatsapp-btn" onclick="openFinalizeMatchModal('${key}')"><i class="fa-solid fa-flag-checkered"></i> Cerrar operación</button>`;
     } else {
-      primaryBtn = `<div class="waiting-note"><i class="fa-solid fa-hourglass-half"></i> Esperando que ${m.prop.agency} cierre la operación</div>`;
+      primaryBtn = `<div class="waiting-note"><i class="fa-solid fa-hourglass-half"></i> Esperando que ${escapeHtml(m.prop.agency)} cierre la operación</div>`;
     }
   }
   return eliminarInline ? primaryBtn : `${primaryBtn}<button class="btn btn-sm btn-eliminar-pastel" onclick="dropMatch('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>`;
@@ -4382,7 +4396,7 @@ function matchRowHTML(m){
   const propPhotoSrc = (m.prop.fotos && m.prop.fotos.length) ? m.prop.fotos[0] : `https://picsum.photos/id/${hashToRange(m.prop.id, 1020, 1080)}/100/100`;
   return `
     <div class="match-row">
-      <div class="match-claim-note"><i class="fa-solid fa-clock"></i> Reclamado el ${formatDateTime(m.claimedAt)}${m.agreedAt?` · Comisión acordada (${m.agreedValue}) el ${formatDateTime(m.agreedAt)}`:''}${m.dropReason?` · Motivo de caída: ${m.dropReason}${m.dropComment?' — "'+m.dropComment+'"':''}`:''}</div>
+      <div class="match-claim-note"><i class="fa-solid fa-clock"></i> Reclamado el ${formatDateTime(m.claimedAt)}${m.agreedAt?` · Comisión acordada (${m.agreedValue}) el ${formatDateTime(m.agreedAt)}`:''}${m.dropReason?` · Motivo de caída: ${escapeHtml(m.dropReason)}${m.dropComment?' — "'+escapeHtml(m.dropComment)+'"':''}`:''}</div>
       <div class="match-property-preview">
         <img class="match-property-thumb" src="${propPhotoSrc}" alt="${m.prop.tipo} en ${m.prop.zona}">
         <span>${m.prop.tipo} en ${m.prop.zona}, ${m.prop.ciudad}</span>
@@ -4393,14 +4407,14 @@ function matchRowHTML(m){
             <span class="dot dot-icon"><i class="fa-solid fa-house"></i></span>
             <div class="text">
               <div class="flow-pill">${d.pillLabel}</div>
-              <strong class="flow-my-agency">${AGENCY.name}</strong>
+              <strong class="flow-my-agency">${escapeHtml(AGENCY.name)}</strong>
               <span>${d.node1Sub}</span>
             </div>
           </div>
           <div class="flow-connector"></div>
-          <div class="flow-node"><span class="dot dot-icon"><i class="fa-solid fa-user"></i></span><div class="text"><strong>${d.clientName}${d.clientTag?' '+d.clientTag:''}</strong><span>${d.node3Sub}</span></div></div>
+          <div class="flow-node"><span class="dot dot-icon"><i class="fa-solid fa-user"></i></span><div class="text"><strong>${escapeHtml(d.clientName)}${d.clientTag?' '+d.clientTag:''}</strong><span>${escapeHtml(d.node3Sub)}</span></div></div>
           <div class="flow-connector"></div>
-          <div class="flow-node flow-node-match"><span class="dot dot-icon dot-heart"><i class="fa-solid fa-heart"></i></span><div class="text"><strong>${d.otherAgency}</strong><span>${d.node2Sub}</span></div></div>
+          <div class="flow-node flow-node-match"><span class="dot dot-icon dot-heart"><i class="fa-solid fa-heart"></i></span><div class="text"><strong>${escapeHtml(d.otherAgency)}</strong><span>${d.node2Sub}</span></div></div>
         </div>
         ${pipelineStepperHTML(m.status)}
         <div class="match-actions">
@@ -4641,12 +4655,12 @@ function fmtMoney(n,cur){ if(!n) return '—'; return (cur==='USD'?'USD ':'ARS '
 let clientesSearchQuery = '';
 function propietarioRowsHTML(list){
   return list.length
-    ? list.map(p=>`<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${p.propietario||'Sin nombre'}</span></div></td><td>${p.propietarioTel||'—'}</td><td>${p.tipo} · ${p.zona}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
+    ? list.map(p=>`<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${escapeHtml(p.propietario)||'Sin nombre'}</span></div></td><td>${escapeHtml(p.propietarioTel)||'—'}</td><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
     : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron propietarios con ese nombre.' : 'No tenés propietarios cargados todavía. Se suman automáticamente cuando publicás una propiedad con sus datos.'}</td></tr>`;
 }
 function buscadorRowsHTML(list){
   return list.length
-    ? list.map(c=>`<tr><td><div class="client-name-cell">${clientAvatarHTML(c)}<span>${c.nombre}</span></div></td><td>${c.tel}</td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()} en ${c.ciudad}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill ${c.estado==='Cerrado'?'':'pill-sage'}">${c.estado||'Activo'}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditClientModal('${c.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteClient('${c.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
+    ? list.map(c=>`<tr><td><div class="client-name-cell">${clientAvatarHTML(c)}<span>${escapeHtml(c.nombre)}</span></div></td><td>${escapeHtml(c.tel)}</td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()} en ${escapeHtml(c.ciudad)}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill ${c.estado==='Cerrado'?'':'pill-sage'}">${c.estado||'Activo'}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditClientModal('${c.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteClient('${c.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
     : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron clientes con ese nombre.' : 'No tenés clientes buscadores cargados. Hacé clic en "Agregar cliente" para comenzar.'}</td></tr>`;
 }
 function filterClientesTable(query){
@@ -4770,8 +4784,8 @@ notificaciones: ()=>{
     <div class="notif-item ${n.read?'':'notif-unread'}" onclick="markNotificationRead('${n.id}')">
       <div class="notif-icon" style="color:${colorMap[n.color]||'var(--brass)'};background:${colorMap[n.color]||'var(--brass)'}1a;"><i class="fa-solid ${n.icon}"></i></div>
       <div class="notif-body">
-        <div class="notif-title">${n.title}${!n.read?'<span class="notif-dot"></span>':''}</div>
-        <div class="notif-text">${n.text}</div>
+        <div class="notif-title">${escapeHtml(n.title)}${!n.read?'<span class="notif-dot"></span>':''}</div>
+        <div class="notif-text">${escapeHtml(n.text)}</div>
         <div class="notif-date">${formatDateTime(n.date)}</div>
       </div>
     </div>
@@ -4822,7 +4836,7 @@ dashboard: ()=>{
     <div class="card">
       <div class="eyebrow" style="margin-bottom:14px;">Propiedades recientes</div>
       <table><tbody>
-      ${myProps.length? myProps.slice(-4).reverse().map(p=>`<tr><td>${p.tipo} · ${p.zona}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td></tr>`).join('') : `<tr><td class="empty-row">No tenés propiedades cargadas aún.</td></tr>`}
+      ${myProps.length? myProps.slice(-4).reverse().map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td></tr>`).join('') : `<tr><td class="empty-row">No tenés propiedades cargadas aún.</td></tr>`}
       </tbody></table>
     </div>
   </div>
@@ -4848,7 +4862,7 @@ explorar: ()=>`
     <div class="tab ${exploreTab==='Venta'?'active':''}" onclick="switchExploreTab('Venta')">Explorar la Red · Ventas</div>
     <div class="tab ${exploreTab==='Alquiler'?'active':''}" onclick="switchExploreTab('Alquiler')">Explorar la Red · Alquiler</div>
   </div>
-  ${exploreAgencyFilter ? `<div class="agency-filter-chip">Mostrando propiedades de <strong>${exploreAgencyFilter}</strong><button onclick="clearAgencyFilter()">Ver todas <i class="fa-solid fa-xmark"></i></button></div>` : ''}
+  ${exploreAgencyFilter ? `<div class="agency-filter-chip">Mostrando propiedades de <strong>${escapeHtml(exploreAgencyFilter)}</strong><button onclick="clearAgencyFilter()">Ver todas <i class="fa-solid fa-xmark"></i></button></div>` : ''}
   <div class="toolbar">
     <div class="filters">
       <div class="select-wrap">
@@ -4968,8 +4982,8 @@ redbusca: ()=>`
   <table>
     <thead><tr><th>Inmobiliaria</th><th>Busca</th><th>Ciudad / Zona</th><th>Presupuesto</th><th></th></tr></thead>
     <tbody>
-      ${networkSearches.filter(matchesRedbuscaFilters).map(s=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${s.agency}</span></td><td>${s.op==='Venta'?'Busca comprar':'Busca alquilar'} ${s.tipo.toLowerCase()}</td><td>${s.ciudad} · ${s.zona}</td><td class="mono">${fmtMoney(s.presu,s.moneda||'USD')}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta btn-hover-fill" onclick="openSearchDetail('${s.id}')"><i class="fa-solid fa-eye"></i> Ver detalle</button>${searchWhatsappBtn(s)}</td></tr>`).join('') || `<tr><td colspan="5" class="empty-row">No hay búsquedas que coincidan con estos filtros.</td></tr>`}
-      ${myClients.filter(c=>matchesRedbuscaFilters({op:c.op==='Compra'?'Venta':'Alquiler', tipo:c.tipo, ciudad:c.ciudad, presu:c.presu, estado:c.estado||'Activo'})).map(c=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${AGENCY.name}</span></td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()}</td><td>${c.ciudad}${c.zona&&c.zona!=='—'?' · '+c.zona:''}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill" style="color:var(--brass);border-color:var(--brass);">Tu búsqueda</span></td></tr>`).join('')}
+      ${networkSearches.filter(matchesRedbuscaFilters).map(s=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${escapeHtml(s.agency)}</span></td><td>${s.op==='Venta'?'Busca comprar':'Busca alquilar'} ${s.tipo.toLowerCase()}</td><td>${escapeHtml(s.ciudad)} · ${escapeHtml(s.zona)}</td><td class="mono">${fmtMoney(s.presu,s.moneda||'USD')}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta btn-hover-fill" onclick="openSearchDetail('${s.id}')"><i class="fa-solid fa-eye"></i> Ver detalle</button>${searchWhatsappBtn(s)}</td></tr>`).join('') || `<tr><td colspan="5" class="empty-row">No hay búsquedas que coincidan con estos filtros.</td></tr>`}
+      ${myClients.filter(c=>matchesRedbuscaFilters({op:c.op==='Compra'?'Venta':'Alquiler', tipo:c.tipo, ciudad:c.ciudad, presu:c.presu, estado:c.estado||'Activo'})).map(c=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${escapeHtml(AGENCY.name)}</span></td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()}</td><td>${escapeHtml(c.ciudad)}${c.zona&&c.zona!=='—'?' · '+escapeHtml(c.zona):''}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill" style="color:var(--brass);border-color:var(--brass);">Tu búsqueda</span></td></tr>`).join('')}
     </tbody>
   </table>
 `,
@@ -5044,7 +5058,7 @@ propiedades: ()=>`
   <table>
     <thead><tr><th>Propiedad</th><th>Operación</th><th>Precio</th><th>Comisión</th><th>Estado</th><th></th></tr></thead>
     <tbody>
-    ${myProps.length? myProps.map(p=>`<tr><td>${p.tipo} · ${p.zona} (${p.ciudad})</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${p.com}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="6" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
+    ${myProps.length? myProps.map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="6" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
     </tbody>
   </table>
 `,
@@ -5122,7 +5136,7 @@ asociadas: ()=>`
   <table>
     <thead><tr><th>Inmobiliaria</th><th>Ciudad</th><th>Calificación</th><th>Operaciones cerradas</th></tr></thead>
     <tbody>
-      ${ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.id!==AGENCY.uid).length ? ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.id!==AGENCY.uid).map(a=>`<tr><td><div class="agency-actions-cell"><span class="client-name-cell">${a.logo ? `<img class="listing-poster-logo" style="width:28px;height:28px;" src="${a.logo}" alt="${a.name}">` : `<div class="listing-poster-logo" style="width:28px;height:28px;"><i class="fa-solid fa-building"></i></div>`}<span>${a.name}</span></span>${agencyActionsHTML(a.name, a.id)}</div></td><td>${a.city}</td><td class="stars">${avgRatingForAgency(a.id) ? starIcons(Math.round(avgRatingForAgency(a.id))) : '—'}</td><td>${a.ops}</td></tr>`).join('') : `<tr><td colspan="4" class="empty-row">Todavía no hay otras inmobiliarias asociadas verificadas.</td></tr>`}
+      ${ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.id!==AGENCY.uid).length ? ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.id!==AGENCY.uid).map(a=>`<tr><td><div class="agency-actions-cell"><span class="client-name-cell">${a.logo ? `<img class="listing-poster-logo" style="width:28px;height:28px;" src="${a.logo}" alt="${escapeHtml(a.name)}">` : `<div class="listing-poster-logo" style="width:28px;height:28px;"><i class="fa-solid fa-building"></i></div>`}<span>${escapeHtml(a.name)}</span></span>${agencyActionsHTML(a.name, a.id)}</div></td><td>${escapeHtml(a.city)}</td><td class="stars">${avgRatingForAgency(a.id) ? starIcons(Math.round(avgRatingForAgency(a.id))) : '—'}</td><td>${a.ops}</td></tr>`).join('') : `<tr><td colspan="4" class="empty-row">Todavía no hay otras inmobiliarias asociadas verificadas.</td></tr>`}
     </tbody>
   </table>
 `,
@@ -5144,18 +5158,18 @@ perfil: ()=>`
 
     <div class="profile-section-title"><i class="fa-solid fa-building"></i> Datos de la inmobiliaria</div>
     <div class="row-3">
-      <div class="field"><label>Nombre de la inmobiliaria</label><input id="perfil-nombre" value="${AGENCY.name}"></div>
+      <div class="field"><label>Nombre de la inmobiliaria</label><input id="perfil-nombre" value="${escapeHtml(AGENCY.name)}"></div>
       <div class="field"><label>Ciudad</label>
         <select id="perfil-ciudad"><option ${AGENCY.city==='Tucumán'?'selected':''}>Tucumán</option><option ${AGENCY.city==='Salta'?'selected':''}>Salta</option><option ${AGENCY.city==='Jujuy'?'selected':''}>Jujuy</option><option ${AGENCY.city==='Santiago del Estero'?'selected':''}>Santiago del Estero</option><option ${AGENCY.city==='Catamarca'?'selected':''}>Catamarca</option><option ${AGENCY.city==='La Rioja'?'selected':''}>La Rioja</option></select>
       </div>
-      <div class="field"><label>N° de matrícula</label><input id="perfil-matricula" value="${AGENCY.matricula||''}" placeholder="Ej: CPI-4021"></div>
+      <div class="field"><label>N° de matrícula</label><input id="perfil-matricula" value="${escapeHtml(AGENCY.matricula)||''}" placeholder="Ej: CPI-4021"></div>
     </div>
 
     <div class="profile-section-title"><i class="fa-solid fa-address-card"></i> Contacto</div>
     <div class="row-3">
-      <div class="field"><label>WhatsApp</label><input id="perfil-whatsapp" value="${AGENCY.whatsapp||''}" placeholder="+54 9 ..."></div>
+      <div class="field"><label>WhatsApp</label><input id="perfil-whatsapp" value="${escapeHtml(AGENCY.whatsapp)||''}" placeholder="+54 9 ..."></div>
       <div class="field"><label>Email</label><input id="perfil-email" value="${AGENCY.email||''}" placeholder="contacto@inmobiliaria.com"></div>
-      <div class="field"><label>Dirección</label><input id="perfil-direccion" value="${AGENCY.direccion||''}" placeholder="Oficina / local"></div>
+      <div class="field"><label>Dirección</label><input id="perfil-direccion" value="${escapeHtml(AGENCY.direccion)||''}" placeholder="Oficina / local"></div>
     </div>
 
     <div class="profile-section-title"><i class="fa-solid fa-star"></i> Plan actual</div>
@@ -5242,8 +5256,8 @@ usuarios: ()=>{
     <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th>${CURRENT_USER_ROLE==='owner' ? '<th></th>' : ''}</tr></thead>
     <tbody>
       ${agencyUsersList.filter(u=>u.status!=='Eliminado').length ? agencyUsersList.filter(u=>u.status!=='Eliminado').map(u=>`<tr>
-        <td>${u.name}${u.id===CURRENT_USER_UID ? ' <span style="color:var(--paper-dim);font-size:11px;">(vos)</span>' : ''}</td>
-        <td>${u.email}</td>
+        <td>${escapeHtml(u.name)}${u.id===CURRENT_USER_UID ? ' <span style="color:var(--paper-dim);font-size:11px;">(vos)</span>' : ''}</td>
+        <td>${escapeHtml(u.email)}</td>
         <td>${u.role==='owner' ? 'Dueño' : 'Colaborador'}</td>
         <td>${adminStatusPill(u.status==='Activo' ? 'Verificada' : 'Suspendida', u.status)}</td>
         ${CURRENT_USER_ROLE==='owner' ? `<td>${u.role!=='owner' ? `<button class="btn btn-sm btn-eliminar-pastel" onclick="removeUser('${u.id}')"><i class="fa-solid fa-user-xmark"></i> Eliminar</button>` : ''}</td>` : ''}
@@ -5341,13 +5355,13 @@ soporte: ()=>`
     <div class="card" style="margin-bottom:14px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px;">
         <div>
-          <strong style="font-size:14px;">${t.subject}</strong>
+          <strong style="font-size:14px;">${escapeHtml(t.subject)}</strong>
           <div style="font-size:12px;color:var(--paper-dim);margin-top:2px;">${t.category} · ${formatDateTime(t.date)}</div>
         </div>
         ${adminStatusPill(t.status)}
       </div>
-      <p style="font-size:13px;color:var(--paper-dim);margin:0 0 10px;">${t.message}</p>
-      ${t.reply ? `<div class="card" style="background:var(--ink-3);"><div class="eyebrow" style="margin-bottom:6px;">Respuesta del equipo · ${formatDateTime(t.repliedAt)}</div><p style="font-size:13px;margin:0;">${t.reply}</p></div>` : `<p style="font-size:12px;color:var(--paper-dim);font-style:italic;margin:0;">Todavía no recibiste respuesta. Te vamos a avisar acá apenas te contestemos.</p>`}
+      <p style="font-size:13px;color:var(--paper-dim);margin:0 0 10px;">${escapeHtml(t.message)}</p>
+      ${t.reply ? `<div class="card" style="background:var(--ink-3);"><div class="eyebrow" style="margin-bottom:6px;">Respuesta del equipo · ${formatDateTime(t.repliedAt)}</div><p style="font-size:13px;margin:0;">${escapeHtml(t.reply)}</p></div>` : `<p style="font-size:12px;color:var(--paper-dim);font-style:italic;margin:0;">Todavía no recibiste respuesta. Te vamos a avisar acá apenas te contestemos.</p>`}
     </div>
   `).join('') : `<div class="card"><p style="color:var(--paper-dim);margin:0;">Todavía no enviaste ninguna consulta.</p></div>`}
 `,
