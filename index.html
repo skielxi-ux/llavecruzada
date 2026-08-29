@@ -2536,8 +2536,6 @@ async function submitNewClient(){
     const data = {
       op:document.getElementById('p-op').value,
       tipo:document.getElementById('p-tipo').value,
-      propietario:nombre,
-      propietarioTel:tel,
       ciudad:document.getElementById('p-ciudad').value,
       zona:document.getElementById('p-zona').value || '—',
       direccion:direccionValue,
@@ -2564,6 +2562,10 @@ async function submitNewClient(){
       ownerUid:AGENCY.uid,
       ownerName:AGENCY.name,
     };
+    // El nombre y teléfono del propietario NUNCA viajan en el doc público
+    // (ese sí lo lee toda la red para el matching) — se guardan aparte, en
+    // una colección que solo puede leer la propia inmobiliaria dueña.
+    const contactData = { propietario:nombre, propietarioTel:tel, ownerUid:AGENCY.uid };
     try{
       const fotosSize = photosArraySize(data.fotos);
       if(fotosSize > PHOTOS_SIZE_BUDGET){
@@ -2573,11 +2575,13 @@ async function submitNewClient(){
       }
       if(editingContext && editingContext.type==='prop'){
         await db.collection('properties').doc(editingContext.id).update(data);
+        await db.collection('propertyContacts').doc(editingContext.id).set(contactData);
         toast('Propiedad actualizada');
       } else {
         data.estado = 'Activo';
         data.createdAt = new Date().toISOString();
-        await db.collection('properties').add(data);
+        const ref = await db.collection('properties').add(data);
+        await db.collection('propertyContacts').doc(ref.id).set(contactData);
         toast('Propietario y propiedad publicados en la red');
       }
       closeModal('newclient');
@@ -2588,7 +2592,7 @@ async function submitNewClient(){
     }
   } else {
     const data = {
-      nombre, tel,
+      nombre,
       op:document.getElementById('c-op').value,
       tipo:document.getElementById('c-tipo').value,
       ciudad:document.getElementById('c-ciudad').value,
@@ -2603,14 +2607,19 @@ async function submitNewClient(){
       ownerUid:AGENCY.uid,
       ownerName:AGENCY.name,
     };
+    // El teléfono del cliente buscador tampoco viaja en el doc público
+    // (el nombre sí, eso ya se muestra en la red a propósito).
+    const contactData = { tel, ownerUid:AGENCY.uid };
     try{
       if(editingContext && editingContext.type==='client'){
         await db.collection('clients').doc(editingContext.id).update(data);
+        await db.collection('clientContacts').doc(editingContext.id).set(contactData);
         toast('Cliente actualizado');
       } else {
         data.createdAt = new Date().toISOString();
         data.estado = 'Activo';
-        await db.collection('clients').add(data);
+        const ref = await db.collection('clients').add(data);
+        await db.collection('clientContacts').doc(ref.id).set(contactData);
         toast('Cliente guardado');
       }
       closeModal('newclient');
@@ -2908,8 +2917,12 @@ async function resetDemo(){
       const batch = db.batch();
       const propsSnap = await db.collection('properties').where('ownerUid','==',AGENCY.uid).get();
       propsSnap.forEach(doc=>batch.delete(doc.ref));
+      const propContactsSnap = await db.collection('propertyContacts').where('ownerUid','==',AGENCY.uid).get();
+      propContactsSnap.forEach(doc=>batch.delete(doc.ref));
       const clientsSnap = await db.collection('clients').where('ownerUid','==',AGENCY.uid).get();
       clientsSnap.forEach(doc=>batch.delete(doc.ref));
+      const clientContactsSnap = await db.collection('clientContacts').where('ownerUid','==',AGENCY.uid).get();
+      clientContactsSnap.forEach(doc=>batch.delete(doc.ref));
       const exclusivasSnap = await db.collection('exclusivas').where('ownerUid','==',AGENCY.uid).get();
       exclusivasSnap.forEach(doc=>batch.delete(doc.ref));
       const notifSnap = await db.collection('notifications').where('ownerUid','==',AGENCY.uid).get();
@@ -4425,6 +4438,8 @@ function importSiteData(event){
 /* ---------------- persistencia entre sesiones ---------------- */
 let unsubscribeProps = null;
 let unsubscribeClients = null;
+let unsubscribePropContacts = null;
+let unsubscribeClientContacts = null;
 function refreshCurrentView(){
   if(document.getElementById('view-admin').style.display === 'block'){
     const activeAdmin = document.querySelector('#view-admin .nav-item.active');
@@ -4437,6 +4452,21 @@ function refreshCurrentView(){
 let unsubscribeMyTickets = null;
 let unsubscribeNotifications = null;
 let unsubscribeAgencies = null;
+let myPropertyContacts = {}; // id de propiedad -> {propietario, propietarioTel} (solo las propias)
+let myClientContacts = {};   // id de cliente -> {tel} (solo las propias)
+function applyMyPropertyContacts(){
+  myProps.forEach(p=>{
+    const c = myPropertyContacts[p.id];
+    p.propietario = c ? c.propietario : (p.propietario || '');
+    p.propietarioTel = c ? c.propietarioTel : (p.propietarioTel || '');
+  });
+}
+function applyMyClientContacts(){
+  myClients.forEach(c=>{
+    const cc = myClientContacts[c.id];
+    c.tel = cc ? cc.tel : (c.tel || '');
+  });
+}
 let unsubscribeExclusivas = null;
 let unsubscribeReviews = null;
 function attachDataListeners(uid){
@@ -4458,6 +4488,7 @@ function attachDataListeners(uid){
   unsubscribeProps = db.collection('properties').onSnapshot(snap=>{
     const all = snap.docs.map(d=>({id:d.id, ...d.data()}));
     myProps = all.filter(p=>p.ownerUid===uid);
+    applyMyPropertyContacts();
     networkProps.length = 0;
     networkProps.push(...all.filter(p=>p.ownerUid!==uid).map(adaptPropForNetwork));
     computeMatches();
@@ -4466,11 +4497,26 @@ function attachDataListeners(uid){
   unsubscribeClients = db.collection('clients').onSnapshot(snap=>{
     const all = snap.docs.map(d=>({id:d.id, ...d.data()}));
     myClients = all.filter(c=>c.ownerUid===uid);
+    applyMyClientContacts();
     networkSearches.length = 0;
     networkSearches.push(...all.filter(c=>c.ownerUid!==uid).map(adaptClientForNetwork));
     computeMatches();
     refreshCurrentView();
   }, err=>console.error('Error escuchando clientes:', err));
+  if(unsubscribePropContacts) unsubscribePropContacts();
+  unsubscribePropContacts = db.collection('propertyContacts').where('ownerUid','==',uid).onSnapshot(snap=>{
+    myPropertyContacts = {};
+    snap.docs.forEach(d=>{ myPropertyContacts[d.id] = d.data(); });
+    applyMyPropertyContacts();
+    refreshCurrentView();
+  }, err=>console.error('Error escuchando datos de contacto de propiedades:', err));
+  if(unsubscribeClientContacts) unsubscribeClientContacts();
+  unsubscribeClientContacts = db.collection('clientContacts').where('ownerUid','==',uid).onSnapshot(snap=>{
+    myClientContacts = {};
+    snap.docs.forEach(d=>{ myClientContacts[d.id] = d.data(); });
+    applyMyClientContacts();
+    refreshCurrentView();
+  }, err=>console.error('Error escuchando datos de contacto de clientes:', err));
   unsubscribeMyTickets = db.collection('supportTickets').where('ownerUid','==',uid).onSnapshot(snap=>{
     supportTickets = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(b.date)-new Date(a.date));
     refreshCurrentView();
@@ -4514,6 +4560,8 @@ function attachMatchesListeners(uid){
 function detachDataListeners(){
   if(unsubscribeProps){ unsubscribeProps(); unsubscribeProps=null; }
   if(unsubscribeClients){ unsubscribeClients(); unsubscribeClients=null; }
+  if(unsubscribePropContacts){ unsubscribePropContacts(); unsubscribePropContacts=null; }
+  if(unsubscribeClientContacts){ unsubscribeClientContacts(); unsubscribeClientContacts=null; }
   if(unsubscribeMyTickets){ unsubscribeMyTickets(); unsubscribeMyTickets=null; }
   if(unsubscribeNotifications){ unsubscribeNotifications(); unsubscribeNotifications=null; }
   if(unsubscribeAgencies){ unsubscribeAgencies(); unsubscribeAgencies=null; }
@@ -4524,6 +4572,8 @@ function detachDataListeners(){
   if(unsubscribeAgencyUsers){ unsubscribeAgencyUsers(); unsubscribeAgencyUsers=null; }
   myProps = [];
   myClients = [];
+  myPropertyContacts = {};
+  myClientContacts = {};
   supportTickets = [];
   notifications = [];
   ADMIN_AGENCIES = [];
@@ -4537,7 +4587,11 @@ function detachDataListeners(){
 
 /* ---------------- eliminar ---------------- */
 async function deleteProp(id){
-  try{ await db.collection('properties').doc(id).delete(); toast('Propiedad eliminada'); }
+  try{
+    await db.collection('properties').doc(id).delete();
+    db.collection('propertyContacts').doc(id).delete().catch(()=>{});
+    toast('Propiedad eliminada');
+  }
   catch(err){ toast('Error al eliminar: '+err.message); }
 }
 async function togglePausarPropiedad(id){
@@ -4550,7 +4604,11 @@ async function togglePausarPropiedad(id){
   }catch(err){ toast('Error al actualizar: '+err.message); }
 }
 async function deleteClient(id){
-  try{ await db.collection('clients').doc(id).delete(); toast('Cliente eliminado'); }
+  try{
+    await db.collection('clients').doc(id).delete();
+    db.collection('clientContacts').doc(id).delete().catch(()=>{});
+    toast('Cliente eliminado');
+  }
   catch(err){ toast('Error al eliminar: '+err.message); }
 }
 
