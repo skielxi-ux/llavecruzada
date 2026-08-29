@@ -1624,7 +1624,10 @@ async function submitRating(){
   const overall = Math.round((values.reduce((a,b)=>a+b,0) / values.length) * 10) / 10;
   const comment = document.getElementById('rating-comentario').value.trim();
   try{
-    await db.collection('reviews').add({
+    // ID determinístico (match + quién califica): si ya existe, esto sería una
+    // actualización (bloqueada por las reglas), no una calificación nueva —
+    // así Firestore mismo impide calificar dos veces el mismo match.
+    await db.collection('reviews').doc(ratingTargetMatchKey+'__'+AGENCY.uid).set({
       targetAgencyUid: ratingTargetAgencyUid,
       targetAgencyName: ratingTargetAgencyName,
       reviewerUid: AGENCY.uid,
@@ -3977,8 +3980,15 @@ async function finalizeOperation(key){
   const otherName = matchFlowData(m).otherAgency;
   const otherUid = otherAgencyUid(m);
   const nowIso = new Date().toISOString();
+  const reviewableDate = new Date();
+  reviewableDate.setDate(reviewableDate.getDate() + 7);
   try{
-    await db.collection('matches').doc(key).update({status:'concretadas', closedAt:nowIso, updatedAt:nowIso});
+    await db.collection('matches').doc(key).update({
+      status:'concretadas', closedAt:nowIso, updatedAt:nowIso,
+      // Timestamp real (no texto) para que las reglas de Firestore puedan
+      // comparar fechas de verdad al validar si ya se puede calificar.
+      reviewableAfter: firebase.firestore.Timestamp.fromDate(reviewableDate),
+    });
     await db.collection('properties').doc(m.prop.id).update({estado: m.prop.op==='Alquiler' ? 'Alquilada' : 'Vendida'});
     await db.collection('clients').doc(m.search.id).update({estado:'Cerrado'});
     await db.collection('agencies').doc(m.propOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
