@@ -2936,8 +2936,8 @@ async function resetDemo(){
       matchesAsSearchSnap.forEach(doc=>batch.delete(doc.ref));
       const reviewsWrittenSnap = await db.collection('reviews').where('reviewerUid','==',AGENCY.uid).get();
       reviewsWrittenSnap.forEach(doc=>batch.delete(doc.ref));
-      const reviewsReceivedSnap = await db.collection('reviews').where('targetAgencyUid','==',AGENCY.uid).get();
-      reviewsReceivedSnap.forEach(doc=>batch.delete(doc.ref));
+      // Las reseñas que OTROS escribieron sobre vos nunca se borran, ni acá:
+      // no tiene que haber forma de taparse una mala calificación reiniciando.
       const planReqSnap = await db.collection('planChangeRequests').where('agencyId','==',AGENCY.uid).get();
       planReqSnap.forEach(doc=>batch.delete(doc.ref));
       const agencyUsersSnap = await db.collection('agencyUsers').where('agencyId','==',AGENCY.uid).get();
@@ -2945,20 +2945,12 @@ async function resetDemo(){
         // Nunca borramos el registro del dueño (id === agencyId) ni el de quien está ejecutando el reset ahora mismo.
         if(doc.id!==AGENCY.uid && doc.id!==CURRENT_USER_UID) batch.delete(doc.ref);
       });
+      const myTicketsSnap = await db.collection('supportTickets').where('ownerUid','==',AGENCY.uid).get();
+      myTicketsSnap.forEach(doc=>batch.delete(doc.ref));
       await batch.commit();
       await db.collection('agencies').doc(AGENCY.uid).update({favoriteProps:[]});
     }catch(err){ toast('Error al borrar datos de Firestore: '+err.message); }
   }
-  try{
-    const batch2 = db.batch();
-    const reportsSnap = await db.collection('reports').get();
-    reportsSnap.forEach(doc=>batch2.delete(doc.ref));
-    const codesSnap = await db.collection('inviteCodes').get();
-    codesSnap.forEach(doc=>batch2.delete(doc.ref));
-    const ticketsSnap = await db.collection('supportTickets').get();
-    ticketsSnap.forEach(doc=>batch2.delete(doc.ref));
-    await batch2.commit();
-  }catch(err){ toast('Error al borrar datos del admin: '+err.message); }
   idSeq = 1;
   matchesRemote = {};
   attemptedMatchKeys = new Set();
@@ -2967,7 +2959,7 @@ async function resetDemo(){
   computeMatches();
   updateSidebarAgencyInfo();
   updateNotifDot();
-  toast('Demo reiniciada — tus datos y los del panel de admin se borraron de Firestore');
+  toast('Demo reiniciada — se borraron tus propiedades, clientes, matches, solicitudes de plan y tickets');
   const adminVisible = document.getElementById('view-admin').style.display === 'block';
   if(adminVisible) showAdmin('dashboard');
   else showApp('dashboard');
@@ -5185,7 +5177,7 @@ perfil: ()=>`
 
     <div class="profile-section-title"><i class="fa-solid fa-cloud-arrow-down"></i> Respaldo de datos</div>
     <div class="card" style="background:var(--ink-3);max-width:640px;">
-      <p style="font-size:13px;color:var(--paper-dim);margin:0 0 16px;">Tu perfil, tus propiedades, tus clientes, la red (lo que publican otras inmobiliarias) y todo el panel de administrador ya se guardan de verdad en la base de datos. Solo el resto (matches, favoritos, oportunidades exclusivas, notificaciones) vive todavía en esta sesión del navegador — exportalo antes de cambiar de archivo si querés conservarlo.</p>
+      <p style="font-size:13px;color:var(--paper-dim);margin:0 0 16px;">Todo lo tuyo (perfil, propiedades, clientes, matches, solicitudes de plan) ya se guarda de verdad en la base de datos — no depende de este navegador ni de esta sesión. "Reiniciar demo" borra tu propia cartera y tu historial de matches para volver a probar de cero; nunca borra reseñas que otras inmobiliarias hayan escrito sobre vos.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-solid" onclick="exportSiteData()"><i class="fa-solid fa-download"></i> Exportar mis datos</button>
         <input type="file" id="import-data-input" accept=".json" style="display:none;" onchange="importSiteData(event)">
