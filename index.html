@@ -1904,7 +1904,7 @@ function setPinGeocodeStatus(text){
   const el = document.getElementById('pin-geocode-status');
   if(el) el.textContent = text;
 }
-/* ---------------- autocompletado de direcciones con sugerencias (Nominatim) ---------------- */
+/* ---------------- autocompletado de direcciones con sugerencias (Geoapify) ---------------- */
 // Compartido por el formulario de propiedad ('p') y el de Oportunidad Exclusiva ('excl').
 let direccionSuggestTimer = null;
 function pinFieldRefs(prefix){
@@ -1920,69 +1920,64 @@ function handleDireccionInput(prefix){
   if(value.length < 4){ box.classList.add('hidden'); box.innerHTML=''; return; }
   direccionSuggestTimer = setTimeout(()=>fetchAddressSuggestions(prefix), 450);
 }
-async function nominatimStructuredSearch(direccion, zona, ciudad){
-  // Nominatim entiende mejor el número de puerta si va antes del nombre de la calle
-  // en el parámetro "street" (convención de su motor de búsqueda estructurada).
-  const match = direccion.match(/^(.*?)\s+(\d+)\s*$/);
-  const street = match ? `${match[2]} ${match[1]}` : direccion;
-  const params = new URLSearchParams({
-    format:'json', addressdetails:'1', limit:'5', countrycodes:'ar',
-    street, country:'Argentina',
-  });
-  if(ciudad) params.set('city', ciudad);
-  try{
-    const res = await fetch('https://nominatim.openstreetmap.org/search?'+params.toString());
-    if(!res.ok) return [];
-    return await res.json();
-  }catch(e){ return []; }
-}
+let lastAddressSuggestions = []; // resultados de la última búsqueda, para no pasar texto externo por el onclick
 async function fetchAddressSuggestions(prefix){
   const box = document.getElementById(prefix+'-direccion-suggestions');
   const direccion = document.getElementById(prefix+'-direccion').value.trim();
   if(!direccion){ box.classList.add('hidden'); return; }
   const zona = document.getElementById(prefix+'-zona').value.trim();
   const ciudad = document.getElementById(prefix+'-ciudad').value;
+  if(!GEOAPIFY_API_KEY || GEOAPIFY_API_KEY === 'TU_API_KEY_ACA'){
+    box.innerHTML = '<div class="address-suggestion-empty">El buscador de direcciones no está configurado todavía (falta la API key de Geoapify) — podés ubicar el pin a mano en el mapa.</div>';
+    box.classList.remove('hidden');
+    return;
+  }
   box.innerHTML = '<div class="address-suggestion-empty">Buscando...</div>';
   box.classList.remove('hidden');
+  const query = [direccion, zona, ciudad, 'Argentina'].filter(Boolean).join(', ');
+  const params = new URLSearchParams({
+    text: query, apiKey: GEOAPIFY_API_KEY, format: 'json', lang: 'es', limit: '5',
+    filter: 'countrycode:ar',
+  });
+  const cityCenter = CITY_COORDS[ciudad];
+  if(cityCenter) params.set('bias', `proximity:${cityCenter[1]},${cityCenter[0]}`);
   try{
-    // 1er intento: búsqueda estructurada (mejor chance de pegarle a la numeración exacta)
-    let results = await nominatimStructuredSearch(direccion, zona, ciudad);
-    if(!results.length){
-      // 2do intento: texto libre, como respaldo si la estructurada no encontró nada
-      const query = [direccion, zona, ciudad, 'Argentina'].filter(Boolean).join(', ');
-      const res = await fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=ar&q='+encodeURIComponent(query));
-      if(!res.ok) throw new Error('respuesta no válida');
-      results = await res.json();
-    }
+    const res = await fetch('https://api.geoapify.com/v1/geocode/autocomplete?'+params.toString());
+    if(!res.ok) throw new Error('respuesta no válida');
+    const data = await res.json();
+    const results = data.results || [];
+    lastAddressSuggestions = results;
     if(!results.length){
       box.innerHTML = '<div class="address-suggestion-empty">No se encontraron direcciones — podés ubicar el pin a mano en el mapa.</div>';
       return;
     }
-    box.innerHTML = results.map(r=>{
-      const label = (r.display_name||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
-      const tieneNumero = !!(r.address && r.address.house_number);
-      const aviso = tieneNumero ? '' : ' <span style="color:var(--paper-dim);font-weight:400;">(solo la calle — OpenStreetMap no tiene esa numeración cargada)</span>';
-      return `<div class="address-suggestion-item" onclick="selectAddressSuggestion('${prefix}', ${parseFloat(r.lat)}, ${parseFloat(r.lon)}, '${label}', ${tieneNumero})">${r.display_name}${aviso}</div>`;
+    box.innerHTML = results.map((r,i)=>{
+      const tieneNumero = !!r.housenumber;
+      const aviso = tieneNumero ? '' : ' <span style="color:var(--paper-dim);font-weight:400;">(solo la calle — no hay numeración exacta cargada)</span>';
+      return `<div class="address-suggestion-item" onclick="selectAddressSuggestion('${prefix}', ${i})">${escapeHtml(r.formatted)}${aviso}</div>`;
     }).join('');
   }catch(err){
     box.innerHTML = '<div class="address-suggestion-empty">No se pudo buscar ahora — podés ubicar el pin a mano.</div>';
   }
 }
-function selectAddressSuggestion(prefix, lat, lng, label, tieneNumero){
+function selectAddressSuggestion(prefix, index){
+  const r = lastAddressSuggestions[index];
+  if(!r) return;
   const box = document.getElementById(prefix+'-direccion-suggestions');
   box.classList.add('hidden');
   box.innerHTML = '';
   const refs = pinFieldRefs(prefix);
   const map = refs.mapInstance();
   const marker = refs.marker();
+  const tieneNumero = !!r.housenumber;
   if(map && marker){
-    map.setView([lat,lng], tieneNumero ? 17 : 16);
-    marker.setLatLng([lat,lng]);
+    map.setView([r.lat,r.lon], tieneNumero ? 17 : 16);
+    marker.setLatLng([r.lat,r.lon]);
   }
-  refs.setPending({lat, lng});
+  refs.setPending({lat:r.lat, lng:r.lon});
   refs.setStatus(tieneNumero
-    ? 'Ubicado en: '+label
-    : 'Ubicado sobre la calle (sin numeración exacta en el mapa) — arrastrá el pin hasta la altura correcta: '+label);
+    ? 'Ubicado en: '+r.formatted
+    : 'Ubicado sobre la calle (sin numeración exacta en el mapa) — arrastrá el pin hasta la altura correcta: '+r.formatted);
 }
 function hideAddressSuggestionsSoon(prefix){
   setTimeout(()=>{
@@ -2698,6 +2693,14 @@ function goStep(n){
     document.getElementById('dot'+i).classList.toggle('active', i<=n);
   });
 }
+/* ---------------- Geocoding de direcciones: Geoapify ---------------- */
+// Reemplaza a Nominatim para el buscador de direcciones — Nominatim no
+// encuentra bien la numeración exacta en muchas calles de Argentina.
+// Sacá tu key gratis en https://myprojects.geoapify.com (nivel gratuito:
+// 3.000 consultas/día) y pegala acá. Mientras esto diga 'TU_API_KEY_ACA',
+// el buscador de direcciones no va a funcionar (el pin manual sigue andando).
+const GEOAPIFY_API_KEY = 'TU_API_KEY_ACA';
+
 /* ---------------- Firebase: autenticación real ---------------- */
 const firebaseConfig = {
   apiKey: "AIzaSyC166cDpP8miorXvm08QQMvqcNb8_-7_Rs",
