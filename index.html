@@ -1927,7 +1927,7 @@ async function fetchAddressSuggestions(prefix){
   if(!direccion){ box.classList.add('hidden'); return; }
   const zona = document.getElementById(prefix+'-zona').value.trim();
   const ciudad = document.getElementById(prefix+'-ciudad').value;
-  if(!GEOAPIFY_API_KEY || GEOAPIFY_API_KEY === 'TU_API_KEY_ACA'){
+  if(!GEOAPIFY_API_KEY || GEOAPIFY_API_KEY === 'a6668bd7a50748e495c3d01e4169e58c'){
     box.innerHTML = '<div class="address-suggestion-empty">El buscador de direcciones no está configurado todavía (falta la API key de Geoapify) — podés ubicar el pin a mano en el mapa.</div>';
     box.classList.remove('hidden');
     return;
