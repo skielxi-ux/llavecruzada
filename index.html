@@ -699,10 +699,10 @@
     </div>
   </div>
 
-  <div class="agencies-marquee-wrap reveal">
+  <div class="agencies-marquee-wrap reveal" id="agencies-marquee-wrap">
     <p class="agencies-marquee-label">Inmobiliarias que ya confían en la red</p>
     <div class="marquee-track-wrap">
-      <div class="marquee-track">
+      <div class="marquee-track" id="agencies-marquee-track">
         <span class="agency-chip">Norte Propiedades</span>
         <span class="agency-chip">Valle Raíces</span>
         <span class="agency-chip">Salta Central Inmuebles</span>
@@ -1135,6 +1135,7 @@
           <label class="amenity-check"><input type="checkbox" id="p-cochera"> Cochera</label>
           <label class="amenity-check"><input type="checkbox" id="p-galeria"> Galería</label>
           <label class="amenity-check"><input type="checkbox" id="p-parrilla"> Parrilla</label>
+          <label class="amenity-check"><input type="checkbox" id="p-country"> Country / Barrio cerrado</label>
         </div>
       </div>
       <div class="row-2">
@@ -1327,6 +1328,27 @@
   </div>
 </div>
 
+<div id="modal-useraccess" class="modal-backdrop hidden">
+  <div class="modal" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('useraccess')"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Editar accesos de <span id="useraccess-name"></span></h3>
+    <p class="sub">Cambiar el puesto y qué pestañas ve por defecto. Recordá que esto no restringe los datos que puede ver o tocar, solo organiza la pantalla.</p>
+    <div class="field"><label>Puesto</label>
+      <select id="useraccess-puesto">${PUESTO_OPTIONS.map(o=>`<option>${o}</option>`).join('')}</select>
+    </div>
+    <div class="field">
+      <label>Pestañas visibles</label>
+      <div class="amenities-row" id="useraccess-views">
+        ${APP_VIEWS_TOGGLEABLE.map(v=>`<label class="amenity-check"><input type="checkbox" class="useraccess-view-check" value="${v.key}"> ${v.label}</label>`).join('')}
+      </div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn" onclick="closeModal('useraccess')">Cancelar</button>
+      <button class="btn btn-solid" onclick="saveUserAccess()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-denunciar" class="modal-backdrop hidden">
   <div class="modal" style="position:relative;">
     <button class="avatar-modal-close" onclick="closeModal('denunciar')"><i class="fa-solid fa-xmark"></i></button>
@@ -1402,7 +1424,7 @@ function adaptPropForNetwork(p){
     addr:p.direccion || '', m2:p.m2, beds:p.amb, baths:p.banos, estado:p.estado || 'Activo',
     precio:p.precio, moneda:p.moneda, exc:p.exc || 'Captación abierta', com:p.com, expensas:p.expensas || null,
     popular:false, photo:hashToRange(p.id, 1020, 1080), fotos:p.fotos, requisitos:p.requisitos,
-    lat:p.lat!=null?p.lat:null, lng:p.lng!=null?p.lng:null,
+    lat:p.lat!=null?p.lat:null, lng:p.lng!=null?p.lng:null, country:!!p.country,
   };
 }
 function adaptClientForNetwork(c){
@@ -1477,6 +1499,8 @@ let exploreTab = 'Venta';
 let exploreSort = 'relevancia';
 let exploreFilterTipo = 'Todos los tipos';
 let exploreFilterCiudad = 'Todas las ciudades';
+let exploreFilterZona = '';
+let exploreFilterCountry = 'Indistinto';
 let exploreShowMine = false;
 function toggleExploreMine(){
   exploreShowMine = !exploreShowMine;
@@ -1485,11 +1509,15 @@ function toggleExploreMine(){
 function applyExploreFilters(){
   exploreFilterTipo = document.getElementById('explore-filter-tipo').value;
   exploreFilterCiudad = document.getElementById('explore-filter-ciudad').value;
+  exploreFilterZona = document.getElementById('explore-filter-zona').value.trim();
+  exploreFilterCountry = document.getElementById('explore-filter-country').value;
   showApp('explorar');
 }
 function clearExploreFilters(){
   exploreFilterTipo = 'Todos los tipos';
   exploreFilterCiudad = 'Todas las ciudades';
+  exploreFilterZona = '';
+  exploreFilterCountry = 'Indistinto';
   showApp('explorar');
 }
 
@@ -2516,6 +2544,7 @@ function resetNewClientFormFields(){
   document.getElementById('p-cochera').checked = false;
   document.getElementById('p-galeria').checked = false;
   document.getElementById('p-parrilla').checked = false;
+  document.getElementById('p-country').checked = false;
   document.getElementById('p-precio').value = '';
   document.getElementById('p-expensas').value = '';
   document.getElementById('p-desc').value = '';
@@ -2604,6 +2633,7 @@ function openEditPropModal(id){
   document.getElementById('p-cochera').checked = !!p.cochera;
   document.getElementById('p-galeria').checked = !!p.galeria;
   document.getElementById('p-parrilla').checked = !!p.parrilla;
+  document.getElementById('p-country').checked = !!p.country;
   REQUISITOS_MAP.forEach(r=>{
     document.getElementById(r.id).checked = p.requisitos ? p.requisitos.includes(r.label) : true;
   });
@@ -2648,6 +2678,7 @@ async function submitNewClient(){
       cochera:document.getElementById('p-cochera').checked,
       galeria:document.getElementById('p-galeria').checked,
       parrilla:document.getElementById('p-parrilla').checked,
+      country:document.getElementById('p-country').checked,
       requisitos: document.getElementById('p-op').value==='Alquiler' ? REQUISITOS_MAP.filter(r=>document.getElementById(r.id).checked).map(r=>r.label) : [],
       fotos: [...propPhotos],
       precio:Number(document.getElementById('p-precio').value)||0,
@@ -2755,6 +2786,7 @@ function listingCard(p){
         </div>
         <div class="listing-title">${escapeHtml(p.zona)}, ${escapeHtml(p.ciudad)}</div>
         <div class="listing-addr">${escapeHtml(p.addr) || 'Dirección a confirmar'}</div>
+        ${p.country ? `<div class="listing-commission" style="color:var(--brass-bright);"><i class="fa-solid fa-tree-city"></i> Country / Barrio cerrado</div>` : ''}
         <div class="listing-commission"><i class="fa-solid fa-hand-holding-dollar"></i> Comisión referidora: <strong>${escapeHtml(p.com)}</strong></div>
         <div class="listing-poster">
           <div class="listing-poster-logo">${posterLogo}</div>
@@ -2815,6 +2847,15 @@ const db = firebase.firestore();
 let CURRENT_USER_UID = null;   // uid real de Firebase Auth de quién está logueado
 let CURRENT_ADMIN_UID = null;  // uid real de Firebase Auth de un admin logueado (si corresponde)
 let CURRENT_USER_ROLE = 'owner'; // 'owner' | 'colaborador' — el owner es quien registró la inmobiliaria
+let CURRENT_USER_ALLOWED_VIEWS = null; // null = todas permitidas (dueño, o colaborador sin restricción configurada)
+function applySidebarVisibility(){
+  const restricted = CURRENT_USER_ROLE==='colaborador' && Array.isArray(CURRENT_USER_ALLOWED_VIEWS);
+  document.querySelectorAll('#view-app .nav-item[data-view]').forEach(el=>{
+    const view = el.dataset.view;
+    const visible = view==='dashboard' || !restricted || CURRENT_USER_ALLOWED_VIEWS.includes(view);
+    el.style.display = visible ? '' : 'none';
+  });
+}
 let agencyUsersList = [];
 let unsubscribeAgencyUsers = null;
 let secondaryFbApp = null;
@@ -2826,6 +2867,29 @@ function getSecondaryAuth(){
   return secondaryFbApp.auth();
 }
 function userSeatLimit(){ return AGENCY.plan==='Premium' ? 5 : 2; }
+// Pestañas que el dueño puede mostrar/ocultar por colaborador. Ojo: esto es
+// solo una comodidad de organización de pantalla — no es una restricción de
+// seguridad real (las reglas de Firestore siguen dejando ver los mismos
+// datos a cualquier miembro activo de la agencia, tenga o no la pestaña
+// visible). "dashboard" queda siempre incluido, para que nadie se quede sin
+// una pantalla de inicio a la que entrar.
+const APP_VIEWS_TOGGLEABLE = [
+  {key:'explorar', label:'Explorar la Red'},
+  {key:'mapa', label:'Ver Mapa'},
+  {key:'redbusca', label:'La Red está buscando'},
+  {key:'matches', label:'Mis Matches'},
+  {key:'comisiones', label:'Comisiones'},
+  {key:'notificaciones', label:'Notificaciones'},
+  {key:'propiedades', label:'Mis Propiedades'},
+  {key:'clientes', label:'Búsquedas para Clientes'},
+  {key:'asociadas', label:'Inmobiliarias Asociadas'},
+  {key:'perfil', label:'Mi Perfil'},
+  {key:'usuarios', label:'Usuarios'},
+  {key:'faqapp', label:'FAQs'},
+  {key:'precios', label:'Precios'},
+  {key:'soporte', label:'Soporte'},
+];
+const PUESTO_OPTIONS = ['Comercial','Martillero / Corredor','Gerente Comercial','Asesor Inmobiliario','Administrador','Otro'];
 
 function showAuthError(elId, message){
   const el = document.getElementById(elId);
@@ -2937,6 +3001,7 @@ function logout(){
   detachDataListeners();
   CURRENT_USER_UID = null;
   CURRENT_USER_ROLE = 'owner';
+  CURRENT_USER_ALLOWED_VIEWS = null;
   document.getElementById('view-app').style.display='none';
   document.getElementById('view-landing').style.display='block';
 }
@@ -2957,6 +3022,7 @@ fbAuth.onAuthStateChanged(async (user)=>{
     const memberDoc = await db.collection('agencyUsers').doc(user.uid).get();
     let agencyId = user.uid;
     let role = 'owner';
+    let allowedViews = null;
     if(memberDoc.exists){
       const m = memberDoc.data();
       if(m.status!=='Activo'){
@@ -2966,9 +3032,11 @@ fbAuth.onAuthStateChanged(async (user)=>{
       }
       agencyId = m.agencyId;
       role = m.role;
+      allowedViews = Array.isArray(m.allowedViews) ? m.allowedViews : null;
     }
     CURRENT_USER_UID = user.uid;
     CURRENT_USER_ROLE = role;
+    CURRENT_USER_ALLOWED_VIEWS = allowedViews;
     const doc = await db.collection('agencies').doc(agencyId).get();
     if(doc.exists) Object.assign(AGENCY, doc.data());
     AGENCY.uid = agencyId;
@@ -2995,6 +3063,7 @@ fbAuth.onAuthStateChanged(async (user)=>{
   document.getElementById('view-app').style.display='block';
   goStep(1);
   updateSidebarAgencyInfo();
+  applySidebarVisibility();
   attachDataListeners(AGENCY.uid);
   showApp('dashboard');
   const loginBtn = document.getElementById('login-submit-btn');
@@ -3169,6 +3238,14 @@ function showAdmin(view){
 async function setAgencyStatus(id, status){
   try{
     await db.collection('agencies').doc(id).update({status});
+    // Solo las inmobiliarias Verificadas aparecen en la landing pública
+    // (colección aparte, sin datos sensibles, legible sin login).
+    if(status==='Verificada'){
+      const a = ADMIN_AGENCIES.find(x=>x.id===id);
+      await db.collection('publicAgencies').doc(id).set({name: a ? a.name : '', city: a ? a.city : ''});
+    } else {
+      await db.collection('publicAgencies').doc(id).delete().catch(()=>{});
+    }
     toast('Inmobiliaria actualizada a: '+status);
   }catch(err){ toast('Error: '+err.message); }
 }
@@ -4071,10 +4148,13 @@ async function inviteUser(){
   const nameEl = document.getElementById('user-invite-name');
   const emailEl = document.getElementById('user-invite-email');
   const passEl = document.getElementById('user-invite-password');
+  const puestoEl = document.getElementById('user-invite-puesto');
   if(!nameEl || !emailEl || !passEl) return;
   const name = nameEl.value.trim();
   const email = emailEl.value.trim();
   const password = passEl.value;
+  const puesto = puestoEl ? puestoEl.value : '';
+  const allowedViews = Array.from(document.querySelectorAll('.user-invite-view-check:checked')).map(el=>el.value);
   if(!name || !email || !password){ toast('Completá nombre, email y contraseña'); return; }
   if(password.length<6){ toast('La contraseña tiene que tener al menos 6 caracteres'); return; }
   const activeCount = agencyUsersList.filter(u=>u.status==='Activo' && u.role==='colaborador').length;
@@ -4085,7 +4165,7 @@ async function inviteUser(){
     const secAuth = getSecondaryAuth();
     const cred = await secAuth.createUserWithEmailAndPassword(email, password);
     await db.collection('agencyUsers').doc(cred.user.uid).set({
-      agencyId: AGENCY.uid, name, email, role:'colaborador', status:'Activo',
+      agencyId: AGENCY.uid, name, email, role:'colaborador', status:'Activo', puesto, allowedViews,
       invitedAt: new Date().toISOString(), invitedBy: AGENCY.name,
     });
     await secAuth.signOut();
@@ -4103,6 +4183,30 @@ async function removeUser(uid){
     await db.collection('agencyUsers').doc(uid).update({status:'Eliminado', removedAt:new Date().toISOString()});
     toast('Usuario eliminado. Ya no va a poder acceder a la cuenta.');
   }catch(err){ toast('Error: '+err.message); }
+}
+let editingUserAccessId = null;
+function openEditUserAccessModal(uid){
+  if(CURRENT_USER_ROLE!=='owner'){ toast('Solo el dueño de la cuenta puede editar accesos'); return; }
+  const u = agencyUsersList.find(x=>x.id===uid);
+  if(!u) return;
+  editingUserAccessId = uid;
+  document.getElementById('useraccess-name').textContent = u.name;
+  const puestoEl = document.getElementById('useraccess-puesto');
+  if(u.puesto && Array.from(puestoEl.options).some(o=>o.value===u.puesto)) puestoEl.value = u.puesto;
+  else puestoEl.selectedIndex = 0;
+  const allowed = Array.isArray(u.allowedViews) ? u.allowedViews : APP_VIEWS_TOGGLEABLE.map(v=>v.key);
+  document.querySelectorAll('.useraccess-view-check').forEach(el=>{ el.checked = allowed.includes(el.value); });
+  openModal('useraccess');
+}
+async function saveUserAccess(){
+  if(!editingUserAccessId) return;
+  const puesto = document.getElementById('useraccess-puesto').value;
+  const allowedViews = Array.from(document.querySelectorAll('.useraccess-view-check:checked')).map(el=>el.value);
+  try{
+    await db.collection('agencyUsers').doc(editingUserAccessId).update({puesto, allowedViews});
+    toast('Accesos actualizados');
+    closeModal('useraccess');
+  }catch(err){ toast('Error al guardar: '+err.message); }
 }
 function updatePassword(){
   const actual = document.getElementById('pw-actual').value;
@@ -4352,6 +4456,7 @@ function renderDetailModal(p, opts){
         ${p.beds ? `<div><span class="lbl">Ambientes</span><span class="val">${p.beds}</span></div>` : ''}
         ${p.baths ? `<div><span class="lbl">Baños</span><span class="val">${p.baths}</span></div>` : ''}
         <div><span class="lbl">Ciudad</span><span class="val">${escapeHtml(p.ciudad)}</span></div>
+        ${!opts.isSearch && p.country ? `<div><span class="lbl">Ubicación</span><span class="val"><i class="fa-solid fa-tree-city"></i> Country / Barrio cerrado</span></div>` : ''}
         ${p.op==='Alquiler' && p.expensas ? `<div><span class="lbl">Expensas</span><span class="val">${fmtMoney(p.expensas,'ARS')}/mes</span></div>` : ''}
         ${!opts.isSearch ? `<div><span class="lbl">Comisión referidora</span><span class="val">${escapeHtml(p.com)}</span></div>` : ''}
       </div>
@@ -4555,13 +4660,11 @@ function openCommissionPagoModal(key){
 function openVentaCommissionModal(key){
   const m = matches.find(x=>matchKey(x)===key);
   if(!m) return;
-  const calc = commissionAmountForMatch(m);
-  const montoTexto = calc ? ` (≈ ${fmtMoney(Math.round(calc.amount), calc.moneda)})` : '';
   const miPagado = m.mine==='prop' ? m.propCommissionPaidAt : m.searchCommissionPaidAt;
   const otraPagado = m.mine==='prop' ? m.searchCommissionPaidAt : m.propCommissionPaidAt;
   document.getElementById('ventacomision-body').innerHTML = `
     <div class="field" style="background:var(--ink-3);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;">
-      <div style="font-size:12.5px;color:var(--paper-dim);margin-bottom:6px;">Tu comisión (3% de tu propio cliente)${montoTexto}</div>
+      <div style="font-size:12.5px;color:var(--paper-dim);margin-bottom:6px;">Tu comisión (3% de tu propio cliente)</div>
       ${miPagado
         ? `<span class="pill pill-sage">Marcada como cobrada el ${formatDateTime(miPagado)}</span>`
         : `<button class="btn btn-sm whatsapp-btn" onclick="markMyVentaCommissionPaid('${key}')"><i class="fa-solid fa-check"></i> Marcar como cobrada</button>`}
@@ -4627,14 +4730,10 @@ function commissionRowHTML(m, role){
       : `<span class="pill" style="color:var(--brass);border-color:var(--brass);">Pendiente</span>`;
   const actionBtn = isPaid ? '' : `<button class="btn btn-sm whatsapp-btn" onclick="markCommissionSettled('${key}')"><i class="fa-solid fa-check"></i> Marcar como ${role==='pagar'?'paga':'cobrada'}</button>`;
   const label = m.agreedValue || m.prop.com;
-  const calc = commissionAmountForMatch(m);
-  const montoDisplay = calc
-    ? `${label}<span style="display:block;color:var(--paper-dim);font-weight:400;font-size:12px;margin-top:2px;">≈ ${fmtMoney(Math.round(calc.amount), calc.moneda)}</span>`
-    : label;
   return `<tr>
     <td><div class="client-name-cell"><img class="match-property-thumb" style="width:36px;height:36px;" src="${propPhotoSrc}" alt=""><span>${escapeHtml(d.otherAgency)}</span></div></td>
     <td>${m.prop.tipo} · ${m.prop.zona}, ${m.prop.ciudad}</td>
-    <td class="mono">${montoDisplay}</td>
+    <td class="mono">${escapeHtml(label)}</td>
     <td>${formatDateTime(due.toISOString())}</td>
     <td>${statusPill}</td>
     <td>${actionBtn}</td>
@@ -4646,8 +4745,6 @@ function ventaCommissionRowHTML(m){
   const propPhotoSrc = (m.prop.fotos && m.prop.fotos.length) ? m.prop.fotos[0] : `https://picsum.photos/id/${hashToRange(m.prop.id, 1020, 1080)}/100/100`;
   const miPagado = m.mine==='prop' ? m.propCommissionPaidAt : m.searchCommissionPaidAt;
   const otraPagado = m.mine==='prop' ? m.searchCommissionPaidAt : m.propCommissionPaidAt;
-  const calc = commissionAmountForMatch(m);
-  const montoDisplay = calc ? `${COMISION_LEGAL_LABEL}<span style="display:block;color:var(--paper-dim);font-weight:400;font-size:12px;margin-top:2px;">≈ ${fmtMoney(Math.round(calc.amount), calc.moneda)}</span>` : COMISION_LEGAL_LABEL;
   const miStatusPill = miPagado
     ? `<span class="pill pill-sage">Cobrada el ${formatDateTime(miPagado)}</span>`
     : `<span class="pill" style="color:var(--brass);border-color:var(--brass);">Pendiente</span>`;
@@ -4658,7 +4755,7 @@ function ventaCommissionRowHTML(m){
   return `<tr>
     <td><div class="client-name-cell"><img class="match-property-thumb" style="width:36px;height:36px;" src="${propPhotoSrc}" alt=""><span>${escapeHtml(d.otherAgency)}</span></div></td>
     <td>${escapeHtml(m.prop.tipo)} · ${escapeHtml(m.prop.zona)}, ${escapeHtml(m.prop.ciudad)}</td>
-    <td class="mono">${montoDisplay}</td>
+    <td class="mono">${COMISION_LEGAL_LABEL}</td>
     <td>Tu comisión: ${miStatusPill}<br><span style="font-size:11px;color:var(--paper-dim);">La de ${escapeHtml(d.otherAgency)}: </span>${otraStatusPill}</td>
     <td>${actionBtn}</td>
   </tr>`;
@@ -4821,6 +4918,13 @@ function attachDataListeners(uid){
       Object.assign(AGENCY, own);
       AGENCY.uid = uid;
       if(AGENCY.plan !== prevPlan) updateSidebarAgencyInfo();
+      // Se mantiene sincronizado el registro público (solo nombre/ciudad,
+      // nada sensible) que usa la landing para mostrar inmobiliarias reales.
+      if(AGENCY.status==='Verificada'){
+        db.collection('publicAgencies').doc(uid).set({name:AGENCY.name||'', city:AGENCY.city||''}).catch(()=>{});
+      } else {
+        db.collection('publicAgencies').doc(uid).delete().catch(()=>{});
+      }
     }
     refreshCurrentView();
   }, err=>console.error('Error escuchando agencies:', err));
@@ -4875,6 +4979,11 @@ function attachDataListeners(uid){
   }, err=>console.error('Error escuchando reviews:', err));
   unsubscribeAgencyUsers = db.collection('agencyUsers').where('agencyId','==',uid).onSnapshot(snap=>{
     agencyUsersList = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(a.invitedAt)-new Date(b.invitedAt));
+    const own = agencyUsersList.find(u=>u.id===CURRENT_USER_UID);
+    if(own){
+      CURRENT_USER_ALLOWED_VIEWS = Array.isArray(own.allowedViews) ? own.allowedViews : null;
+      applySidebarVisibility();
+    }
     refreshCurrentView();
   }, err=>console.error('Error escuchando agencyUsers:', err));
   attachMatchesListeners(uid);
@@ -4955,6 +5064,10 @@ async function deleteClient(id){
 
 /* ---------------- view rendering ---------------- */
 function showApp(view){
+  if(view!=='dashboard' && CURRENT_USER_ROLE==='colaborador' && Array.isArray(CURRENT_USER_ALLOWED_VIEWS) && !CURRENT_USER_ALLOWED_VIEWS.includes(view)){
+    toast('No tenés acceso a esta sección — pedile al dueño de la cuenta que te lo habilite en Usuarios.');
+    view = 'dashboard';
+  }
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view));
   document.getElementById('main-content').innerHTML = renderers[view] ? renderers[view]() : '<p>Vista no encontrada.</p>';
   updateNotifDot();
@@ -4965,9 +5078,14 @@ function showApp(view){
 function fmtMoney(n,cur){ if(!n) return '—'; return (cur==='USD'?'USD ':'ARS ') + n.toLocaleString('es-AR'); }
 
 let clientesSearchQuery = '';
+function propietarioWhatsappBtn(p){
+  const phone = (p.propietarioTel||'').replace(/\D/g,'');
+  if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este propietario">Sin WhatsApp</button>`;
+  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+}
 function propietarioRowsHTML(list){
   return list.length
-    ? list.map(p=>`<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${escapeHtml(p.propietario)||'Sin nombre'}</span></div></td><td>${escapeHtml(p.propietarioTel)||'—'}</td><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
+    ? list.map(p=>`<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${escapeHtml(p.propietario)||'Sin nombre'}</span></div></td><td>${escapeHtml(p.propietarioTel)||'—'}</td><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td style="display:flex;gap:8px;">${propietarioWhatsappBtn(p)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
     : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron propietarios con ese nombre.' : 'No tenés propietarios cargados todavía. Se suman automáticamente cuando publicás una propiedad con sus datos.'}</td></tr>`;
 }
 function clientWhatsappBtn(c){
@@ -5204,6 +5322,16 @@ explorar: ()=>`
         </select>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
+      <div class="select-wrap" style="min-width:200px;">
+        <input id="explore-filter-zona" type="text" placeholder="Buscar por zona/barrio..." value="${escapeHtml(exploreFilterZona)}" style="padding:10px 14px;border-radius:10px;border:1px solid #E2E1ED;width:100%;">
+      </div>
+      <div class="select-wrap">
+        <select id="explore-filter-country">
+          <option ${exploreFilterCountry==='Indistinto'?'selected':''}>Indistinto</option>
+          <option ${exploreFilterCountry==='Solo en country / barrio cerrado'?'selected':''}>Solo en country / barrio cerrado</option>
+        </select>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
       <div class="select-wrap">
         <select onchange="setExploreSort(this.value)">
           <option value="relevancia" ${exploreSort==='relevancia'?'selected':''}>Ordenar por: Relevancia</option>
@@ -5219,9 +5347,9 @@ explorar: ()=>`
       <button class="btn btn-solid toolbar-apply-btn" onclick="applyExploreFilters()"><i class="fa-solid fa-filter"></i> Aplicar filtros</button>
     </div>
   </div>
-  ${(exploreFilterTipo!=='Todos los tipos' || exploreFilterCiudad!=='Todas las ciudades') ? `<div class="agency-filter-chip">Filtrando por <strong>${exploreFilterTipo!=='Todos los tipos'?exploreFilterTipo:''}${exploreFilterTipo!=='Todos los tipos'&&exploreFilterCiudad!=='Todas las ciudades'?' · ':''}${exploreFilterCiudad!=='Todas las ciudades'?exploreFilterCiudad:''}</strong><button onclick="clearExploreFilters()">Ver todas <i class="fa-solid fa-xmark"></i></button></div>` : ''}
+  ${(exploreFilterTipo!=='Todos los tipos' || exploreFilterCiudad!=='Todas las ciudades' || exploreFilterZona || exploreFilterCountry!=='Indistinto') ? `<div class="agency-filter-chip">Filtrando por <strong>${[exploreFilterTipo!=='Todos los tipos'?exploreFilterTipo:'', exploreFilterCiudad!=='Todas las ciudades'?exploreFilterCiudad:'', exploreFilterZona?('zona: '+exploreFilterZona):'', exploreFilterCountry!=='Indistinto'?'country/barrio cerrado':''].filter(Boolean).join(' · ')}</strong><button onclick="clearExploreFilters()">Ver todas <i class="fa-solid fa-xmark"></i></button></div>` : ''}
   <div class="listing-grid">
-    ${sortProps((exploreShowMine ? myProps.map(adaptPropForNetwork) : networkProps).filter(p=>p.op===exploreTab && p.estado==='Activo' && (!exploreAgencyFilter || p.agency===exploreAgencyFilter) && (exploreFilterTipo==='Todos los tipos' || p.tipo===exploreFilterTipo) && (exploreFilterCiudad==='Todas las ciudades' || p.ciudad===exploreFilterCiudad)), exploreSort).map(p=>listingCard(p)).join('') || `<div class="card"><p style="color:var(--paper-dim);margin:0;">${exploreShowMine ? 'No tenés propiedades activas cargadas con estos filtros.' : 'No hay propiedades que coincidan con estos filtros.'}</p></div>`}
+    ${sortProps((exploreShowMine ? myProps.map(adaptPropForNetwork) : networkProps).filter(p=>p.op===exploreTab && p.estado==='Activo' && (!exploreAgencyFilter || p.agency===exploreAgencyFilter) && (exploreFilterTipo==='Todos los tipos' || p.tipo===exploreFilterTipo) && (exploreFilterCiudad==='Todas las ciudades' || p.ciudad===exploreFilterCiudad) && (!exploreFilterZona || (p.zona||'').toLowerCase().includes(exploreFilterZona.toLowerCase())) && (exploreFilterCountry==='Indistinto' || !!p.country)), exploreSort).map(p=>listingCard(p)).join('') || `<div class="card"><p style="color:var(--paper-dim);margin:0;">${exploreShowMine ? 'No tenés propiedades activas cargadas con estos filtros.' : 'No hay propiedades que coincidan con estos filtros.'}</p></div>`}
   </div>
 `,
 
@@ -5302,7 +5430,7 @@ redbusca: ()=>`
   <table>
     <thead><tr><th>Inmobiliaria</th><th>Busca</th><th>Ciudad / Zona</th><th>Presupuesto</th><th></th></tr></thead>
     <tbody>
-      ${networkSearches.filter(matchesRedbuscaFilters).map(s=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${escapeHtml(s.agency)}</span></td><td>${s.op==='Venta'?'Busca comprar':'Busca alquilar'} ${s.tipo.toLowerCase()}</td><td>${escapeHtml(s.ciudad)} · ${escapeHtml(s.zona)}</td><td class="mono">${fmtMoney(s.presu,s.moneda||'USD')}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta btn-hover-fill" onclick="openSearchDetail('${s.id}')"><i class="fa-solid fa-eye"></i> Ver detalle</button>${searchWhatsappBtn(s)}</td></tr>`).join('') || `<tr><td colspan="5" class="empty-row">No hay búsquedas que coincidan con estos filtros.</td></tr>`}
+      ${networkSearches.filter(matchesRedbuscaFilters).map(s=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${escapeHtml(s.agency)}</span></td><td>${s.op==='Venta'?'Busca comprar':'Busca alquilar'} ${s.tipo.toLowerCase()}</td><td>${escapeHtml(s.ciudad)} · ${escapeHtml(s.zona)}</td><td class="mono">${fmtMoney(s.presu,s.moneda||'USD')}</td><td>${searchWhatsappBtn(s)}</td></tr>`).join('') || `<tr><td colspan="5" class="empty-row">No hay búsquedas que coincidan con estos filtros.</td></tr>`}
       ${myClients.filter(c=>matchesRedbuscaFilters({op:c.op==='Compra'?'Venta':'Alquiler', tipo:c.tipo, ciudad:c.ciudad, presu:c.presu, estado:c.estado||'Activo'})).map(c=>`<tr><td><span class="agency-name"><span class="search-pulse"><span class="ring"></span><span class="ring"></span><span class="ring"></span><i class="fa-solid fa-magnifying-glass"></i></span>${escapeHtml(AGENCY.name)}</span></td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()}</td><td>${escapeHtml(c.ciudad)}${c.zona&&c.zona!=='—'?' · '+escapeHtml(c.zona):''}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill" style="color:var(--brass);border-color:var(--brass);">Tu búsqueda</span></td></tr>`).join('')}
     </tbody>
   </table>
@@ -5352,7 +5480,7 @@ comisiones: ()=>{
   porCobrar.sort(sortByDue);
   const tableHTML = (list, role)=> list.length ? `
     <table>
-      <thead><tr><th>Inmobiliaria</th><th>Propiedad</th><th>Monto</th><th>Vence el</th><th>Estado</th><th></th></tr></thead>
+      <thead><tr><th>Inmobiliaria</th><th>Propiedad</th><th>Comisión</th><th>Vence el</th><th>Estado</th><th></th></tr></thead>
       <tbody>${list.map(m=>commissionRowHTML(m, role)).join('')}</tbody>
     </table>` : `<div class="card"><p style="color:var(--paper-dim);margin:0;">No tenés comisiones ${role==='pagar'?'por pagar':'por cobrar'} por ahora.</p></div>`;
 
@@ -5395,7 +5523,7 @@ propiedades: ()=>`
   <table>
     <thead><tr><th>Propiedad</th><th>Propietario</th><th>Operación</th><th>Precio</th><th>Comisión</th><th>Estado</th><th></th></tr></thead>
     <tbody>
-    ${myProps.length? myProps.map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td>${escapeHtml(p.propietario)||'Sin nombre'}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="7" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
+    ${myProps.length? myProps.map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td>${escapeHtml(p.propietario)||'Sin nombre'}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;">${propietarioWhatsappBtn(p)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="7" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
     </tbody>
   </table>
 `,
@@ -5581,6 +5709,16 @@ usuarios: ()=>{
     <div class="field"><label>Nombre y apellido</label><input id="user-invite-name" placeholder="Nombre completo"></div>
     <div class="field"><label>Email</label><input id="user-invite-email" type="email" placeholder="persona@inmobiliaria.com"></div>
     <div class="field"><label>Contraseña provisoria</label><input id="user-invite-password" type="password" placeholder="Mínimo 6 caracteres"></div>
+    <div class="field"><label>Puesto</label>
+      <select id="user-invite-puesto">${PUESTO_OPTIONS.map(o=>`<option ${o==='Comercial'?'selected':''}>${o}</option>`).join('')}</select>
+    </div>
+    <div class="field">
+      <label>Pestañas visibles para esta persona</label>
+      <p style="font-size:11.5px;color:var(--paper-dim);margin:0 0 8px;">Dashboard queda siempre visible. Esto solo organiza qué ve por defecto — no es una restricción de datos, ya que comparte toda la información de la cuenta.</p>
+      <div class="amenities-row" id="user-invite-views">
+        ${APP_VIEWS_TOGGLEABLE.map(v=>`<label class="amenity-check"><input type="checkbox" class="user-invite-view-check" value="${v.key}" checked> ${v.label}</label>`).join('')}
+      </div>
+    </div>
     <button id="user-invite-submit-btn" class="btn btn-solid" onclick="inviteUser()"><i class="fa-solid fa-paper-plane"></i> Invitar</button>
     `}
   </div>
@@ -5590,15 +5728,16 @@ usuarios: ()=>{
 
   <div class="admin-section-title">Usuarios con acceso</div>
   <table>
-    <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th>${CURRENT_USER_ROLE==='owner' ? '<th></th>' : ''}</tr></thead>
+    <thead><tr><th>Nombre</th><th>Email</th><th>Puesto</th><th>Rol</th><th>Estado</th>${CURRENT_USER_ROLE==='owner' ? '<th></th>' : ''}</tr></thead>
     <tbody>
       ${agencyUsersList.filter(u=>u.status!=='Eliminado').length ? agencyUsersList.filter(u=>u.status!=='Eliminado').map(u=>`<tr>
         <td>${escapeHtml(u.name)}${u.id===CURRENT_USER_UID ? ' <span style="color:var(--paper-dim);font-size:11px;">(vos)</span>' : ''}</td>
         <td>${escapeHtml(u.email)}</td>
+        <td>${u.role==='owner' ? '—' : escapeHtml(u.puesto)||'—'}</td>
         <td>${u.role==='owner' ? 'Dueño' : 'Colaborador'}</td>
         <td>${adminStatusPill(u.status==='Activo' ? 'Verificada' : 'Suspendida', u.status)}</td>
-        ${CURRENT_USER_ROLE==='owner' ? `<td>${u.role!=='owner' ? `<button class="btn btn-sm btn-eliminar-pastel" onclick="removeUser('${u.id}')"><i class="fa-solid fa-user-xmark"></i> Eliminar</button>` : ''}</td>` : ''}
-      </tr>`).join('') : `<tr><td colspan="${CURRENT_USER_ROLE==='owner'?5:4}" class="empty-row">No hay usuarios cargados.</td></tr>`}
+        ${CURRENT_USER_ROLE==='owner' ? `<td style="display:flex;gap:8px;">${u.role!=='owner' ? `<button class="btn btn-sm btn-editar-violeta" onclick="openEditUserAccessModal('${u.id}')"><i class="fa-solid fa-sliders"></i> Accesos</button><button class="btn btn-sm btn-eliminar-pastel" onclick="removeUser('${u.id}')"><i class="fa-solid fa-user-xmark"></i> Eliminar</button>` : ''}</td>` : ''}
+      </tr>`).join('') : `<tr><td colspan="${CURRENT_USER_ROLE==='owner'?6:5}" class="empty-row">No hay usuarios cargados.</td></tr>`}
     </tbody>
   </table>
   `;
@@ -5722,7 +5861,31 @@ function animateCount(el){
   }
   requestAnimationFrame(step);
 }
+// Trae las inmobiliarias YA verificadas (sin necesitar login: es una
+// colección pública aparte, sin datos sensibles) y reemplaza los chips de
+// ejemplo del marquee de la landing por nombres reales.
+async function loadRealAgenciesMarquee(){
+  try{
+    const snap = await db.collection('publicAgencies').get();
+    const names = snap.docs.map(d=>d.data().name).filter(Boolean);
+    const wrap = document.getElementById('agencies-marquee-wrap');
+    const track = document.getElementById('agencies-marquee-track');
+    if(!track) return;
+    if(!names.length){
+      // Todavía no hay ninguna inmobiliaria verificada — se oculta la
+      // sección en vez de mostrar chips de ejemplo o quedar vacía.
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
+    // Se duplica la lista para el efecto de scroll continuo (mismo truco
+    // que ya usaba el marquee de ejemplo).
+    track.innerHTML = [...names, ...names].map(n=>`<span class="agency-chip">${escapeHtml(n)}</span>`).join('');
+  }catch(err){
+    console.error('Error cargando inmobiliarias reales para la landing:', err);
+  }
+}
 (function initLandingInteractivity(){
+  loadRealAgenciesMarquee();
   const heroStats = document.getElementById('hero-stats');
   if(heroStats){
     const counters = heroStats.querySelectorAll('[data-count]');
