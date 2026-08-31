@@ -974,7 +974,9 @@
         <div class="nav-group-label">Mi Inmobiliaria</div>
         <div class="nav-item" data-view="propiedades" onclick="showApp('propiedades')"><i class="fa-solid fa-building"></i> Mis Propiedades</div>
         <div class="nav-item" data-view="clientes" onclick="showApp('clientes')"><i class="fa-solid fa-users"></i> Búsquedas para Clientes</div>
-        <div class="nav-item" data-view="exclusiva" onclick="showApp('exclusiva')"><i class="fa-solid fa-gem"></i> Oportunidad Exclusiva</div>
+        <!-- "Oportunidad Exclusiva" se sacó del menú a pedido explícito, pero la
+             función (vista, formulario, colección exclusivas, panel de admin)
+             sigue intacta en el código por si se quiere reactivar más adelante. -->
       </div>
 
       <div class="nav-group">
@@ -1381,6 +1383,7 @@ function adaptClientForNetwork(c){
 
 let matches = [];
 let notifications = [];
+let attemptedDropKeys = new Set(); // evita reintentar/duplicar el auto-baja de un mismo match
 function myTickets(){
   return supportTickets.filter(t=>t.agency===AGENCY.name);
 }
@@ -2699,7 +2702,7 @@ function goStep(n){
 // Sacá tu key gratis en https://myprojects.geoapify.com (nivel gratuito:
 // 3.000 consultas/día) y pegala acá. Mientras esto diga 'TU_API_KEY_ACA',
 // el buscador de direcciones no va a funcionar (el pin manual sigue andando).
-const GEOAPIFY_API_KEY = 'a6668bd7a50748e495c3d01e4169e58c';
+const GEOAPIFY_API_KEY = 'TU_API_KEY_ACA';
 
 /* ---------------- Firebase: autenticación real ---------------- */
 const firebaseConfig = {
@@ -2961,6 +2964,7 @@ async function resetDemo(){
   idSeq = 1;
   matchesRemote = {};
   attemptedMatchKeys = new Set();
+  attemptedDropKeys = new Set();
   favoriteProps = [];
   Object.keys(REVIEWS_DATA).forEach(k=>delete REVIEWS_DATA[k]);
   computeMatches();
@@ -3690,12 +3694,14 @@ function computeMatches(){
   myProps.forEach(p=>{
     if(p.estado!=='Activo') return;
     networkSearches.forEach(s=>{
+      if((s.estado||'Activo')!=='Activo') return; // el cliente ya cerró su búsqueda en otro lado
       if(p.tipo===s.tipo && p.ciudad===s.ciudad && sameOp(p.op,s.op) && p.precio<=s.presu*1.1){
         pairs.push({prop:p, search:s, mine:'prop', propOwnerUid:AGENCY.uid, propOwnerName:AGENCY.name, searchOwnerUid:s.ownerUid, searchOwnerName:s.agency});
       }
     });
   });
   myClients.forEach(c=>{
+    if((c.estado||'Activo')!=='Activo') return; // esta búsqueda ya se cerró, no generar matches nuevos
     networkProps.forEach(p=>{
       if(p.estado!=='Activo') return;
       if(c.tipo===p.tipo && c.ciudad===p.ciudad && sameOp(p.op,c.op) && p.precio<=c.presu*1.1){
@@ -3770,7 +3776,35 @@ function computeMatches(){
     const hayVencidas = closedCommissionMatches().some(m=>!m.commissionPaidAt && operationSettleDate(m).getTime()<Date.now());
     comisionesDotEl.style.display = hayVencidas ? 'block' : 'none';
   }
+  autoDropStaleMatches();
   reconcileClosedOperations();
+}
+// Si una propiedad se vendió/alquiló, o una búsqueda se cerró, cualquier OTRO
+// match que siga abierto para esa misma propiedad o esa misma búsqueda ya no
+// tiene sentido — en vez de dejar que desaparezca en silencio de la vista,
+// lo pasamos a "Operaciones caídas" con un motivo claro y avisamos a la otra
+// parte. Corre para cualquier match donde yo sea una de las dos partes.
+function autoDropStaleMatches(){
+  Object.keys(matchesRemote).forEach(key=>{
+    const remote = matchesRemote[key];
+    if(!['nuevos','acordado','seguimiento'].includes(remote.status)) return;
+    const isMine = remote.propOwnerUid===AGENCY.uid || remote.searchOwnerUid===AGENCY.uid;
+    if(!isMine) return;
+    if(attemptedDropKeys.has(key)) return;
+    const propNow = (remote.propOwnerUid===AGENCY.uid ? myProps : networkProps).find(x=>x.id===remote.propId);
+    const searchNow = (remote.searchOwnerUid===AGENCY.uid ? myClients : networkSearches).find(x=>x.id===remote.searchId);
+    const propInactive = propNow && propNow.estado!=='Activo';
+    const searchInactive = searchNow && (searchNow.estado||'Activo')!=='Activo';
+    if(!propInactive && !searchInactive) return; // sigue todo activo, no tocar (ej. solo cambió el precio)
+    attemptedDropKeys.add(key);
+    const otherUid = remote.propOwnerUid===AGENCY.uid ? remote.searchOwnerUid : remote.propOwnerUid;
+    const motivo = propInactive ? 'La propiedad se cerró con otra inmobiliaria de la red' : 'La búsqueda de este cliente ya se cerró';
+    db.collection('matches').doc(key).update({
+      status:'caidas', dropReason:motivo, dropComment:null, updatedAt:new Date().toISOString(),
+    }).then(()=>{
+      addNotificationFor(otherUid, 'fa-circle-xmark','red','Un match se cerró solo', motivo+'. Lo movimos a Operaciones caídas.');
+    }).catch(err=>{ attemptedDropKeys.delete(key); console.error('Error en auto-baja de match:', err); });
+  });
 }
 // Autocorrección: si un match ya está 'concretadas' pero la propiedad o el cliente
 // todavía figuran como activos (por ejemplo, operaciones cerradas antes de que esto
@@ -3968,6 +4002,16 @@ function openFinalizeMatchModal(key){
   finalizeMatchKey = key;
   document.getElementById('finalizarmatch-step1').classList.remove('hidden');
   document.getElementById('finalizarmatch-step2').classList.add('hidden');
+  document.getElementById('finalizarmatch-motivo').value = 'El cliente desistió';
+  document.getElementById('finalizarmatch-comentario').value = '';
+  openModal('finalizarmatch');
+}
+function openDropMatchModal(key){
+  // Igual que "Cerrar operación", pero yendo directo al paso del motivo —
+  // el botón de basurero ya indica que no se concretó, no hace falta preguntar.
+  finalizeMatchKey = key;
+  document.getElementById('finalizarmatch-step1').classList.add('hidden');
+  document.getElementById('finalizarmatch-step2').classList.remove('hidden');
   document.getElementById('finalizarmatch-motivo').value = 'El cliente desistió';
   document.getElementById('finalizarmatch-comentario').value = '';
   openModal('finalizarmatch');
@@ -4274,9 +4318,9 @@ const PIPELINE_STAGES = [
   {key:'seguimiento', label:'Contactado', icon:'fa-brands fa-whatsapp'},
   {key:'concretadas', label:'Finalizado', icon:'fa-circle-check'},
 ];
-function pipelineStepperHTML(status){
+function pipelineStepperHTML(status, dropReason, dropComment){
   if(status==='caidas'){
-    return `<div class="pipeline-steps pipeline-caida"><i class="fa-solid fa-circle-xmark"></i> Operación caída</div>`;
+    return `<div class="pipeline-steps pipeline-caida"><i class="fa-solid fa-circle-xmark"></i> Operación caída${dropReason ? ' — '+escapeHtml(dropReason) : ''}${dropComment ? ` ("${escapeHtml(dropComment)}")` : ''}</div>`;
   }
   const idx = PIPELINE_STAGES.findIndex(s=>s.key===status);
   return `<div class="pipeline-steps">${PIPELINE_STAGES.map((s,i)=>`
@@ -4295,12 +4339,12 @@ function negotiationHTML(m, key){
     return `<div class="commission-proposal">
       <div class="commission-proposal-text"><i class="fa-solid fa-file-signature"></i> Comisión propuesta: <strong>${last.value}</strong></div>
       <button class="btn btn-sm whatsapp-btn" onclick="acceptCommission('${key}')"><i class="fa-solid fa-check"></i> Aceptar comisión</button>
-      <button class="btn btn-sm btn-eliminar-pastel" onclick="dropMatch('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>
+      <button class="btn btn-sm btn-eliminar-pastel" onclick="openDropMatchModal('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>
     </div>`;
   }
   return `<div class="commission-proposal commission-proposal-waiting">
     <div class="commission-proposal-text"><i class="fa-solid fa-paper-plane"></i> Tu propuesta: <strong>${last.value}</strong> — esperando respuesta de ${escapeHtml(matchFlowData(m).otherAgency)}</div>
-    <button class="btn btn-sm btn-eliminar-pastel" onclick="dropMatch('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>
+    <button class="btn btn-sm btn-eliminar-pastel" onclick="openDropMatchModal('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>
   </div>`;
 }
 function openCommissionPagoModal(key){
@@ -4391,7 +4435,7 @@ function matchActionsHTML(m, key){
       primaryBtn = `<div class="waiting-note"><i class="fa-solid fa-hourglass-half"></i> Esperando que ${escapeHtml(m.prop.agency)} cierre la operación</div>`;
     }
   }
-  return eliminarInline ? primaryBtn : `${primaryBtn}<button class="btn btn-sm btn-eliminar-pastel" onclick="dropMatch('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>`;
+  return eliminarInline ? primaryBtn : `${primaryBtn}<button class="btn btn-sm btn-eliminar-pastel" onclick="openDropMatchModal('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>`;
 }
 function matchRowHTML(m){
   const d = matchFlowData(m);
@@ -4419,7 +4463,7 @@ function matchRowHTML(m){
           <div class="flow-connector"></div>
           <div class="flow-node flow-node-match"><span class="dot dot-icon dot-heart"><i class="fa-solid fa-heart"></i></span><div class="text"><strong>${escapeHtml(d.otherAgency)}</strong><span>${d.node2Sub}</span></div></div>
         </div>
-        ${pipelineStepperHTML(m.status)}
+        ${pipelineStepperHTML(m.status, m.dropReason, m.dropComment)}
         <div class="match-actions">
           ${matchActionsHTML(m, key)}
         </div>
@@ -4614,6 +4658,7 @@ function detachDataListeners(){
   agencyUsersList = [];
   matchesRemote = {};
   attemptedMatchKeys = new Set();
+  attemptedDropKeys = new Set();
   matches = [];
 }
 
@@ -4661,9 +4706,14 @@ function propietarioRowsHTML(list){
     ? list.map(p=>`<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${escapeHtml(p.propietario)||'Sin nombre'}</span></div></td><td>${escapeHtml(p.propietarioTel)||'—'}</td><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
     : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron propietarios con ese nombre.' : 'No tenés propietarios cargados todavía. Se suman automáticamente cuando publicás una propiedad con sus datos.'}</td></tr>`;
 }
+function clientWhatsappBtn(c){
+  const phone = (c.tel||'').replace(/\D/g,'');
+  if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este cliente">Sin WhatsApp</button>`;
+  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+}
 function buscadorRowsHTML(list){
   return list.length
-    ? list.map(c=>`<tr><td><div class="client-name-cell">${clientAvatarHTML(c)}<span>${escapeHtml(c.nombre)}</span></div></td><td>${escapeHtml(c.tel)}</td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()} en ${escapeHtml(c.ciudad)}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill ${c.estado==='Cerrado'?'':'pill-sage'}">${c.estado||'Activo'}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditClientModal('${c.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteClient('${c.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
+    ? list.map(c=>`<tr><td><div class="client-name-cell">${clientAvatarHTML(c)}<span>${escapeHtml(c.nombre)}</span></div></td><td>${escapeHtml(c.tel)}</td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()} en ${escapeHtml(c.ciudad)}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill ${c.estado==='Cerrado'?'':'pill-sage'}">${c.estado||'Activo'}</span></td><td style="display:flex;gap:8px;">${clientWhatsappBtn(c)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditClientModal('${c.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteClient('${c.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
     : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron clientes con ese nombre.' : 'No tenés clientes buscadores cargados. Hacé clic en "Agregar cliente" para comenzar.'}</td></tr>`;
 }
 function filterClientesTable(query){
