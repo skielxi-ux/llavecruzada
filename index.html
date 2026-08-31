@@ -1294,6 +1294,22 @@
   </div>
 </div>
 
+<div id="modal-contactprop" class="modal-backdrop hidden">
+  <div class="modal" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('contactprop')"><i class="fa-solid fa-xmark"></i></button>
+    <h3>¿Con qué propiedad es este contacto?</h3>
+    <p class="sub">Así te queda un seguimiento real de esta negociación en Mis Matches, para saber más adelante si se cerró.</p>
+    <div class="field">
+      <label>Elegí una de tus propiedades activas</label>
+      <div class="report-reasons" id="contactprop-list"></div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn" onclick="closeModal('contactprop')">Cancelar</button>
+      <button class="btn btn-solid whatsapp-btn" id="contactprop-confirm-btn" onclick="confirmContactWithProp()"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-denunciar" class="modal-backdrop hidden">
   <div class="modal" style="position:relative;">
     <button class="avatar-modal-close" onclick="closeModal('denunciar')"><i class="fa-solid fa-xmark"></i></button>
@@ -1444,6 +1460,11 @@ let exploreTab = 'Venta';
 let exploreSort = 'relevancia';
 let exploreFilterTipo = 'Todos los tipos';
 let exploreFilterCiudad = 'Todas las ciudades';
+let exploreShowMine = false;
+function toggleExploreMine(){
+  exploreShowMine = !exploreShowMine;
+  showApp('explorar');
+}
 function applyExploreFilters(){
   exploreFilterTipo = document.getElementById('explore-filter-tipo').value;
   exploreFilterCiudad = document.getElementById('explore-filter-ciudad').value;
@@ -2236,9 +2257,57 @@ function searchWhatsappBtn(s){
   const ag = ADMIN_AGENCIES.find(a=>a.name===s.agency);
   const phone = ag && (ag.whatsapp || ag.phone);
   if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No tenemos el WhatsApp de esta inmobiliaria todavía">Sin WhatsApp</button>`;
-  const msg = `Hola ${s.agency}! Vi que tu cliente busca ${s.op==='Venta'?'comprar':'alquilar'} ${s.tipo.toLowerCase()} en ${s.zona}, ${s.ciudad}. Tengo una propiedad que podría encajar, ¿hablamos?`;
-  const url = `https://wa.me/${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`;
-  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Tengo potencial cliente</a>`;
+  return `<button class="btn btn-sm whatsapp-btn" onclick="openContactPropModal('${s.id}')"><i class="fa-brands fa-whatsapp"></i> Tengo potencial cliente</button>`;
+}
+let contactPropContext = {searchId:null};
+function openContactPropModal(searchId){
+  contactPropContext = {searchId};
+  const listEl = document.getElementById('contactprop-list');
+  const confirmBtn = document.getElementById('contactprop-confirm-btn');
+  const activas = myProps.filter(p=>p.estado==='Activo');
+  if(activas.length){
+    listEl.innerHTML = activas.map((p,i)=>`<label class="report-reason-opt"><input type="radio" name="contactprop-radio" value="${p.id}" ${i===0?'checked':''}> ${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}, ${escapeHtml(p.ciudad)} (${fmtMoney(p.precio,p.moneda)})</label>`).join('');
+    confirmBtn.disabled = false;
+  } else {
+    listEl.innerHTML = `<p style="font-size:13px;color:var(--paper-dim);margin:0;">Todavía no tenés propiedades activas cargadas. <a style="color:var(--brass-bright);cursor:pointer;" onclick="closeModal('contactprop'); showApp('propiedades');">Agregá una</a> antes de contactar.</p>`;
+    confirmBtn.disabled = true;
+  }
+  openModal('contactprop');
+}
+async function confirmContactWithProp(){
+  const searchId = contactPropContext.searchId;
+  const s = networkSearches.find(x=>x.id===searchId);
+  if(!s){ toast('No se encontró la búsqueda'); return; }
+  const checked = document.querySelector('input[name="contactprop-radio"]:checked');
+  if(!checked){ toast('Elegí una propiedad'); return; }
+  const propId = checked.value;
+  const p = myProps.find(x=>x.id===propId);
+  if(!p){ toast('No se encontró la propiedad'); return; }
+  try{
+    const key = `${propId}__${s.id}`;
+    const nowIso = new Date().toISOString();
+    await ensureMatchDoc(key, {
+      propId: propId, searchId: s.id,
+      propOwnerUid: AGENCY.uid, propOwnerName: AGENCY.name,
+      searchOwnerUid: s.ownerUid, searchOwnerName: s.agency,
+      status: 'nuevos', claimedAt: nowIso,
+      agreedAt: null, agreedValue: null, dropReason: null, dropComment: null,
+      offers: [{byUid: AGENCY.uid, value: p.com, at: nowIso}],
+      updatedAt: nowIso,
+    });
+  }catch(err){
+    toast('Error al registrar el contacto: '+err.message);
+    return;
+  }
+  closeModal('contactprop');
+  const ag = ADMIN_AGENCIES.find(a=>a.id===s.ownerUid) || ADMIN_AGENCIES.find(a=>a.name===s.agency);
+  const phone = ag && (ag.whatsapp || ag.phone);
+  if(phone){
+    const msg = `Hola ${s.agency}! Vi que tu cliente busca ${s.op==='Venta'?'comprar':'alquilar'} ${s.tipo.toLowerCase()} en ${s.zona}, ${s.ciudad}. Tengo una propiedad que podría encajar, ¿hablamos?`;
+    const url = `https://wa.me/${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+  toast('Contacto registrado — lo vas a encontrar en Mis Matches para hacerle seguimiento');
 }
 function exclusivaWhatsappBtn(o){
   const ag = ADMIN_AGENCIES.find(a=>a.name===o.agency);
@@ -2672,7 +2741,7 @@ function listingCard(p){
           ${p.baths ? `<div class="listing-spec">${icoBath} ${p.baths} Baños</div>` : ''}
           <div class="listing-spec">${icoArea} ${p.m2} m²</div>
         </div>
-        <button class="listing-detail-btn" onclick="openPropertyDetail('${p.id}')"><i class="fa-solid fa-eye"></i> Ver detalle</button>
+        <button class="listing-detail-btn" onclick="${p.ownerUid===AGENCY.uid ? `openPropertyDetailFromMap('${p.id}', true)` : `openPropertyDetail('${p.id}')`}"><i class="fa-solid fa-eye"></i> Ver detalle</button>
       </div>
     </div>
   `;
@@ -4950,11 +5019,14 @@ explorar: ()=>`
         <i class="fa-solid fa-chevron-down"></i>
       </div>
     </div>
-    <button class="btn btn-solid toolbar-apply-btn" onclick="applyExploreFilters()"><i class="fa-solid fa-filter"></i> Aplicar filtros</button>
+    <div style="display:flex;gap:10px;">
+      <button class="btn ${exploreShowMine?'btn-solid':''}" onclick="toggleExploreMine()"><i class="fa-solid fa-building-user"></i> ${exploreShowMine?'Ver toda la red':'Ver mis propiedades'}</button>
+      <button class="btn btn-solid toolbar-apply-btn" onclick="applyExploreFilters()"><i class="fa-solid fa-filter"></i> Aplicar filtros</button>
+    </div>
   </div>
   ${(exploreFilterTipo!=='Todos los tipos' || exploreFilterCiudad!=='Todas las ciudades') ? `<div class="agency-filter-chip">Filtrando por <strong>${exploreFilterTipo!=='Todos los tipos'?exploreFilterTipo:''}${exploreFilterTipo!=='Todos los tipos'&&exploreFilterCiudad!=='Todas las ciudades'?' · ':''}${exploreFilterCiudad!=='Todas las ciudades'?exploreFilterCiudad:''}</strong><button onclick="clearExploreFilters()">Ver todas <i class="fa-solid fa-xmark"></i></button></div>` : ''}
   <div class="listing-grid">
-    ${sortProps(networkProps.filter(p=>p.op===exploreTab && p.estado==='Activo' && (!exploreAgencyFilter || p.agency===exploreAgencyFilter) && (exploreFilterTipo==='Todos los tipos' || p.tipo===exploreFilterTipo) && (exploreFilterCiudad==='Todas las ciudades' || p.ciudad===exploreFilterCiudad)), exploreSort).map(p=>listingCard(p)).join('') || `<div class="card"><p style="color:var(--paper-dim);margin:0;">No hay propiedades que coincidan con estos filtros.</p></div>`}
+    ${sortProps((exploreShowMine ? myProps.map(adaptPropForNetwork) : networkProps).filter(p=>p.op===exploreTab && p.estado==='Activo' && (!exploreAgencyFilter || p.agency===exploreAgencyFilter) && (exploreFilterTipo==='Todos los tipos' || p.tipo===exploreFilterTipo) && (exploreFilterCiudad==='Todas las ciudades' || p.ciudad===exploreFilterCiudad)), exploreSort).map(p=>listingCard(p)).join('') || `<div class="card"><p style="color:var(--paper-dim);margin:0;">${exploreShowMine ? 'No tenés propiedades activas cargadas con estos filtros.' : 'No hay propiedades que coincidan con estos filtros.'}</p></div>`}
   </div>
 `,
 
@@ -5109,9 +5181,9 @@ propiedades: ()=>`
     <p><strong>Todo lo que cargues acá se publica en toda la red.</strong> Cada propiedad que agregues va a aparecer en <a onclick="showApp('explorar')">Explorar la Red</a>, visible para todas las inmobiliarias asociadas, que van a poder contactarte si tienen un cliente interesado.</p>
   </div>
   <table>
-    <thead><tr><th>Propiedad</th><th>Operación</th><th>Precio</th><th>Comisión</th><th>Estado</th><th></th></tr></thead>
+    <thead><tr><th>Propiedad</th><th>Propietario</th><th>Operación</th><th>Precio</th><th>Comisión</th><th>Estado</th><th></th></tr></thead>
     <tbody>
-    ${myProps.length? myProps.map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="6" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
+    ${myProps.length? myProps.map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td>${escapeHtml(p.propietario)||'Sin nombre'}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;"><button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="7" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
     </tbody>
   </table>
 `,
