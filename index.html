@@ -5282,6 +5282,19 @@ function leadTempPillHTML(temp){
   const info = LEAD_TEMP_INFO[temp] || LEAD_TEMP_INFO['Tibio'];
   return `<span class="pill" style="color:${info.color};background:${info.bg};border-color:${info.border};">${info.emoji} ${escapeHtml(temp)}</span>`;
 }
+function leadTempSelectHTML(l){
+  const temp = l.temperatura || 'Tibio';
+  const info = LEAD_TEMP_INFO[temp] || LEAD_TEMP_INFO['Tibio'];
+  return `<select onchange="changeLeadTemperaturaInline('${l.id}', this.value)" style="color:${info.color};background:${info.bg};border:1px solid ${info.border};border-radius:20px;padding:4px 10px;font-size:12.5px;font-weight:600;cursor:pointer;">
+    ${Object.keys(LEAD_TEMP_INFO).map(t=>`<option value="${t}" ${t===temp?'selected':''}>${LEAD_TEMP_INFO[t].emoji} ${t}</option>`).join('')}
+  </select>`;
+}
+async function changeLeadTemperaturaInline(id, temperatura){
+  try{
+    await db.collection('externalLeads').doc(id).update({temperatura});
+    toast('Interés actualizado a '+temperatura);
+  }catch(err){ toast('Error: '+err.message); }
+}
 function leadWhatsappBtn(l){
   const phone = (l.telefono||'').replace(/\D/g,'');
   if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este lead">Sin WhatsApp</button>`;
@@ -5399,7 +5412,7 @@ function leadRowHTML(l){
     <td>${escapeHtml(l.telefono)||'—'}</td>
     <td>${escapeHtml(l.propiedadDescripcion)||'—'}</td>
     <td>${escapeHtml(l.tipo)}</td>
-    <td>${leadTempPillHTML(l.temperatura||'Tibio')}</td>
+    <td>${leadTempSelectHTML(l)}</td>
     <td style="display:flex;gap:8px;flex-wrap:wrap;">
       ${leadWhatsappBtn(l)}
       <button class="btn btn-sm" onclick="openLeadDetalleModal('${l.id}')"><i class="fa-solid fa-clock-rotate-left"></i> Notas</button>
