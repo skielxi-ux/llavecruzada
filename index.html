@@ -3119,8 +3119,10 @@ async function resetDemo(){
         // Nunca borramos el registro del dueño (id === agencyId) ni el de quien está ejecutando el reset ahora mismo.
         if(doc.id!==AGENCY.uid && doc.id!==CURRENT_USER_UID) batch.delete(doc.ref);
       });
-      const myTicketsSnap = await db.collection('supportTickets').where('ownerUid','==',AGENCY.uid).get();
-      myTicketsSnap.forEach(doc=>batch.delete(doc.ref));
+      // Los tickets de soporte NO se borran acá: las reglas de Firestore los
+      // protegen a propósito (ni siquiera vos podés borrar tu propio
+      // historial de tickets) — intentarlo cancelaba el lote entero y hacía
+      // que "Reiniciar demo" no borrara nada en absoluto.
       await batch.commit();
       await db.collection('agencies').doc(AGENCY.uid).update({favoriteProps:[]});
     }catch(err){ toast('Error al borrar datos de Firestore: '+err.message); }
@@ -3135,7 +3137,7 @@ async function resetDemo(){
   computeMatches();
   updateSidebarAgencyInfo();
   updateNotifDot();
-  toast('Demo reiniciada — se borraron tus propiedades, clientes, matches, solicitudes de plan y tickets');
+  toast('Demo reiniciada — se borraron tus propiedades, clientes, matches y solicitudes de plan');
   const adminVisible = document.getElementById('view-admin').style.display === 'block';
   if(adminVisible) showAdmin('dashboard');
   else showApp('dashboard');
