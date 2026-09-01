@@ -871,7 +871,7 @@
   <div class="modal" style="position:relative;">
     <button class="avatar-modal-close" onclick="closeModal('ventacomision')"><i class="fa-solid fa-xmark"></i></button>
     <h3><i class="fa-solid fa-circle-check" style="color:#3F7A46;margin-right:8px;"></i>Operación concretada</h3>
-    <p class="sub" style="font-size:13px;">Por ley, cada inmobiliaria cobra su 3% directo de su propio cliente — no hay pago entre inmobiliarias. Esto es solo para tu propio registro.</p>
+    <p class="sub" style="font-size:13px;">Honorarios por Ley: Cada parte abona el 3% a su respectiva inmobiliaria. Las inmobiliarias no realizan cobros ni pagos entre sí. Esto es solo para tu propio registro.</p>
     <div id="ventacomision-body"></div>
     <div class="modal-close-row">
       <button class="btn btn-solid" onclick="closeModal('ventacomision')">Cerrar</button>
@@ -1148,7 +1148,7 @@
       </div>
       <div class="field hidden" id="com-venta-section" style="background:var(--ink-3);border-radius:var(--radius);padding:12px 14px;">
         <label style="margin-bottom:4px;">Comisión</label>
-        <p style="font-size:12.5px;color:var(--paper-dim);margin:0;">Por ley, la comisión de una venta es del <strong>3%</strong> para cada parte: 3% lo paga quien vende a tu inmobiliaria, y 3% lo paga quien compra a la otra. No es un valor que se elija por propiedad.</p>
+        <p style="font-size:12.5px;color:var(--paper-dim);margin:0;">Honorarios por Ley: Cada parte abona el <strong>3%</strong> a su respectiva inmobiliaria. Las inmobiliarias no realizan cobros ni pagos entre sí.</p>
       </div>
       <div class="field hidden" id="com-alquiler-section">
         <label>Comisión para inmob. referidora</label>
@@ -4642,7 +4642,7 @@ function negotiationHTML(m, key){
   if(m.prop.op==='Venta'){
     // No hay nada que negociar: 3%/3% fijo por ley. Solo confirmar y avanzar.
     return `<div class="commission-proposal">
-      <div class="commission-proposal-text"><i class="fa-solid fa-scale-balanced"></i> Comisión de ley: <strong>3%</strong> lo paga quien vende a su inmobiliaria, <strong>3%</strong> lo paga quien compra a la suya. No hay pago entre inmobiliarias.</div>
+      <div class="commission-proposal-text"><i class="fa-solid fa-scale-balanced"></i> Honorarios por Ley: Cada parte abona el <strong>3%</strong> a su respectiva inmobiliaria. Las inmobiliarias no realizan cobros ni pagos entre sí.</div>
       <button class="btn btn-sm whatsapp-btn" onclick="confirmMatchAdvanceVenta('${key}')"><i class="fa-solid fa-check"></i> Confirmar y avanzar</button>
       <button class="btn btn-sm btn-eliminar-pastel" onclick="openDropMatchModal('${key}')"><i class="fa-solid fa-trash"></i> Eliminar match</button>
     </div>`;
@@ -5513,7 +5513,7 @@ comisiones: ()=>{
   <h3 style="margin:0 0 12px;font-size:16px;"><i class="fa-solid fa-scale-balanced" style="color:var(--brass);margin-right:6px;"></i> Ventas</h3>
   <div class="explore-purpose-note">
     <i class="fa-solid fa-circle-info"></i>
-    <p>En una venta, cada inmobiliaria cobra su <strong>3%</strong> directo de su propio cliente al firmar el boleto — <strong>no hay pago entre inmobiliarias</strong>. Esto es solo para tu propio registro; lo de la otra inmobiliaria es informativo, no depende de vos.</p>
+    <p>Honorarios por Ley: Cada parte abona el <strong>3%</strong> a su respectiva inmobiliaria. Las inmobiliarias no realizan cobros ni pagos entre sí. Esto es solo para tu propio registro; lo de la otra inmobiliaria es informativo, no depende de vos.</p>
   </div>
   ${ventaTableHTML}
 
