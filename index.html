@@ -2823,12 +2823,8 @@ function goStep(n){
   });
 }
 /* ---------------- Geocoding de direcciones: Geoapify ---------------- */
-// Reemplaza a Nominatim para el buscador de direcciones — Nominatim no
-// encuentra bien la numeración exacta en muchas calles de Argentina.
-// Sacá tu key gratis en https://myprojects.geoapify.com (nivel gratuito:
-// 3.000 consultas/día) y pegala acá. Mientras esto diga 'TU_API_KEY_ACA',
-// el buscador de direcciones no va a funcionar (el pin manual sigue andando).
-const GEOAPIFY_API_KEY = 'TU_API_KEY_ACA';
+// Nivel gratuito: 3.000 consultas/día. Administrala en https://myprojects.geoapify.com
+const GEOAPIFY_API_KEY = 'a6668bd7a50748e495c3d01e4169e58c';
 
 /* ---------------- Firebase: autenticación real ---------------- */
 const firebaseConfig = {
