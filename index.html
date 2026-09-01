@@ -1224,7 +1224,7 @@
       </div>
       <div class="row-2">
         <div class="field"><label>Operación</label><select id="p-op" onchange="toggleRequisitosSection(); updateComOptions(); updateMonedaYExpensas();"><option>Venta</option><option>Alquiler</option></select></div>
-        <div class="field"><label>Tipo de propiedad</label><select id="p-tipo"><option>Casa</option><option>Departamento</option><option>PH</option><option>Terreno</option><option>Local comercial</option><option>Oficina</option><option>Galpón / Depósito</option></select></div>
+        <div class="field"><label>Tipo de propiedad</label><select id="p-tipo" onchange="updateAmenitiesByTipo()"><option>Casa</option><option>Departamento</option><option>PH</option><option>Terreno</option><option>Local comercial</option><option>Oficina</option><option>Galpón / Depósito</option></select></div>
       </div>
       <div class="row-2">
         <div class="field"><label>Ciudad</label><select id="p-ciudad" onchange="recenterPropPinMap()"><option>Tucumán</option><option>Salta</option><option>Jujuy</option><option>Santiago del Estero</option><option>Catamarca</option><option>La Rioja</option></select></div>
@@ -1253,14 +1253,45 @@
       </div>
       <div class="field">
         <label>Comodidades</label>
-        <div class="amenities-row">
+        <div class="amenities-row" id="com-generico-row">
           <label class="amenity-check"><input type="checkbox" id="p-toilette"> Toilette</label>
           <label class="amenity-check"><input type="checkbox" id="p-piscina"> Piscina</label>
           <label class="amenity-check"><input type="checkbox" id="p-cochera"> Cochera</label>
           <label class="amenity-check"><input type="checkbox" id="p-galeria"> Galería</label>
           <label class="amenity-check"><input type="checkbox" id="p-parrilla"> Parrilla</label>
-          <label class="amenity-check"><input type="checkbox" id="p-country"> Country / Barrio cerrado</label>
         </div>
+        <div class="amenities-row hidden" id="com-depto-row">
+          <label class="amenity-check"><input type="checkbox" id="p-dept-toilette"> Toilette</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-piscina"> Piscina</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-cochera"> Cochera</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-baulera"> Baulera</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-gimnasio"> Gimnasio</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-seguridad"> Seguridad</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-porteria"> Portería</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-asador"> Asador</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-balcon"> Balcón</label>
+          <label class="amenity-check"><input type="checkbox" id="p-dept-mascotas"> Apto mascotas</label>
+        </div>
+        <div class="amenities-row hidden" id="com-casa-row">
+          <label class="amenity-check"><input type="checkbox" id="p-casa-toilette"> Toilette</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-bano"> Baño</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-piscina"> Piscina</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-cochera"> Cochera</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-quincho"> Quincho</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-asador"> Asador</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-galeria"> Galería</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-porteria"> Portería</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-lavadero"> Lavadero</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-jardin"> Jardín</label>
+          <label class="amenity-check"><input type="checkbox" id="p-casa-credito"> Apto crédito</label>
+        </div>
+        <div class="row-2 hidden" id="com-depto-orientacion-wrap" style="margin-top:10px;">
+          <div class="field"><label>Orientación</label>
+            <select id="p-dept-orientacion"><option value="">No especificado</option><option value="Frente">Frente</option><option value="Contrafrente">Contrafrente</option></select>
+          </div>
+          <div class="field"></div>
+        </div>
+        <label class="amenity-check" style="margin-top:10px;display:inline-flex;"><input type="checkbox" id="p-country"> Country / Barrio cerrado</label>
       </div>
       <div class="row-2">
         <div class="field"><label>Precio</label><input id="p-precio" type="number" placeholder="85000"></div>
@@ -1431,7 +1462,7 @@
     <button type="button" class="btn btn-sm btn-editar-violeta" style="margin-top:8px;" onclick="toggleContactClienteQuickAdd()"><i class="fa-solid fa-plus"></i> <span id="contactcliente-quickadd-label">Cargar cliente rápido</span></button>
     <div class="modal-close-row">
       <button class="btn" onclick="closeModal('contactcliente')">Cancelar</button>
-      <button class="btn btn-solid whatsapp-btn" onclick="confirmContactWithClient()"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</button>
+      <button class="btn btn-solid whatsapp-btn" onclick="confirmContactWithClient()" title="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
     </div>
   </div>
 </div>
@@ -1447,7 +1478,7 @@
     </div>
     <div class="modal-close-row">
       <button class="btn" onclick="closeModal('contactprop')">Cancelar</button>
-      <button class="btn btn-solid whatsapp-btn" id="contactprop-confirm-btn" onclick="confirmContactWithProp()"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</button>
+      <button class="btn btn-solid whatsapp-btn" id="contactprop-confirm-btn" onclick="confirmContactWithProp()" title="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
     </div>
   </div>
 </div>
@@ -2125,6 +2156,15 @@ function updateComOptions(selectedValue){
     document.getElementById('p-com').innerHTML = options.map(o=>`<option ${o===toSelect?'selected':''}>${o}</option>`).join('');
   }
 }
+function updateAmenitiesByTipo(){
+  const tipo = document.getElementById('p-tipo').value;
+  const esDepto = tipo === 'Departamento';
+  const esCasa = tipo === 'Casa';
+  document.getElementById('com-generico-row').classList.toggle('hidden', esDepto || esCasa);
+  document.getElementById('com-depto-row').classList.toggle('hidden', !esDepto);
+  document.getElementById('com-depto-orientacion-wrap').classList.toggle('hidden', !esDepto);
+  document.getElementById('com-casa-row').classList.toggle('hidden', !esCasa);
+}
 /* ---------------- mini-mapa para elegir la ubicación aproximada de una propiedad ---------------- */
 let propPinMapInstance = null;
 let propPinMarker = null;
@@ -2324,11 +2364,41 @@ function generateDescriptionAI(){
   const banos = document.getElementById('p-banos').value;
   const ant = document.getElementById('p-ant').value;
   const amenities = [];
-  if(document.getElementById('p-toilette').checked) amenities.push('toilette');
-  if(document.getElementById('p-piscina').checked) amenities.push('piscina');
-  if(document.getElementById('p-cochera').checked) amenities.push('cochera');
-  if(document.getElementById('p-galeria').checked) amenities.push('galería');
-  if(document.getElementById('p-parrilla').checked) amenities.push('parrilla');
+  const esDepto = tipo === 'Departamento';
+  const esCasa = tipo === 'Casa';
+  if(esDepto){
+    if(document.getElementById('p-dept-toilette').checked) amenities.push('toilette');
+    if(document.getElementById('p-dept-piscina').checked) amenities.push('piscina');
+    if(document.getElementById('p-dept-cochera').checked) amenities.push('cochera');
+    if(document.getElementById('p-dept-baulera').checked) amenities.push('baulera');
+    if(document.getElementById('p-dept-gimnasio').checked) amenities.push('gimnasio');
+    if(document.getElementById('p-dept-seguridad').checked) amenities.push('seguridad');
+    if(document.getElementById('p-dept-porteria').checked) amenities.push('portería');
+    if(document.getElementById('p-dept-asador').checked) amenities.push('asador');
+    if(document.getElementById('p-dept-balcon').checked) amenities.push('balcón');
+    if(document.getElementById('p-dept-mascotas').checked) amenities.push('apto mascotas');
+    const orientacion = document.getElementById('p-dept-orientacion').value;
+    if(orientacion) amenities.push(orientacion.toLowerCase());
+  } else if(esCasa){
+    if(document.getElementById('p-casa-toilette').checked) amenities.push('toilette');
+    if(document.getElementById('p-casa-bano').checked) amenities.push('baño');
+    if(document.getElementById('p-casa-piscina').checked) amenities.push('piscina');
+    if(document.getElementById('p-casa-cochera').checked) amenities.push('cochera');
+    if(document.getElementById('p-casa-quincho').checked) amenities.push('quincho');
+    if(document.getElementById('p-casa-asador').checked) amenities.push('asador');
+    if(document.getElementById('p-casa-galeria').checked) amenities.push('galería');
+    if(document.getElementById('p-casa-porteria').checked) amenities.push('portería');
+    if(document.getElementById('p-casa-lavadero').checked) amenities.push('lavadero');
+    if(document.getElementById('p-casa-jardin').checked) amenities.push('jardín');
+    if(document.getElementById('p-casa-credito').checked) amenities.push('apto crédito');
+  } else {
+    if(document.getElementById('p-toilette').checked) amenities.push('toilette');
+    if(document.getElementById('p-piscina').checked) amenities.push('piscina');
+    if(document.getElementById('p-cochera').checked) amenities.push('cochera');
+    if(document.getElementById('p-galeria').checked) amenities.push('galería');
+    if(document.getElementById('p-parrilla').checked) amenities.push('parrilla');
+  }
+  if(document.getElementById('p-country').checked) amenities.push('en country/barrio cerrado');
 
   let frase = `${tipo}${amb?' de '+amb+' ambientes':''}${op==='Venta'?' en venta':' en alquiler'}${zona?' en '+zona:''}${ciudad?', '+ciudad:''}.`;
 
@@ -2561,7 +2631,7 @@ function exclusivaWhatsappBtn(o){
   if(!phone) return `<button class="btn btn-sm" disabled style="flex:1;opacity:.5;cursor:not-allowed;" title="No tenemos el WhatsApp de esta inmobiliaria todavía">Sin WhatsApp</button>`;
   const msg = `Hola ${o.agency}! Te escribo por la Oportunidad Exclusiva que publicaste: ${o.tipo} en ${o.zona}, ${o.ciudad} (${fmtMoney(o.precioEspecial,o.moneda)}). Me interesa, ¿seguimos hablando?`;
   const url = `https://wa.me/${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`;
-  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="flex:1;text-decoration:none;text-align:center;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="flex:1;text-decoration:none;text-align:center;" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`;
 }
 function openExclusivaDetail(id){
   const o = exclusivaOpportunities.find(x=>x.id===id);
@@ -2737,7 +2807,30 @@ function resetNewClientFormFields(){
   document.getElementById('p-cochera').checked = false;
   document.getElementById('p-galeria').checked = false;
   document.getElementById('p-parrilla').checked = false;
+  document.getElementById('p-dept-toilette').checked = false;
+  document.getElementById('p-dept-piscina').checked = false;
+  document.getElementById('p-dept-cochera').checked = false;
+  document.getElementById('p-dept-baulera').checked = false;
+  document.getElementById('p-dept-gimnasio').checked = false;
+  document.getElementById('p-dept-seguridad').checked = false;
+  document.getElementById('p-dept-porteria').checked = false;
+  document.getElementById('p-dept-asador').checked = false;
+  document.getElementById('p-dept-balcon').checked = false;
+  document.getElementById('p-dept-mascotas').checked = false;
+  document.getElementById('p-dept-orientacion').value = '';
+  document.getElementById('p-casa-toilette').checked = false;
+  document.getElementById('p-casa-bano').checked = false;
+  document.getElementById('p-casa-piscina').checked = false;
+  document.getElementById('p-casa-cochera').checked = false;
+  document.getElementById('p-casa-quincho').checked = false;
+  document.getElementById('p-casa-asador').checked = false;
+  document.getElementById('p-casa-galeria').checked = false;
+  document.getElementById('p-casa-porteria').checked = false;
+  document.getElementById('p-casa-lavadero').checked = false;
+  document.getElementById('p-casa-jardin').checked = false;
+  document.getElementById('p-casa-credito').checked = false;
   document.getElementById('p-country').checked = false;
+  updateAmenitiesByTipo();
   document.getElementById('p-precio').value = '';
   document.getElementById('p-expensas').value = '';
   document.getElementById('p-desc').value = '';
@@ -2826,7 +2919,30 @@ function openEditPropModal(id){
   document.getElementById('p-cochera').checked = !!p.cochera;
   document.getElementById('p-galeria').checked = !!p.galeria;
   document.getElementById('p-parrilla').checked = !!p.parrilla;
+  document.getElementById('p-dept-toilette').checked = !!p.toilette;
+  document.getElementById('p-dept-piscina').checked = !!p.piscina;
+  document.getElementById('p-dept-cochera').checked = !!p.cochera;
+  document.getElementById('p-dept-baulera').checked = !!p.baulera;
+  document.getElementById('p-dept-gimnasio').checked = !!p.gimnasio;
+  document.getElementById('p-dept-seguridad').checked = !!p.seguridad;
+  document.getElementById('p-dept-porteria').checked = !!p.porteria;
+  document.getElementById('p-dept-asador').checked = !!p.asador;
+  document.getElementById('p-dept-balcon').checked = !!p.balcon;
+  document.getElementById('p-dept-mascotas').checked = !!p.aptoMascotas;
+  document.getElementById('p-dept-orientacion').value = p.orientacion || '';
+  document.getElementById('p-casa-toilette').checked = !!p.toilette;
+  document.getElementById('p-casa-bano').checked = !!p.bano;
+  document.getElementById('p-casa-piscina').checked = !!p.piscina;
+  document.getElementById('p-casa-cochera').checked = !!p.cochera;
+  document.getElementById('p-casa-quincho').checked = !!p.quincho;
+  document.getElementById('p-casa-asador').checked = !!p.asador;
+  document.getElementById('p-casa-galeria').checked = !!p.galeria;
+  document.getElementById('p-casa-porteria').checked = !!p.porteria;
+  document.getElementById('p-casa-lavadero').checked = !!p.lavadero;
+  document.getElementById('p-casa-jardin').checked = !!p.jardin;
+  document.getElementById('p-casa-credito').checked = !!p.aptoCredito;
   document.getElementById('p-country').checked = !!p.country;
+  updateAmenitiesByTipo();
   REQUISITOS_MAP.forEach(r=>{
     document.getElementById(r.id).checked = p.requisitos ? p.requisitos.includes(r.label) : true;
   });
@@ -2855,9 +2971,12 @@ async function submitNewClient(){
       btn.disabled = false;
       return;
     }
+    const tipoSeleccionado = document.getElementById('p-tipo').value;
+    const esDeptoForm = tipoSeleccionado === 'Departamento';
+    const esCasaForm = tipoSeleccionado === 'Casa';
     const data = {
       op:document.getElementById('p-op').value,
-      tipo:document.getElementById('p-tipo').value,
+      tipo:tipoSeleccionado,
       ciudad:document.getElementById('p-ciudad').value,
       zona:document.getElementById('p-zona').value || '—',
       direccion:direccionValue,
@@ -2866,11 +2985,24 @@ async function submitNewClient(){
       amb:document.getElementById('p-amb').value || '—',
       banos:document.getElementById('p-banos').value || '—',
       ant:document.getElementById('p-ant').value || '—',
-      toilette:document.getElementById('p-toilette').checked,
-      piscina:document.getElementById('p-piscina').checked,
-      cochera:document.getElementById('p-cochera').checked,
-      galeria:document.getElementById('p-galeria').checked,
+      toilette: esDeptoForm ? document.getElementById('p-dept-toilette').checked : esCasaForm ? document.getElementById('p-casa-toilette').checked : document.getElementById('p-toilette').checked,
+      piscina: esDeptoForm ? document.getElementById('p-dept-piscina').checked : esCasaForm ? document.getElementById('p-casa-piscina').checked : document.getElementById('p-piscina').checked,
+      cochera: esDeptoForm ? document.getElementById('p-dept-cochera').checked : esCasaForm ? document.getElementById('p-casa-cochera').checked : document.getElementById('p-cochera').checked,
+      galeria: esCasaForm ? document.getElementById('p-casa-galeria').checked : document.getElementById('p-galeria').checked,
       parrilla:document.getElementById('p-parrilla').checked,
+      baulera:document.getElementById('p-dept-baulera').checked,
+      gimnasio:document.getElementById('p-dept-gimnasio').checked,
+      seguridad:document.getElementById('p-dept-seguridad').checked,
+      porteria: esCasaForm ? document.getElementById('p-casa-porteria').checked : document.getElementById('p-dept-porteria').checked,
+      asador: esCasaForm ? document.getElementById('p-casa-asador').checked : document.getElementById('p-dept-asador').checked,
+      balcon:document.getElementById('p-dept-balcon').checked,
+      aptoMascotas:document.getElementById('p-dept-mascotas').checked,
+      orientacion: esDeptoForm ? document.getElementById('p-dept-orientacion').value : '',
+      bano:document.getElementById('p-casa-bano').checked,
+      quincho:document.getElementById('p-casa-quincho').checked,
+      lavadero:document.getElementById('p-casa-lavadero').checked,
+      jardin:document.getElementById('p-casa-jardin').checked,
+      aptoCredito:document.getElementById('p-casa-credito').checked,
       country:document.getElementById('p-country').checked,
       requisitos: document.getElementById('p-op').value==='Alquiler' ? REQUISITOS_MAP.filter(r=>document.getElementById(r.id).checked).map(r=>r.label) : [],
       fotos: [...propPhotos],
@@ -3530,14 +3662,14 @@ function riskWhatsappBtn(a){
   const dias = daysSince(a.registeredAt);
   const msg = `Hola ${a.name}! Vimos que tu inmobiliaria está registrada hace más de 30 días en Llave Cruzada y lleva ${dias} días sin realizar operaciones. ¿Necesitás que te ayudemos con algo para sacarle más provecho a la red?`;
   const url = `https://wa.me/${a.phone}?text=${encodeURIComponent(msg)}`;
-  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Contactar</a>`;
+  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;" title="Contactar"><i class="fa-brands fa-whatsapp"></i></a>`;
 }
 function reportWhatsappBtn(r){
   const agency = ADMIN_AGENCIES.find(a=>a.name===r.agency);
   if(!agency || !agency.phone) return '';
   const msg = `Hola ${agency.name}! Te escribimos desde el equipo de Llave Cruzada. Recibimos una denuncia de otra inmobiliaria de la red por el siguiente motivo: "${r.reason}". Te recordamos que al registrarte aceptaste los Términos y Condiciones del sistema, y que este tipo de situaciones puede afectar tu reputación y calificación dentro de la red. Nos gustaría conocer tu versión y ayudarte a resolverlo antes de tener que tomar una medida sobre tu cuenta.`;
   const url = `https://wa.me/${agency.phone}?text=${encodeURIComponent(msg)}`;
-  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</a>`;
+  return `<a href="${url}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;" title="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`;
 }
 function adminAgencyRowsHTML(list){
   return list.length ? list.map(a=>`<tr><td style="color:var(--brass);font-weight:700;">${escapeHtml(a.name)}</td><td>${escapeHtml(a.city)}</td><td>${adminStatusPill(a.status)}</td><td>${a.registeredAt}</td><td>${a.plan}</td><td>${a.ops}</td><td style="display:flex;gap:8px;">
@@ -4309,11 +4441,12 @@ async function saveProfileChanges(){
   AGENCY.whatsapp = document.getElementById('perfil-whatsapp').value;
   AGENCY.email = document.getElementById('perfil-email').value;
   AGENCY.direccion = document.getElementById('perfil-direccion').value;
+  AGENCY.sitioWeb = document.getElementById('perfil-sitioweb').value;
   updateSidebarAgencyInfo();
   try{
     await db.collection('agencies').doc(AGENCY.uid).update({
       name:AGENCY.name, city:AGENCY.city, matricula:AGENCY.matricula,
-      whatsapp:AGENCY.whatsapp, email:AGENCY.email, direccion:AGENCY.direccion,
+      whatsapp:AGENCY.whatsapp, email:AGENCY.email, direccion:AGENCY.direccion, sitioWeb:AGENCY.sitioWeb,
     });
     toast('Cambios guardados');
   }catch(err){
@@ -4715,11 +4848,11 @@ function renderDetailModal(p, opts){
           const phone = ag && (ag.whatsapp || ag.phone);
           if(!phone) return `<button class="btn btn-solid" onclick="toast('Todavía no tenemos el WhatsApp de esta inmobiliaria')"><i class="fa-solid fa-comment-dots"></i> Contactar inmobiliaria</button>`;
           if(opts.enableContactMatch){
-            return `<button class="btn btn-solid" onclick="openContactClienteModal('${p.id}')"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</button>`;
+            return `<button class="btn btn-solid" onclick="openContactClienteModal('${p.id}')" title="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>`;
           }
           const msg = `Hola ${p.agency}! Te escribo por ${p.tipo} en ${p.zona}, ${p.ciudad} (${fmtMoney(p.precio,p.moneda)}). Me interesa, ¿seguimos hablando?`;
           const url = `https://wa.me/${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`;
-          return `<a href="${url}" target="_blank" class="btn btn-solid" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</a>`;
+          return `<a href="${url}" target="_blank" class="btn btn-solid" style="text-decoration:none;" title="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`;
         })()}
         <button class="btn" onclick="closeModal('propdetail')">Cerrar</button>
       </div>
@@ -5024,7 +5157,7 @@ function matchActionsHTML(m, key){
     primaryBtn = negotiationHTML(m, key);
     eliminarInline = true;
   } else if(status==='acordado'){
-    primaryBtn = `<button class="btn btn-sm whatsapp-btn" onclick="contactMatch('${key}')"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</button>`;
+    primaryBtn = `<button class="btn btn-sm whatsapp-btn" onclick="contactMatch('${key}')" title="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>`;
   } else if(status==='seguimiento'){
     if(esVenta){
       const yaConfirme = iOwnProperty ? !!m.propClosedAt : !!m.searchClosedAt;
@@ -5352,7 +5485,7 @@ let leadsSearchQuery = '';
 function propietarioWhatsappBtn(p){
   const phone = (p.propietarioTel||'').replace(/\D/g,'');
   if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este propietario">Sin WhatsApp</button>`;
-  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`;
 }
 function propietarioRowsHTML(list){
   return list.length
@@ -5366,7 +5499,7 @@ function propietarioRowsHTML(list){
 function clientWhatsappBtn(c){
   const phone = (c.tel||'').replace(/\D/g,'');
   if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este cliente">Sin WhatsApp</button>`;
-  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`;
 }
 function buscadorRowsHTML(list){
   return list.length
@@ -5399,7 +5532,7 @@ async function changeLeadTemperaturaInline(id, temperatura){
 function leadWhatsappBtn(l){
   const phone = (l.telefono||'').replace(/\D/g,'');
   if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este lead">Sin WhatsApp</button>`;
-  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`;
 }
 let pendingLeadFoto = null;
 let editingLeadId = null;
@@ -5559,15 +5692,16 @@ function commissionAmountForMatch(m){
 }
 function totalCommissionIncome(){
   const totals = {};
-  matches.filter(m=>m.mine==='client' && m.status==='concretadas').forEach(m=>{
+  matches.filter(m=>m.status==='concretadas' && isCommissionEarnedByMe(m)).forEach(m=>{
     const c = commissionAmountForMatch(m);
     if(c) totals[c.moneda] = (totals[c.moneda] || 0) + c.amount;
   });
   return totals;
 }
 // Venta: las dos partes cobran su 3% siempre. Alquiler: solo cobrás una
-// comisión por la referencia cuando fuiste vos quien trajo al inquilino
-// (misma convención que ya usa totalCommissionIncome en el resto de la app).
+// comisión por la referencia cuando fuiste vos quien trajo al inquilino.
+// Esta es LA regla única de cuándo contás una comisión como propia — la
+// usan tanto el Dashboard (total histórico) como Performance (por mes).
 function isCommissionEarnedByMe(m){
   if(m.prop.op==='Venta') return true;
   return m.mine==='client';
@@ -6301,6 +6435,9 @@ perfil: ()=>`
       <div class="field"><label>WhatsApp</label><input id="perfil-whatsapp" value="${escapeHtml(AGENCY.whatsapp)||''}" placeholder="+54 9 ..."></div>
       <div class="field"><label>Email</label><input id="perfil-email" value="${AGENCY.email||''}" placeholder="contacto@inmobiliaria.com"></div>
       <div class="field"><label>Dirección</label><input id="perfil-direccion" value="${escapeHtml(AGENCY.direccion)||''}" placeholder="Oficina / local"></div>
+    </div>
+    <div class="row-3">
+      <div class="field"><label>Sitio web (opcional)</label><input id="perfil-sitioweb" value="${escapeHtml(AGENCY.sitioWeb)||''}" placeholder="https://tuinmobiliaria.com"></div>
     </div>
 
     <div class="profile-section-title"><i class="fa-solid fa-star"></i> Plan actual</div>
