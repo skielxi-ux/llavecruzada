@@ -730,6 +730,7 @@
       <div class="step-card"><div class="tag">02 · Cruce</div><h3>Encontramos tu match</h3><p>El sistema cruza automáticamente tu cartera y tus búsquedas contra toda la red y te avisa apenas hay compatibilidad.</p></div>
       <div class="step-card"><div class="tag">03 · Cierre</div><h3>Cerrá y cobrá tu comisión</h3><p>Contacto directo con la otra inmobiliaria, seguimiento de la operación y comisión acordada de antemano.</p></div>
     </div>
+    <img src="como-funciona-ilustracion.jpg" alt="Dos inmobiliarias cerrando un acuerdo" style="width:100%;max-width:900px;display:block;margin:40px auto 0;border-radius:var(--radius);">
   </div>
 
   <div class="section reveal" id="precios">
@@ -2889,7 +2890,7 @@ const APP_VIEWS_TOGGLEABLE = [
   {key:'precios', label:'Precios'},
   {key:'soporte', label:'Soporte'},
 ];
-const PUESTO_OPTIONS = ['Comercial','Martillero / Corredor','Gerente Comercial','Asesor Inmobiliario','Administrador','Otro'];
+const PUESTO_OPTIONS = ['Comercial','Otro'];
 
 function showAuthError(elId, message){
   const el = document.getElementById(elId);
@@ -4253,9 +4254,23 @@ async function confirmMatchAdvanceVenta(key){
   showApp('matches');
 }
 async function contactMatch(key){
+  const m = matches.find(x=>matchKey(x)===key);
   try{ await db.collection('matches').doc(key).update({status:'seguimiento', updatedAt:new Date().toISOString()}); }
-  catch(err){ toast('Error: '+err.message); }
-  toast('Abriendo WhatsApp para contactar');
+  catch(err){ toast('Error: '+err.message); return; }
+  if(m){
+    const otherUid = otherAgencyUid(m);
+    const otherName = matchFlowData(m).otherAgency;
+    const ag = ADMIN_AGENCIES.find(a=>a.id===otherUid) || ADMIN_AGENCIES.find(a=>a.name===otherName);
+    const phone = ag && (ag.whatsapp || ag.phone);
+    if(phone){
+      const msg = `Hola ${otherName}! Te contacto por nuestro match de ${m.prop.tipo} en ${m.prop.zona}, ${m.prop.ciudad}. ¿Seguimos coordinando?`;
+      const url = `https://wa.me/${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+      toast('Abriendo WhatsApp para contactar');
+    } else {
+      toast('Todavía no tenemos el WhatsApp de '+otherName+' — el match ya quedó marcado como "en seguimiento" igual.');
+    }
+  }
   showApp('matches');
 }
 let finalizeMatchKey = null;
@@ -5701,16 +5716,20 @@ usuarios: ()=>{
   </div>
 
   ${CURRENT_USER_ROLE==='owner' ? `
-  <div class="card" style="max-width:520px;margin-bottom:24px;">
+  <div class="card" style="margin-bottom:24px;">
     <div class="profile-section-title"><i class="fa-solid fa-user-plus"></i> Invitar usuario</div>
     ${collaborators.length>=limit ? `
     <p style="font-size:13px;color:var(--paper-dim);margin:0;">Alcanzaste el límite de usuarios de tu Plan ${AGENCY.plan}. Para invitar a alguien más, pedí un cambio de plan desde Mi Perfil.</p>
     ` : `
-    <div class="field"><label>Nombre y apellido</label><input id="user-invite-name" placeholder="Nombre completo"></div>
-    <div class="field"><label>Email</label><input id="user-invite-email" type="email" placeholder="persona@inmobiliaria.com"></div>
-    <div class="field"><label>Contraseña provisoria</label><input id="user-invite-password" type="password" placeholder="Mínimo 6 caracteres"></div>
-    <div class="field"><label>Puesto</label>
-      <select id="user-invite-puesto">${PUESTO_OPTIONS.map(o=>`<option ${o==='Comercial'?'selected':''}>${o}</option>`).join('')}</select>
+    <div class="row-2">
+      <div class="field"><label>Nombre y apellido</label><input id="user-invite-name" placeholder="Nombre completo"></div>
+      <div class="field"><label>Email</label><input id="user-invite-email" type="email" placeholder="persona@inmobiliaria.com"></div>
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Contraseña provisoria</label><input id="user-invite-password" type="password" placeholder="Mínimo 6 caracteres"></div>
+      <div class="field"><label>Puesto</label>
+        <select id="user-invite-puesto">${PUESTO_OPTIONS.map(o=>`<option ${o==='Comercial'?'selected':''}>${o}</option>`).join('')}</select>
+      </div>
     </div>
     <div class="field">
       <label>Pestañas visibles para esta persona</label>
