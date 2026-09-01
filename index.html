@@ -730,7 +730,6 @@
       <div class="step-card"><div class="tag">02 · Cruce</div><h3>Encontramos tu match</h3><p>El sistema cruza automáticamente tu cartera y tus búsquedas contra toda la red y te avisa apenas hay compatibilidad.</p></div>
       <div class="step-card"><div class="tag">03 · Cierre</div><h3>Cerrá y cobrá tu comisión</h3><p>Contacto directo con la otra inmobiliaria, seguimiento de la operación y comisión acordada de antemano.</p></div>
     </div>
-    <img src="como-funciona-ilustracion.jpg" alt="Dos inmobiliarias cerrando un acuerdo" style="width:100%;max-width:900px;display:block;margin:40px auto 0;border-radius:var(--radius);">
   </div>
 
   <div class="section reveal" id="precios">
@@ -3081,6 +3080,7 @@ function newAgencies(){ return ADMIN_AGENCIES.filter(a=>daysSince(a.registeredAt
 function fmtARS(n){ return 'ARS ' + Math.round(n).toLocaleString('es-AR'); }
 
 let ADMIN_AGENCIES = [];
+let ADMIN_MATCHES = [];
 let submittedReports = [];
 let inviteCodes = [];
 let supportTickets = [];
@@ -3141,7 +3141,7 @@ async function resetDemo(){
   else showApp('dashboard');
 }
 
-let unsubAdminAgencies = null, unsubReports = null, unsubCodes = null, unsubTickets = null, unsubAdminProps = null, unsubAdminClients = null, unsubSubPayments = null, unsubPlanRequests = null;
+let unsubAdminAgencies = null, unsubReports = null, unsubCodes = null, unsubTickets = null, unsubAdminProps = null, unsubAdminClients = null, unsubSubPayments = null, unsubPlanRequests = null, unsubAdminMatches = null;
 let adminTotalProps = 0, adminTotalClients = 0;
 let subscriptionPayments = [];
 function attachAdminListeners(){
@@ -3178,10 +3178,14 @@ function attachAdminListeners(){
     adminTotalClients = snap.size;
     if(document.getElementById('view-admin').style.display==='block') showAdmin(document.querySelector('#view-admin .nav-item.active')?.dataset.aview || 'dashboard');
   }, err=>console.error('Error escuchando clients (admin):', err));
+  unsubAdminMatches = db.collection('matches').onSnapshot(snap=>{
+    ADMIN_MATCHES = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    if(document.getElementById('view-admin').style.display==='block') showAdmin(document.querySelector('#view-admin .nav-item.active')?.dataset.aview || 'dashboard');
+  }, err=>console.error('Error escuchando matches (admin):', err));
 }
 function detachAdminListeners(){
-  [unsubAdminAgencies, unsubReports, unsubCodes, unsubTickets, unsubAdminProps, unsubAdminClients, unsubSubPayments, unsubPlanRequests].forEach(u=>u&&u());
-  unsubAdminAgencies = unsubReports = unsubCodes = unsubTickets = unsubSubPayments = unsubPlanRequests = null;
+  [unsubAdminAgencies, unsubReports, unsubCodes, unsubTickets, unsubAdminProps, unsubAdminClients, unsubSubPayments, unsubPlanRequests, unsubAdminMatches].forEach(u=>u&&u());
+  unsubAdminAgencies = unsubReports = unsubCodes = unsubTickets = unsubSubPayments = unsubPlanRequests = unsubAdminMatches = null;
 }
 function enterAdminView(){
   document.querySelectorAll('.modal-backdrop').forEach(m=>m.classList.add('hidden'));
@@ -3576,8 +3580,8 @@ const adminRenderers = {
     const mrr = proCountDash*120000 + premiumCountDash*400000;
     const atRisk = agenciesAtRisk();
     const nuevas = newAgencies();
-    const opsPendientes = matches.filter(m=>['nuevos','acordado','seguimiento','visita'].includes(m.status)).length;
-    const opsCaidas = matches.filter(m=>m.status==='caidas').length;
+    const opsPendientes = ADMIN_MATCHES.filter(m=>['nuevos','acordado','seguimiento','visita'].includes(m.status)).length;
+    const opsCaidas = ADMIN_MATCHES.filter(m=>m.status==='caidas').length;
     const comisionesGeneradas = totalOps * 220000;
     const gmv = totalOps * 6000000;
     return `
@@ -3588,7 +3592,7 @@ const adminRenderers = {
       ${adminKpi('inmobiliariasActivas', 'fa-solid fa-building', 'Inmobiliarias activas', verifiedCount)}
       ${adminKpi('propiedadesPublicadas', 'fa-solid fa-house', 'Propiedades publicadas', adminTotalProps)}
       ${adminKpi('busquedasActivasAdmin', 'fa-solid fa-magnifying-glass', 'Búsquedas activas', adminTotalClients)}
-      ${adminKpi('matchesActivosDash', 'fa-solid fa-link', 'Matches activos', matches.filter(m=>m.status!=='caidas' && m.status!=='concretadas').length, 'brass')}
+      ${adminKpi('matchesActivosDash', 'fa-solid fa-link', 'Matches activos', ADMIN_MATCHES.filter(m=>m.status!=='caidas' && m.status!=='concretadas').length, 'brass')}
     </div>
 
     <div class="admin-section-title">Resultados</div>
@@ -3659,12 +3663,13 @@ const adminRenderers = {
     </table>
   `,
   matches: ()=>{
-    const total = matches.length;
-    const enSeguimiento = matches.filter(m=>['acordado','seguimiento','visita'].includes(m.status)).length;
-    const concretadas = matches.filter(m=>m.status==='concretadas').length;
-    const canceladas = matches.filter(m=>m.status==='caidas').length;
+    const total = ADMIN_MATCHES.length;
+    const enSeguimiento = ADMIN_MATCHES.filter(m=>['acordado','seguimiento','visita'].includes(m.status)).length;
+    const concretadas = ADMIN_MATCHES.filter(m=>m.status==='concretadas').length;
+    const canceladas = ADMIN_MATCHES.filter(m=>m.status==='caidas').length;
     const tasaCierre = total ? Math.round(concretadas/total*100) : 0;
     const MATCH_LABELS = {nuevos:'Nuevo', acordado:'Comisión acordada', seguimiento:'Contactado', visita:'Visita', concretadas:'Concretada', caidas:'Cancelada'};
+    const sorted = [...ADMIN_MATCHES].sort((a,b)=>new Date(b.claimedAt||0)-new Date(a.claimedAt||0));
     return `
     <div class="main-head"><div><h1>Matches</h1><p class="sub">Todos los cruces detectados en el sistema</p></div></div>
     <div class="kpi-grid">
@@ -3679,13 +3684,11 @@ const adminRenderers = {
     <table>
       <thead><tr><th>Inmobiliaria A</th><th>Inmobiliaria B</th><th>Cliente</th><th>Estado</th><th>Reclamado</th></tr></thead>
       <tbody>
-        ${total ? matches.map(m=>{
-          const d = matchFlowData(m);
-          return `<tr><td>${escapeHtml(AGENCY.name)}</td><td>${escapeHtml(d.otherAgency)}</td><td>${escapeHtml(d.clientName)}</td><td>${adminStatusPill(m.status==='caidas'?'Suspendida':m.status==='concretadas'?'Verificada':'Pendiente', MATCH_LABELS[m.status])}</td><td>${formatDateTime(m.claimedAt)}</td></tr>`;
+        ${total ? sorted.map(m=>{
+          return `<tr><td>${escapeHtml(m.propOwnerName)}</td><td>${escapeHtml(m.searchOwnerName)}</td><td>Cliente de ${escapeHtml(m.searchOwnerName)}</td><td>${adminStatusPill(m.status==='caidas'?'Suspendida':m.status==='concretadas'?'Verificada':'Pendiente', MATCH_LABELS[m.status]||m.status)}</td><td>${m.claimedAt ? formatDateTime(m.claimedAt) : '—'}</td></tr>`;
         }).join('') : `<tr><td colspan="5" class="empty-row">Todavía no hay matches en el sistema.</td></tr>`}
       </tbody>
     </table>
-    <p style="font-size:11.5px;color:var(--paper-dim);margin-top:14px;">En este prototipo, los matches mostrados corresponden a la sesión activa de la inmobiliaria demo. En producción, esta vista mostraría los matches de toda la red.</p>
   `;
   },
   ingresos: ()=>{
