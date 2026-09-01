@@ -132,6 +132,7 @@
   }
   .pill.pill-brass{color:#FFFFFF;background:var(--brass);border-color:var(--brass);}
   .pill.pill-sage{color:#166534;background:#f0fdf4;border-color:#bbf7d0;}
+  .pill.pill-orange{color:#9A5B10;background:#FFF3E0;border-color:#FBD9A6;}
 
   /* ---- panel de administrador ---- */
   #view-admin .admin-section-title{color:var(--brass);}
@@ -795,7 +796,74 @@
 
   <div class="footer">
     <span>© 2026 Llave Cruzada · Tucumán, Argentina</span>
-    <span style="display:flex;align-items:center;gap:18px;">Plataforma exclusiva para inmobiliarias verificadas<a onclick="openModal('adminlogin')" style="cursor:pointer;color:var(--paper-dim);text-decoration:none;opacity:.6;font-size:11px;">Acceso administrador</a></span>
+    <span style="display:flex;align-items:center;gap:18px;">Plataforma exclusiva para inmobiliarias verificadas<a onclick="openModal('terminos')" style="cursor:pointer;color:var(--paper-dim);text-decoration:underline;font-size:11px;">Términos y Condiciones</a><a onclick="openModal('adminlogin')" style="cursor:pointer;color:var(--paper-dim);text-decoration:none;opacity:.6;font-size:11px;">Acceso administrador</a></span>
+  </div>
+</div>
+
+<div id="modal-terminos" class="modal-backdrop hidden" style="z-index:250;">
+  <div class="modal modal-xl" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('terminos')"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Términos y Condiciones de Uso</h3>
+    <p class="sub">Última actualización: pendiente de fecha de publicación</p>
+    <div style="background:#FDF6E3;border:1px solid #E8D9A0;border-radius:10px;padding:14px 16px;margin-bottom:22px;">
+      <p style="font-size:12.5px;color:#7A6420;margin:0;line-height:1.6;"><i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i><strong>Borrador de trabajo.</strong> Este texto todavía no fue revisado por un abogado y no debería publicarse ni exigirse su aceptación tal cual está. Antes de activarlo, hay que completar los datos societarios reales (razón social, CUIT, domicilio legal) y que un profesional matriculado lo valide — en particular la sección de responsabilidad entre inmobiliarias y el tratamiento de datos personales de terceros (Ley 25.326).</p>
+    </div>
+    <div style="font-size:13.5px;line-height:1.7;color:var(--ink);">
+      <p><strong>1. Aceptación de los Términos</strong><br>
+      Al registrarte y utilizar Llave Cruzada ("la Plataforma"), aceptás estos Términos y Condiciones en su totalidad. Si no estás de acuerdo, no debés utilizar el servicio. La aceptación se realiza al activar tu cuenta con el código de invitación provisto por el equipo de Llave Cruzada.</p>
+
+      <p><strong>2. Descripción del Servicio</strong><br>
+      Llave Cruzada es una red B2B que conecta inmobiliarias del NOA (Noroeste Argentino) para facilitar el intercambio de propiedades en cartera y búsquedas de clientes entre colegas del rubro. La Plataforma actúa exclusivamente como <strong>intermediario tecnológico</strong>: no participa, interviene ni es parte de ninguna operación inmobiliaria, contrato, boleto de compraventa o contrato de locación que se celebre entre inmobiliarias, propietarios, compradores, vendedores, locadores o locatarios.</p>
+
+      <p><strong>3. Registro y Verificación de Cuentas</strong><br>
+      El acceso a la Plataforma requiere un código de invitación y la verificación posterior por parte del equipo de Llave Cruzada. Cada cuenta corresponde a una inmobiliaria real, identificada por su matrícula profesional y datos de contacto verificables. Está prohibido registrar cuentas falsas, duplicadas o en representación de una inmobiliaria sin la debida autorización.</p>
+
+      <p><strong>4. Usuarios Múltiples por Cuenta</strong><br>
+      El titular de la cuenta (dueño) puede invitar colaboradores dentro del límite de su plan contratado. El titular es responsable por el uso que sus colaboradores hagan de la Plataforma en nombre de su inmobiliaria.</p>
+
+      <p><strong>5. Publicación de Propiedades y Búsquedas</strong><br>
+      Cada inmobiliaria es responsable de la veracidad, actualidad y exactitud de la información que publica: propiedades en cartera, búsquedas activas de clientes, precios, comisiones, fotografías y cualquier otro dato cargado. Llave Cruzada no verifica ni garantiza la exactitud de estos datos y no asume responsabilidad por publicaciones erróneas, desactualizadas o engañosas.</p>
+
+      <p><strong>6. Sistema de Matches y Contacto entre Inmobiliarias</strong><br>
+      La Plataforma cruza automáticamente propiedades y búsquedas compatibles cargadas por distintas inmobiliarias y facilita el contacto directo entre ellas (incluyendo WhatsApp). A partir de ese contacto, la negociación, coordinación y cierre de la operación es responsabilidad exclusiva de las inmobiliarias involucradas.</p>
+
+      <p><strong>7. Honorarios y Comisiones</strong><br>
+      En operaciones de <strong>venta</strong>, rige la comisión de ley: cada parte (comprador y vendedor) abona el 3% a su respectiva inmobiliaria. Llave Cruzada no gestiona, cobra, retiene ni es parte de estos pagos, que se realizan directamente entre cada cliente y su propia inmobiliaria al momento de la firma del boleto de compraventa ante escribanía.<br><br>
+      En operaciones de <strong>alquiler</strong>, la comisión por la referencia se acuerda libremente entre las dos inmobiliarias involucradas en el match, y su pago es responsabilidad exclusiva de las partes. Llave Cruzada no interviene en la cobranza ni garantiza su cumplimiento, sin perjuicio de las medidas disciplinarias que pueda aplicar ante un incumplimiento comprobado (ver punto 9).</p>
+
+      <p><strong>8. Reseñas y Calificaciones</strong><br>
+      Las inmobiliarias pueden calificar y dejar reseñas sobre otras inmobiliarias con las que hayan concretado una operación real dentro de la Plataforma. Las reseñas deben reflejar experiencias genuinas y no pueden contener contenido difamatorio, falso o ajeno a la relación comercial. Llave Cruzada puede eliminar reseñas que incumplan esta condición, pero no garantiza la exactitud de las opiniones publicadas por terceros.</p>
+
+      <p><strong>9. Denuncias y Medidas Disciplinarias</strong><br>
+      Cualquier inmobiliaria puede denunciar a otra con la que haya operado, detallando el motivo. El equipo de Llave Cruzada evalúa cada denuncia y puede advertir, suspender o dar de baja la cuenta involucrada según la gravedad del caso. Esta facultad es discrecional del equipo y no constituye un proceso arbitral ni sustituye las vías legales que las partes puedan iniciar por su cuenta.</p>
+
+      <p><strong>10. Planes y Facturación</strong><br>
+      El acceso a determinadas funciones y límites de uso (cantidad de usuarios, propiedades y búsquedas activas) depende del plan contratado. Los cambios de plan y bajas deben solicitarse desde la Plataforma y quedan sujetos a aprobación del equipo de Llave Cruzada. Las condiciones comerciales y de pago de los planes se rigen por lo informado en la sección de Precios vigente al momento de la contratación.</p>
+
+      <p><strong>11. Datos Personales de Terceros</strong><br>
+      Al cargar datos de clientes, propietarios, compradores o inquilinos (nombre, teléfono u otro dato personal), la inmobiliaria declara contar con el consentimiento correspondiente para su tratamiento conforme a la Ley 25.326 de Protección de Datos Personales, y asume toda responsabilidad frente a los titulares de esos datos. Llave Cruzada restringe el acceso a estos datos de contacto exclusivamente a la inmobiliaria que los cargó, salvo los casos previstos en estos Términos (por ejemplo, para el aviso automático al cerrar una operación).</p>
+
+      <p><strong>12. Propiedad Intelectual</strong><br>
+      El software, diseño, marca "Llave Cruzada" y demás elementos de la Plataforma son propiedad de sus titulares y no pueden reproducirse, copiarse o utilizarse sin autorización. El contenido cargado por cada inmobiliaria (fotos, descripciones) sigue siendo de su titularidad, y al publicarlo se otorga a Llave Cruzada una licencia para mostrarlo dentro de la red con el fin de prestar el servicio.</p>
+
+      <p><strong>13. Limitación de Responsabilidad</strong><br>
+      Llave Cruzada se ofrece "tal cual está", sin garantías de disponibilidad ininterrumpida o libre de errores. En la medida permitida por la ley, Llave Cruzada no será responsable por daños, perjuicios, lucro cesante o pérdidas derivadas de operaciones inmobiliarias, incumplimientos entre inmobiliarias, o información publicada por los usuarios de la red.</p>
+
+      <p><strong>14. Suspensión y Baja de Cuentas</strong><br>
+      Llave Cruzada puede suspender o dar de baja una cuenta ante el incumplimiento de estos Términos, denuncias fundadas, falta de pago del plan contratado, o uso indebido de la Plataforma. La inmobiliaria puede solicitar la baja de su cuenta en cualquier momento desde su perfil.</p>
+
+      <p><strong>15. Modificaciones de estos Términos</strong><br>
+      Estos Términos pueden actualizarse. Los cambios relevantes se comunicarán a las inmobiliarias registradas, y el uso continuado de la Plataforma después de una actualización implica su aceptación.</p>
+
+      <p><strong>16. Ley Aplicable y Jurisdicción</strong><br>
+      Estos Términos se rigen por las leyes de la República Argentina. Para cualquier controversia, las partes se someten a los tribunales ordinarios de la provincia de Tucumán, con renuncia a cualquier otro fuero que pudiera corresponder.</p>
+
+      <p><strong>17. Contacto</strong><br>
+      Ante cualquier consulta sobre estos Términos, podés escribirnos a través del sistema de Soporte dentro de la Plataforma.</p>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn btn-solid" onclick="closeModal('terminos')">Entendido</button>
+    </div>
   </div>
 </div>
 
@@ -816,7 +884,7 @@
   <div class="modal" style="position:relative;">
     <button class="avatar-modal-close" onclick="closeModal('confirmreset')"><i class="fa-solid fa-xmark"></i></button>
     <h3><i class="fa-solid fa-triangle-exclamation" style="color:#E2726B;margin-right:8px;"></i>Reiniciar demo</h3>
-    <p class="sub">Tus propiedades y clientes se van a borrar de verdad de la base de datos — con eso también van a desaparecer de "Explorar la Red" y "La Red está buscando" para las demás inmobiliarias. También se borran las denuncias, códigos de invitación y tickets de soporte de <strong>toda la red</strong> (esto afecta a cualquier otra inmobiliaria registrada, no solo a la tuya). Además se ponen en blanco los matches, favoritos, oportunidades exclusivas y notificaciones de esta sesión. Las cuentas de otras inmobiliarias NO se borran. Esta acción no se puede deshacer.</p>
+    <p class="sub">Tus propiedades, clientes, leads externos y matches se van a borrar de verdad de la base de datos — con eso también van a desaparecer de "Explorar la Red" y "La Red está buscando" para las demás inmobiliarias. También se borran tus propias solicitudes de plan. Los tickets de soporte, denuncias y códigos de invitación de la red <strong>no se tocan</strong>. Las cuentas de otras inmobiliarias tampoco se ven afectadas. Esta acción no se puede deshacer.</p>
     <div class="modal-close-row">
       <button class="btn" onclick="closeModal('confirmreset')">Cancelar</button>
       <button class="btn btn-report-send" onclick="closeModal('confirmreset'); resetDemo();">Sí, reiniciar todo</button>
@@ -829,7 +897,7 @@
     <button class="avatar-modal-close" onclick="closeModal('finalizarmatch')"><i class="fa-solid fa-xmark"></i></button>
     <div id="finalizarmatch-step1">
       <h3>¿Cómo terminó la operación?</h3>
-      <p class="sub">Como dueño de la propiedad, sos quien puede cerrar este match.</p>
+      <p class="sub" id="finalizarmatch-subtitle">Como dueño de la propiedad, sos quien puede cerrar este match.</p>
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px;">
         <button class="btn whatsapp-btn" style="width:100%;justify-content:center;" onclick="confirmOperationSuccess()"><i class="fa-solid fa-circle-check"></i> Se concretó la operación</button>
         <button class="btn btn-report-send" style="width:100%;justify-content:center;" onclick="showCancelReasonStep()"><i class="fa-solid fa-circle-xmark"></i> No se concretó / se cayó</button>
@@ -950,7 +1018,7 @@
     <div id="act-step-3" class="hidden">
       <div class="field"><label>Contraseña *</label><input type="password" id="act-password"></div>
       <div class="field"><label>Confirmar contraseña *</label><input type="password" id="act-password2"></div>
-      <p style="font-size:11.5px;color:var(--paper-dim);">Al activar tu código aceptás los Términos y Condiciones. Tu cuenta será verificada por el equipo antes de activarse.</p>
+      <p style="font-size:11.5px;color:var(--paper-dim);">Al activar tu código aceptás los <a onclick="openModal('terminos')" style="color:var(--brass-bright);cursor:pointer;text-decoration:underline;">Términos y Condiciones</a>. Tu cuenta será verificada por el equipo antes de activarse.</p>
       <p id="act-step3-error" class="auth-error hidden"></p>
       <div class="modal-close-row" style="justify-content:space-between;">
         <button class="btn" onclick="goStep(2)">← Volver</button>
@@ -986,6 +1054,7 @@
         <div class="nav-group-label">Mi Inmobiliaria</div>
         <div class="nav-item" data-view="propiedades" onclick="showApp('propiedades')"><i class="fa-solid fa-building"></i> Mis Propiedades</div>
         <div class="nav-item" data-view="clientes" onclick="showApp('clientes')"><i class="fa-solid fa-users"></i> Búsquedas para Clientes</div>
+        <div class="nav-item" data-view="leadsexternos" onclick="showApp('leadsexternos')"><i class="fa-solid fa-user-tag"></i> Leads Externos</div>
         <!-- "Oportunidad Exclusiva" se sacó del menú a pedido explícito, pero la
              función (vista, formulario, colección exclusivas, panel de admin)
              sigue intacta en el código por si se quiere reactivar más adelante. -->
@@ -1161,7 +1230,7 @@
         </div>
         <textarea id="p-desc" rows="3" placeholder="Cochera, patio, permuta, estado de escritura, disponibilidad para visitas..."></textarea>
       </div>
-      <p style="font-size:11px;color:var(--paper-dim);">Al publicar en la red, te comprometés a respetar los Términos y Condiciones y a pagar la comisión acordada al concretarse una operación por match.</p>
+      <p style="font-size:11px;color:var(--paper-dim);">Al publicar en la red, te comprometés a respetar los <a onclick="openModal('terminos')" style="color:var(--brass-bright);cursor:pointer;text-decoration:underline;">Términos y Condiciones</a> y a pagar la comisión acordada al concretarse una operación por match.</p>
     </div>
 
     <div class="field hidden" id="requisitos-section">
@@ -1349,6 +1418,66 @@
   </div>
 </div>
 
+<div id="modal-agregarlead" class="modal-backdrop hidden">
+  <div class="modal" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('agregarlead')"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="agregarlead-title">Agregar lead externo</h3>
+    <p class="sub">Para clientes que te consultaron por una propiedad publicada en otra plataforma (no en Llave Cruzada) — esto queda 100% privado, no se comparte con la red.</p>
+    <div class="field"><label>Nombre del cliente</label><input id="lead-nombre" placeholder="Nombre completo"></div>
+    <div class="row-2">
+      <div class="field"><label>Teléfono</label><input id="lead-telefono" placeholder="381..."></div>
+      <div class="field"><label>Email</label><input id="lead-email" type="email" placeholder="cliente@mail.com"></div>
+    </div>
+    <div class="field"><label>Propiedad por la que consultó</label><input id="lead-propiedad" placeholder="Ej: Depto 2 amb Barrio Norte - ZonaProp"></div>
+    <div class="row-2">
+      <div class="field"><label>Tipo de propiedad</label>
+        <select id="lead-tipo"><option>Casa</option><option>Departamento</option><option>PH</option><option>Terreno</option><option>Local comercial</option><option>Oficina</option><option>Galpón / Depósito</option></select>
+      </div>
+      <div class="field"><label>Interés del lead</label>
+        <select id="lead-temperatura">
+          <option value="Frío">🔵 Frío</option>
+          <option value="Tibio" selected>🟠 Tibio</option>
+          <option value="Caliente">🔴 Caliente</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Foto del aviso (opcional)</label>
+      <input id="lead-foto-input" type="file" accept="image/*" onchange="handleLeadPhoto(event)">
+      <div id="lead-foto-preview" style="margin-top:8px;"></div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn" onclick="closeModal('agregarlead')">Cancelar</button>
+      <button class="btn btn-solid" onclick="submitExternalLead()">Guardar lead</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-leaddetalle" class="modal-backdrop hidden">
+  <div class="modal" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('leaddetalle')"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="leaddetalle-nombre"></h3>
+    <div id="leaddetalle-info" style="font-size:13px;color:var(--paper-dim);margin-bottom:18px;"></div>
+    <div class="field">
+      <label>Interés actual</label>
+      <select id="leaddetalle-temperatura" onchange="updateLeadTemperatura()">
+        <option value="Frío">🔵 Frío</option>
+        <option value="Tibio">🟠 Tibio</option>
+        <option value="Caliente">🔴 Caliente</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Historial de interacciones</label>
+      <div id="leaddetalle-interacciones" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:10px;"></div>
+      <textarea id="leaddetalle-nueva-nota" rows="2" placeholder="Ej: Lo llamé, dijo que lo va a pensar hasta el fin de semana..."></textarea>
+      <button class="btn btn-sm whatsapp-btn" style="margin-top:8px;" onclick="addLeadInteraccion()"><i class="fa-solid fa-plus"></i> Agregar nota</button>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn" onclick="closeModal('leaddetalle')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-denunciar" class="modal-backdrop hidden">
   <div class="modal" style="position:relative;">
     <button class="avatar-modal-close" onclick="closeModal('denunciar')"><i class="fa-solid fa-xmark"></i></button>
@@ -1408,6 +1537,7 @@ const AGENCY = {name:"Inmobiliaria del Valle", city:"Tucumán", plan:"Pro"};
 
 let myProps = [];
 let myClients = [];
+let externalLeads = [];
 let idSeq = 3;
 
 /* seeded "network" data from OTHER agencies, used to compute matches */
@@ -1561,6 +1691,11 @@ function sortProps(list, sortKey){
 }
 let exploreAgencyFilter = null;
 let clientesTab = 'buscadores';
+let clientesShowCerrados = false;
+function toggleClientesShowCerrados(){
+  clientesShowCerrados = !clientesShowCerrados;
+  showApp('clientes');
+}
 function setClientesTab(tab){ clientesTab = tab; showApp('clientes'); }
 
 function switchExploreTab(tab){
@@ -2878,6 +3013,7 @@ const APP_VIEWS_TOGGLEABLE = [
   {key:'notificaciones', label:'Notificaciones'},
   {key:'propiedades', label:'Mis Propiedades'},
   {key:'clientes', label:'Búsquedas para Clientes'},
+  {key:'leadsexternos', label:'Leads Externos'},
   {key:'asociadas', label:'Inmobiliarias Asociadas'},
   {key:'perfil', label:'Mi Perfil'},
   {key:'usuarios', label:'Usuarios'},
@@ -3098,6 +3234,8 @@ async function resetDemo(){
       clientContactsSnap.forEach(doc=>batch.delete(doc.ref));
       const exclusivasSnap = await db.collection('exclusivas').where('ownerUid','==',AGENCY.uid).get();
       exclusivasSnap.forEach(doc=>batch.delete(doc.ref));
+      const leadsSnap = await db.collection('externalLeads').where('ownerUid','==',AGENCY.uid).get();
+      leadsSnap.forEach(doc=>batch.delete(doc.ref));
       const notifSnap = await db.collection('notifications').where('ownerUid','==',AGENCY.uid).get();
       notifSnap.forEach(doc=>batch.delete(doc.ref));
       const matchesAsPropSnap = await db.collection('matches').where('propOwnerUid','==',AGENCY.uid).get();
@@ -3133,7 +3271,7 @@ async function resetDemo(){
   computeMatches();
   updateSidebarAgencyInfo();
   updateNotifDot();
-  toast('Demo reiniciada — se borraron tus propiedades, clientes, matches y solicitudes de plan');
+  toast('Demo reiniciada — se borraron tus propiedades, clientes, leads externos, matches y solicitudes de plan');
   const adminVisible = document.getElementById('view-admin').style.display === 'block';
   if(adminVisible) showAdmin('dashboard');
   else showApp('dashboard');
@@ -4277,8 +4415,13 @@ async function contactMatch(key){
 let finalizeMatchKey = null;
 function openFinalizeMatchModal(key){
   finalizeMatchKey = key;
+  const m = matches.find(x=>matchKey(x)===key);
+  const esVenta = m && m.prop.op==='Venta';
   document.getElementById('finalizarmatch-step1').classList.remove('hidden');
   document.getElementById('finalizarmatch-step2').classList.add('hidden');
+  document.getElementById('finalizarmatch-subtitle').textContent = esVenta
+    ? 'Cada inmobiliaria confirma el cierre de su lado — la operación queda concretada recién cuando las dos lo confirmaron.'
+    : 'Como dueño de la propiedad, sos quien puede cerrar este match.';
   document.getElementById('finalizarmatch-motivo').value = 'El cliente desistió';
   document.getElementById('finalizarmatch-comentario').value = '';
   openModal('finalizarmatch');
@@ -4303,8 +4446,10 @@ function backToFinalizeChoice(){
 }
 function confirmOperationSuccess(){
   const key = finalizeMatchKey;
+  const m = matches.find(x=>matchKey(x)===key);
   closeModal('finalizarmatch');
-  finalizeOperation(key);
+  if(m && m.prop.op==='Venta') confirmMyClose(key);
+  else finalizeOperation(key);
 }
 function confirmOperationCancelled(){
   const key = finalizeMatchKey;
@@ -4803,7 +4948,7 @@ function matchActionsHTML(m, key){
       if(yaConfirme){
         primaryBtn = `<div class="waiting-note"><i class="fa-solid fa-hourglass-half"></i> Ya confirmaste el cierre de tu lado — esperando que ${escapeHtml(matchFlowData(m).otherAgency)} confirme también</div>`;
       } else {
-        primaryBtn = `<button class="btn btn-sm whatsapp-btn" onclick="confirmMyClose('${key}')"><i class="fa-solid fa-flag-checkered"></i> Confirmar cierre de mi lado</button>${otraYaConfirmo ? `<div class="waiting-note" style="margin-top:6px;"><i class="fa-solid fa-circle-check"></i> ${escapeHtml(matchFlowData(m).otherAgency)} ya confirmó — falta tu confirmación</div>` : ''}`;
+        primaryBtn = `<button class="btn btn-sm whatsapp-btn" onclick="openFinalizeMatchModal('${key}')"><i class="fa-solid fa-flag-checkered"></i> Confirmar cierre de mi lado</button>${otraYaConfirmo ? `<div class="waiting-note" style="margin-top:6px;"><i class="fa-solid fa-circle-check"></i> ${escapeHtml(matchFlowData(m).otherAgency)} ya confirmó — falta tu confirmación</div>` : ''}`;
       }
     } else if(iOwnProperty){
       primaryBtn = `<button class="btn btn-sm whatsapp-btn" onclick="openFinalizeMatchModal('${key}')"><i class="fa-solid fa-flag-checkered"></i> Cerrar operación</button>`;
@@ -4890,6 +5035,7 @@ function importSiteData(event){
 /* ---------------- persistencia entre sesiones ---------------- */
 let unsubscribeProps = null;
 let unsubscribeClients = null;
+let unsubscribeExternalLeads = null;
 let unsubscribePropContacts = null;
 let unsubscribeClientContacts = null;
 function refreshCurrentView(){
@@ -4962,6 +5108,11 @@ function attachDataListeners(uid){
     computeMatches();
     refreshCurrentView();
   }, err=>console.error('Error escuchando clientes:', err));
+  if(unsubscribeExternalLeads) unsubscribeExternalLeads();
+  unsubscribeExternalLeads = db.collection('externalLeads').where('ownerUid','==',uid).onSnapshot(snap=>{
+    externalLeads = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+    refreshCurrentView();
+  }, err=>console.error('Error escuchando leads externos:', err));
   if(unsubscribePropContacts) unsubscribePropContacts();
   unsubscribePropContacts = db.collection('propertyContacts').where('ownerUid','==',uid).onSnapshot(snap=>{
     myPropertyContacts = {};
@@ -5034,8 +5185,10 @@ function detachDataListeners(){
   if(unsubscribeMatchesAsProp){ unsubscribeMatchesAsProp(); unsubscribeMatchesAsProp=null; }
   if(unsubscribeMatchesAsSearch){ unsubscribeMatchesAsSearch(); unsubscribeMatchesAsSearch=null; }
   if(unsubscribeAgencyUsers){ unsubscribeAgencyUsers(); unsubscribeAgencyUsers=null; }
+  if(unsubscribeExternalLeads){ unsubscribeExternalLeads(); unsubscribeExternalLeads=null; }
   myProps = [];
   myClients = [];
+  externalLeads = [];
   myPropertyContacts = {};
   myClientContacts = {};
   supportTickets = [];
@@ -5094,6 +5247,7 @@ function showApp(view){
 function fmtMoney(n,cur){ if(!n) return '—'; return (cur==='USD'?'USD ':'ARS ') + n.toLocaleString('es-AR'); }
 
 let clientesSearchQuery = '';
+let leadsSearchQuery = '';
 function propietarioWhatsappBtn(p){
   const phone = (p.propietarioTel||'').replace(/\D/g,'');
   if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este propietario">Sin WhatsApp</button>`;
@@ -5101,8 +5255,12 @@ function propietarioWhatsappBtn(p){
 }
 function propietarioRowsHTML(list){
   return list.length
-    ? list.map(p=>`<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${escapeHtml(p.propietario)||'Sin nombre'}</span></div></td><td>${escapeHtml(p.propietarioTel)||'—'}</td><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td style="display:flex;gap:8px;">${propietarioWhatsappBtn(p)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
-    : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron propietarios con ese nombre.' : 'No tenés propietarios cargados todavía. Se suman automáticamente cuando publicás una propiedad con sus datos.'}</td></tr>`;
+    ? list.map(p=>{
+      const estadoClass = p.estado==='Activo' ? 'pill-sage' : (p.estado==='Vendida'||p.estado==='Alquilada') ? 'pill-orange' : '';
+      const estadoStyle = (p.estado!=='Activo' && p.estado!=='Vendida' && p.estado!=='Alquilada') ? 'color:var(--paper-dim);border-color:var(--paper-dim);' : '';
+      return `<tr><td><div class="client-name-cell">${ownerAvatarHTML(p)}<span>${escapeHtml(p.propietario)||'Sin nombre'}</span></div></td><td>${escapeHtml(p.propietarioTel)||'—'}</td><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td><span class="pill ${estadoClass}" style="${estadoStyle}">${p.estado}</span></td><td style="display:flex;gap:8px;">${propietarioWhatsappBtn(p)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteProp('${p.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`;
+    }).join('')
+    : `<tr><td colspan="7" class="empty-row">${clientesSearchQuery ? 'No se encontraron propietarios con ese nombre.' : 'No tenés propietarios cargados todavía. Se suman automáticamente cuando publicás una propiedad con sus datos.'}</td></tr>`;
 }
 function clientWhatsappBtn(c){
   const phone = (c.tel||'').replace(/\D/g,'');
@@ -5114,15 +5272,158 @@ function buscadorRowsHTML(list){
     ? list.map(c=>`<tr><td><div class="client-name-cell">${clientAvatarHTML(c)}<span>${escapeHtml(c.nombre)}</span></div></td><td>${escapeHtml(c.tel)}</td><td>${c.op==='Compra'?'Comprar':'Alquilar'} ${c.tipo.toLowerCase()} en ${escapeHtml(c.ciudad)}</td><td class="mono">${fmtMoney(c.presu,c.moneda||'USD')}</td><td><span class="pill ${c.estado==='Cerrado'?'':'pill-sage'}">${c.estado||'Activo'}</span></td><td style="display:flex;gap:8px;">${clientWhatsappBtn(c)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditClientModal('${c.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="btn btn-sm btn-eliminar-pastel" onclick="deleteClient('${c.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button></td></tr>`).join('')
     : `<tr><td colspan="6" class="empty-row">${clientesSearchQuery ? 'No se encontraron clientes con ese nombre.' : 'No tenés clientes buscadores cargados. Hacé clic en "Agregar cliente" para comenzar.'}</td></tr>`;
 }
+/* ---------------- Leads externos: contactos de otras plataformas, 100% privados ---------------- */
+const LEAD_TEMP_INFO = {
+  'Frío': {emoji:'🔵', color:'#2563EB', bg:'#EFF6FF', border:'#BFDBFE'},
+  'Tibio': {emoji:'🟠', color:'#B5892A', bg:'#FFF3E0', border:'#FBD9A6'},
+  'Caliente': {emoji:'🔴', color:'#B91C1C', bg:'#FEF2F2', border:'#FECACA'},
+};
+function leadTempPillHTML(temp){
+  const info = LEAD_TEMP_INFO[temp] || LEAD_TEMP_INFO['Tibio'];
+  return `<span class="pill" style="color:${info.color};background:${info.bg};border-color:${info.border};">${info.emoji} ${escapeHtml(temp)}</span>`;
+}
+function leadWhatsappBtn(l){
+  const phone = (l.telefono||'').replace(/\D/g,'');
+  if(!phone) return `<button class="btn btn-sm" disabled style="opacity:.5;cursor:not-allowed;" title="No cargaste el teléfono de este lead">Sin WhatsApp</button>`;
+  return `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+}
+let pendingLeadFoto = null;
+let editingLeadId = null;
+async function handleLeadPhoto(event){
+  const file = event.target.files && event.target.files[0];
+  event.target.value = '';
+  if(!file) return;
+  try{
+    pendingLeadFoto = await compressImageFile(file);
+    document.getElementById('lead-foto-preview').innerHTML = `<img src="${pendingLeadFoto}" style="max-width:160px;border-radius:8px;display:block;">`;
+  }catch(err){ toast('No se pudo procesar la foto: '+err.message); }
+}
+function openNewLeadModal(){
+  editingLeadId = null;
+  pendingLeadFoto = null;
+  document.getElementById('agregarlead-title').textContent = 'Agregar lead externo';
+  document.getElementById('lead-nombre').value = '';
+  document.getElementById('lead-telefono').value = '';
+  document.getElementById('lead-email').value = '';
+  document.getElementById('lead-propiedad').value = '';
+  document.getElementById('lead-tipo').value = 'Departamento';
+  document.getElementById('lead-temperatura').value = 'Tibio';
+  document.getElementById('lead-foto-preview').innerHTML = '';
+  openModal('agregarlead');
+}
+function openEditLeadModal(id){
+  const l = externalLeads.find(x=>x.id===id);
+  if(!l) return;
+  editingLeadId = id;
+  pendingLeadFoto = l.fotoAviso || null;
+  document.getElementById('agregarlead-title').textContent = 'Editar lead externo';
+  document.getElementById('lead-nombre').value = l.nombre || '';
+  document.getElementById('lead-telefono').value = l.telefono || '';
+  document.getElementById('lead-email').value = l.email || '';
+  document.getElementById('lead-propiedad').value = l.propiedadDescripcion || '';
+  document.getElementById('lead-tipo').value = l.tipo || 'Departamento';
+  document.getElementById('lead-temperatura').value = l.temperatura || 'Tibio';
+  document.getElementById('lead-foto-preview').innerHTML = l.fotoAviso ? `<img src="${l.fotoAviso}" style="max-width:160px;border-radius:8px;display:block;">` : '';
+  openModal('agregarlead');
+}
+async function submitExternalLead(){
+  const nombre = document.getElementById('lead-nombre').value.trim();
+  const telefono = document.getElementById('lead-telefono').value.trim();
+  const email = document.getElementById('lead-email').value.trim();
+  const propiedadDescripcion = document.getElementById('lead-propiedad').value.trim();
+  const tipo = document.getElementById('lead-tipo').value;
+  const temperatura = document.getElementById('lead-temperatura').value;
+  if(!nombre){ toast('Completá al menos el nombre del cliente'); return; }
+  try{
+    if(editingLeadId){
+      await db.collection('externalLeads').doc(editingLeadId).update({
+        nombre, telefono, email, propiedadDescripcion, tipo, temperatura, fotoAviso: pendingLeadFoto,
+      });
+      toast('Lead actualizado');
+    } else {
+      await db.collection('externalLeads').add({
+        ownerUid: AGENCY.uid, nombre, telefono, email, propiedadDescripcion, tipo, temperatura,
+        fotoAviso: pendingLeadFoto, interacciones: [], createdAt: new Date().toISOString(),
+      });
+      toast('Lead agregado');
+    }
+    closeModal('agregarlead');
+  }catch(err){ toast('Error al guardar: '+err.message); }
+}
+async function deleteLead(id){
+  try{
+    await db.collection('externalLeads').doc(id).delete();
+    toast('Lead eliminado');
+  }catch(err){ toast('Error: '+err.message); }
+}
+let openLeadDetalleId = null;
+function openLeadDetalleModal(id){
+  const l = externalLeads.find(x=>x.id===id);
+  if(!l) return;
+  openLeadDetalleId = id;
+  document.getElementById('leaddetalle-nombre').textContent = l.nombre;
+  document.getElementById('leaddetalle-info').innerHTML = `${escapeHtml(l.propiedadDescripcion)||'Sin descripción'} · ${escapeHtml(l.tipo)}${l.telefono?' · '+escapeHtml(l.telefono):''}${l.email?' · '+escapeHtml(l.email):''}${l.fotoAviso ? `<br><img src="${l.fotoAviso}" style="max-width:220px;border-radius:8px;margin-top:8px;">` : ''}`;
+  document.getElementById('leaddetalle-temperatura').value = l.temperatura || 'Tibio';
+  const interacciones = l.interacciones || [];
+  document.getElementById('leaddetalle-interacciones').innerHTML = interacciones.length
+    ? [...interacciones].reverse().map(i=>`<div style="background:var(--ink-3);border-radius:8px;padding:10px 12px;"><div style="font-size:11px;color:var(--paper-dim);margin-bottom:3px;">${formatDateTime(i.fecha)}</div><div style="font-size:13px;">${escapeHtml(i.nota)}</div></div>`).join('')
+    : `<p style="font-size:13px;color:var(--paper-dim);margin:0;">Todavía no hay interacciones registradas.</p>`;
+  document.getElementById('leaddetalle-nueva-nota').value = '';
+  openModal('leaddetalle');
+}
+async function updateLeadTemperatura(){
+  if(!openLeadDetalleId) return;
+  const temperatura = document.getElementById('leaddetalle-temperatura').value;
+  try{
+    await db.collection('externalLeads').doc(openLeadDetalleId).update({temperatura});
+    toast('Interés actualizado a '+temperatura);
+  }catch(err){ toast('Error: '+err.message); }
+}
+async function addLeadInteraccion(){
+  if(!openLeadDetalleId) return;
+  const nota = document.getElementById('leaddetalle-nueva-nota').value.trim();
+  if(!nota){ toast('Escribí algo para guardar la nota'); return; }
+  const l = externalLeads.find(x=>x.id===openLeadDetalleId);
+  if(!l) return;
+  const nuevaInteraccion = {fecha: new Date().toISOString(), nota};
+  try{
+    await db.collection('externalLeads').doc(openLeadDetalleId).update({
+      interacciones: [...(l.interacciones||[]), nuevaInteraccion],
+    });
+    openLeadDetalleModal(openLeadDetalleId); // refresca la lista en el mismo modal
+  }catch(err){ toast('Error al guardar la nota: '+err.message); }
+}
+function leadRowHTML(l){
+  return `<tr>
+    <td><div class="client-name-cell">${leadAvatarHTML(l)}<span>${escapeHtml(l.nombre)}</span></div></td>
+    <td>${escapeHtml(l.telefono)||'—'}</td>
+    <td>${escapeHtml(l.propiedadDescripcion)||'—'}</td>
+    <td>${escapeHtml(l.tipo)}</td>
+    <td>${leadTempPillHTML(l.temperatura||'Tibio')}</td>
+    <td style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${leadWhatsappBtn(l)}
+      <button class="btn btn-sm" onclick="openLeadDetalleModal('${l.id}')"><i class="fa-solid fa-clock-rotate-left"></i> Notas</button>
+      <button class="btn btn-sm btn-editar-violeta" onclick="openEditLeadModal('${l.id}')"><i class="fa-solid fa-pen"></i> Editar</button>
+      <button class="btn btn-sm btn-eliminar-pastel" onclick="deleteLead('${l.id}')"><i class="fa-solid fa-trash"></i> Eliminar</button>
+    </td>
+  </tr>`;
+}
+function leadAvatarHTML(l){
+  return `<div class="avatar-circle">${escapeHtml(initials(l.nombre))}</div>`;
+}
 function filterClientesTable(query){
   clientesSearchQuery = query;
   const q = query.trim().toLowerCase();
   const tbody = document.getElementById('clientes-table-body');
   if(!tbody) return;
   if(clientesTab==='propietarios'){
-    tbody.innerHTML = propietarioRowsHTML(myProps.filter(p=>(p.propietario||'').toLowerCase().includes(q)));
+    let list = myProps.filter(p=>(p.propietario||'').toLowerCase().includes(q));
+    if(!clientesShowCerrados) list = list.filter(p=>p.estado!=='Vendida' && p.estado!=='Alquilada');
+    tbody.innerHTML = propietarioRowsHTML(list);
   } else {
-    tbody.innerHTML = buscadorRowsHTML(myClients.filter(c=>(c.nombre||'').toLowerCase().includes(q)));
+    let list = myClients.filter(c=>(c.nombre||'').toLowerCase().includes(q));
+    if(!clientesShowCerrados) list = list.filter(c=>c.estado!=='Cerrado');
+    tbody.innerHTML = buscadorRowsHTML(list);
   }
 }
 /* ---------------- Ingreso por comisiones (estimado real, no demo) ---------------- */
@@ -5145,6 +5446,62 @@ function totalCommissionIncome(){
     if(c) totals[c.moneda] = (totals[c.moneda] || 0) + c.amount;
   });
   return totals;
+}
+// Venta: las dos partes cobran su 3% siempre. Alquiler: solo cobrás una
+// comisión por la referencia cuando fuiste vos quien trajo al inquilino
+// (misma convención que ya usa totalCommissionIncome en el resto de la app).
+function isCommissionEarnedByMe(m){
+  if(m.prop.op==='Venta') return true;
+  return m.mine==='client';
+}
+const MESES_NOMBRE = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+let comisionesMonth = 0; // 0 = "Todos los meses"
+let comisionesYear = new Date().getFullYear();
+function changeComisionesMonth(){
+  comisionesMonth = parseInt(document.getElementById('comisiones-month-select').value, 10);
+  comisionesYear = parseInt(document.getElementById('comisiones-year-select').value, 10);
+  showApp('comisiones');
+}
+function inSelectedComisionesMonth(isoStr){
+  if(comisionesMonth===0) return true; // "Todos los meses"
+  if(!isoStr) return false;
+  const d = new Date(isoStr);
+  return d.getFullYear()===comisionesYear && (d.getMonth()+1)===comisionesMonth;
+}
+let dashboardMonth = new Date().getMonth()+1;
+let dashboardYear = new Date().getFullYear();
+function changeDashboardMonth(){
+  dashboardMonth = parseInt(document.getElementById('dashboard-month-select').value, 10);
+  dashboardYear = parseInt(document.getElementById('dashboard-year-select').value, 10);
+  showApp('dashboard');
+}
+function computeMonthlyStats(year, month){
+  const inMonth = (isoStr)=>{
+    if(!isoStr) return false;
+    const d = new Date(isoStr);
+    return d.getFullYear()===year && (d.getMonth()+1)===month;
+  };
+  const hechos = matches.filter(m=>inMonth(m.claimedAt));
+  const concretadas = matches.filter(m=>m.status==='concretadas' && inMonth(m.closedAt));
+  const caidas = matches.filter(m=>m.status==='caidas' && inMonth(m.updatedAt));
+  const totalResueltos = concretadas.length + caidas.length;
+  const tasaConversion = totalResueltos ? Math.round(concretadas.length/totalResueltos*100) : 0;
+  const totals = {};
+  concretadas.forEach(m=>{
+    if(isCommissionEarnedByMe(m)){
+      const c = commissionAmountForMatch(m);
+      if(c) totals[c.moneda] = (totals[c.moneda]||0) + c.amount;
+    }
+  });
+  return {
+    hechos: hechos.length,
+    concretadas: concretadas.length,
+    caidas: caidas.length,
+    tasaConversion,
+    totals,
+    agenciasConcretadas: concretadas.map(m=>matchFlowData(m).otherAgency),
+    agenciasCaidas: caidas.map(m=>matchFlowData(m).otherAgency),
+  };
 }
 /* ---------------- Cotización del dólar oficial (dolarapi.com, se refresca cada 10 min) ---------------- */
 let dolarOficialCache = null;
@@ -5291,6 +5648,57 @@ dashboard: ()=>{
       </tbody></table>
     </div>
   </div>
+  ${(()=>{
+    const stats = computeMonthlyStats(dashboardYear, dashboardMonth);
+    const currentYear = new Date().getFullYear();
+    const incomeMonthCurrencies = Object.keys(stats.totals);
+    const incomeMonthHTML = incomeMonthCurrencies.length
+      ? incomeMonthCurrencies.map(cur=>fmtMoney(Math.round(stats.totals[cur]), cur)).join(' + ')
+      : '$0';
+    const pillList = (list, colorStyle)=> list.length
+      ? `<div style="display:flex;flex-wrap:wrap;gap:8px;">${list.map(n=>`<span class="pill" style="${colorStyle}">${escapeHtml(n)}</span>`).join('')}</div>`
+      : `<p style="font-size:13px;color:var(--paper-dim);margin:0;">Ninguna este mes.</p>`;
+    return `
+  <div class="card" style="margin-top:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+      <div class="eyebrow" style="margin:0;">Resumen mensual</div>
+      <div style="display:flex;gap:10px;">
+        <div class="select-wrap">
+          <select id="dashboard-month-select" onchange="changeDashboardMonth()">
+            ${MESES_NOMBRE.map((nombre,i)=>`<option value="${i+1}" ${dashboardMonth===i+1?'selected':''}>${nombre}</option>`).join('')}
+          </select>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="select-wrap">
+          <select id="dashboard-year-select" onchange="changeDashboardMonth()">
+            ${[currentYear, currentYear-1, currentYear-2].map(y=>`<option value="${y}" ${dashboardYear===y?'selected':''}>${y}</option>`).join('')}
+          </select>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="lbl">Matches hechos</div><div class="val brass">${stats.hechos}</div></div>
+      <div class="kpi"><div class="lbl">Concretadas</div><div class="val" style="color:#3F7A46;">${stats.concretadas}</div></div>
+      <div class="kpi"><div class="lbl">Caídas</div><div class="val" style="color:#E2726B;">${stats.caidas}</div></div>
+      <div class="kpi"><div class="lbl">Tasa de conversión</div><div class="val">${stats.tasaConversion}%</div></div>
+    </div>
+    <div class="kpi-grid" style="grid-template-columns:1fr;margin-bottom:20px;">
+      <div class="kpi"><div class="lbl">Ingreso por comisiones</div><div class="val">${incomeMonthHTML}</div></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="eyebrow" style="font-size:12px;margin-bottom:8px;">Cerraste operaciones con</div>
+        ${pillList(stats.agenciasConcretadas, 'color:#3F7A46;border-color:#3F7A46;')}
+      </div>
+      <div>
+        <div class="eyebrow" style="font-size:12px;margin-bottom:8px;">Se te cayeron operaciones con</div>
+        ${pillList(stats.agenciasCaidas, 'color:#E2726B;border-color:#E2726B;')}
+      </div>
+    </div>
+  </div>
+  `;
+  })()}
   <div class="card" id="dolar-banner" style="margin-top:24px;display:flex;align-items:center;gap:12px;">
     <i class="fa-solid fa-dollar-sign" style="color:var(--brass);font-size:18px;"></i>
     <span id="dolar-banner-content" style="font-size:13px;">Cargando cotización del dólar oficial...</span>
@@ -5357,15 +5765,15 @@ explorar: ()=>`
         </select>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
+      <button class="btn btn-solid toolbar-apply-btn" onclick="applyExploreFilters()"><i class="fa-solid fa-filter"></i> Aplicar filtros</button>
     </div>
     <div style="display:flex;gap:10px;">
       <button class="btn ${exploreShowMine?'btn-solid':''}" onclick="toggleExploreMine()"><i class="fa-solid fa-building-user"></i> ${exploreShowMine?'Ver toda la red':'Ver mis propiedades'}</button>
-      <button class="btn btn-solid toolbar-apply-btn" onclick="applyExploreFilters()"><i class="fa-solid fa-filter"></i> Aplicar filtros</button>
     </div>
   </div>
   ${(exploreFilterTipo!=='Todos los tipos' || exploreFilterCiudad!=='Todas las ciudades' || exploreFilterZona || exploreFilterCountry!=='Indistinto') ? `<div class="agency-filter-chip">Filtrando por <strong>${[exploreFilterTipo!=='Todos los tipos'?exploreFilterTipo:'', exploreFilterCiudad!=='Todas las ciudades'?exploreFilterCiudad:'', exploreFilterZona?('zona: '+exploreFilterZona):'', exploreFilterCountry!=='Indistinto'?'country/barrio cerrado':''].filter(Boolean).join(' · ')}</strong><button onclick="clearExploreFilters()">Ver todas <i class="fa-solid fa-xmark"></i></button></div>` : ''}
   <div class="listing-grid">
-    ${sortProps((exploreShowMine ? myProps.map(adaptPropForNetwork) : networkProps).filter(p=>p.op===exploreTab && p.estado==='Activo' && (!exploreAgencyFilter || p.agency===exploreAgencyFilter) && (exploreFilterTipo==='Todos los tipos' || p.tipo===exploreFilterTipo) && (exploreFilterCiudad==='Todas las ciudades' || p.ciudad===exploreFilterCiudad) && (!exploreFilterZona || (p.zona||'').toLowerCase().includes(exploreFilterZona.toLowerCase())) && (exploreFilterCountry==='Indistinto' || !!p.country)), exploreSort).map(p=>listingCard(p)).join('') || `<div class="card"><p style="color:var(--paper-dim);margin:0;">${exploreShowMine ? 'No tenés propiedades activas cargadas con estos filtros.' : 'No hay propiedades que coincidan con estos filtros.'}</p></div>`}
+    ${sortProps((exploreShowMine ? myProps.map(adaptPropForNetwork) : [...networkProps, ...myProps.map(adaptPropForNetwork)]).filter(p=>p.op===exploreTab && p.estado==='Activo' && (!exploreAgencyFilter || p.agency===exploreAgencyFilter) && (exploreFilterTipo==='Todos los tipos' || p.tipo===exploreFilterTipo) && (exploreFilterCiudad==='Todas las ciudades' || p.ciudad===exploreFilterCiudad) && (!exploreFilterZona || (p.zona||'').toLowerCase().includes(exploreFilterZona.toLowerCase())) && (exploreFilterCountry==='Indistinto' || !!p.country)), exploreSort).map(p=>listingCard(p)).join('') || `<div class="card"><p style="color:var(--paper-dim);margin:0;">${exploreShowMine ? 'No tenés propiedades activas cargadas con estos filtros.' : 'No hay propiedades que coincidan con estos filtros.'}</p></div>`}
   </div>
 `,
 
@@ -5488,7 +5896,8 @@ matches: ()=>{
 },
 
 comisiones: ()=>{
-  const closed = closedCommissionMatches();
+  const closedAll = closedCommissionMatches();
+  const closed = closedAll.filter(m=>inSelectedComisionesMonth(m.closedAt));
   const porPagar = closed.filter(m=>m.mine==='prop');
   const porCobrar = closed.filter(m=>m.mine==='client');
   const sortByDue = (a,b)=>commissionDueDate(a.agreedAt)-commissionDueDate(b.agreedAt);
@@ -5498,17 +5907,46 @@ comisiones: ()=>{
     <table>
       <thead><tr><th>Inmobiliaria</th><th>Propiedad</th><th>Comisión</th><th>Vence el</th><th>Estado</th><th></th></tr></thead>
       <tbody>${list.map(m=>commissionRowHTML(m, role)).join('')}</tbody>
-    </table>` : `<div class="card"><p style="color:var(--paper-dim);margin:0;">No tenés comisiones ${role==='pagar'?'por pagar':'por cobrar'} por ahora.</p></div>`;
+    </table>` : `<div class="card"><p style="color:var(--paper-dim);margin:0;">No tenés comisiones ${role==='pagar'?'por pagar':'por cobrar'} ${comisionesMonth===0?'por ahora':'en este mes'}.</p></div>`;
 
-  const ventas = closedVentaMatches();
+  const ventasAll = closedVentaMatches();
+  const ventas = ventasAll.filter(m=>inSelectedComisionesMonth(m.closedAt));
   const ventaTableHTML = ventas.length ? `
     <table>
       <thead><tr><th>Inmobiliaria</th><th>Propiedad</th><th>Comisión</th><th>Estado de cobro</th><th></th></tr></thead>
       <tbody>${ventas.map(m=>ventaCommissionRowHTML(m)).join('')}</tbody>
-    </table>` : `<div class="card"><p style="color:var(--paper-dim);margin:0;">Todavía no tenés ventas concretadas.</p></div>`;
+    </table>` : `<div class="card"><p style="color:var(--paper-dim);margin:0;">${comisionesMonth===0 ? 'Todavía no tenés ventas concretadas.' : 'No tenés ventas concretadas en este mes.'}</p></div>`;
+
+  // Aviso fijo: comisiones sin cobrar/pagar que quedan FUERA del mes elegido,
+  // para que nunca se pierdan de vista solo por estar mirando otro mes.
+  const pendientesFueraDeRango = comisionesMonth===0 ? 0 :
+    ventasAll.filter(m=>!inSelectedComisionesMonth(m.closedAt) && !(m.mine==='prop'?m.propCommissionPaidAt:m.searchCommissionPaidAt)).length +
+    closedAll.filter(m=>!inSelectedComisionesMonth(m.closedAt) && !m.commissionPaidAt).length;
+
+  const monthSelectorHTML = `
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+    <p class="sub" style="margin:0;">Comisiones de tus operaciones ya concretadas</p>
+    <div style="display:flex;gap:10px;">
+      <div class="select-wrap">
+        <select id="comisiones-month-select" onchange="changeComisionesMonth()">
+          <option value="0" ${comisionesMonth===0?'selected':''}>Todos los meses</option>
+          ${MESES_NOMBRE.map((nombre,i)=>`<option value="${i+1}" ${comisionesMonth===i+1?'selected':''}>${nombre}</option>`).join('')}
+        </select>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="select-wrap">
+        <select id="comisiones-year-select" onchange="changeComisionesMonth()" ${comisionesMonth===0?'disabled style="opacity:.5;"':''}>
+          ${[new Date().getFullYear(), new Date().getFullYear()-1, new Date().getFullYear()-2].map(y=>`<option value="${y}" ${comisionesYear===y?'selected':''}>${y}</option>`).join('')}
+        </select>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+  </div>
+  ${pendientesFueraDeRango ? `<div class="agency-filter-chip" style="margin-bottom:18px;background:#FDF6E3;border-color:#E8D9A0;"><i class="fa-solid fa-triangle-exclamation" style="color:#B5892A;"></i> Tenés ${pendientesFueraDeRango} comisión${pendientesFueraDeRango>1?'es':''} sin marcar como cobrada/pagada en <strong>otros meses</strong> — no se pierden, solo están fuera de este filtro.<button onclick="document.getElementById('comisiones-month-select').value='0';changeComisionesMonth();">Ver todos los meses</button></div>` : ''}`;
 
   return `
-  <div class="main-head"><div><h1>Comisiones</h1><p class="sub">Comisiones de tus operaciones ya concretadas</p></div></div>
+  <div class="main-head"><div><h1>Comisiones</h1></div></div>
+  ${monthSelectorHTML}
 
   <h3 style="margin:0 0 12px;font-size:16px;"><i class="fa-solid fa-scale-balanced" style="color:var(--brass);margin-right:6px;"></i> Ventas</h3>
   <div class="explore-purpose-note">
@@ -5539,7 +5977,11 @@ propiedades: ()=>`
   <table>
     <thead><tr><th>Propiedad</th><th>Propietario</th><th>Operación</th><th>Precio</th><th>Comisión</th><th>Estado</th><th></th></tr></thead>
     <tbody>
-    ${myProps.length? myProps.map(p=>`<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td>${escapeHtml(p.propietario)||'Sin nombre'}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${p.estado==='Pausada'?'':'pill-sage'}" style="${p.estado==='Pausada'?'color:var(--paper-dim);border-color:var(--paper-dim);':''}">${p.estado}</span></td><td style="display:flex;gap:8px;">${propietarioWhatsappBtn(p)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`).join('') : `<tr><td colspan="7" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
+    ${myProps.length? myProps.map(p=>{
+      const estadoClass = p.estado==='Activo' ? 'pill-sage' : (p.estado==='Vendida'||p.estado==='Alquilada') ? 'pill-orange' : '';
+      const estadoStyle = p.estado==='Pausada' ? 'color:var(--paper-dim);border-color:var(--paper-dim);' : '';
+      return `<tr><td>${escapeHtml(p.tipo)} · ${escapeHtml(p.zona)} (${escapeHtml(p.ciudad)})</td><td>${escapeHtml(p.propietario)||'Sin nombre'}</td><td><span class="pill ${p.op==='Venta'?'pill-brass':''}">${p.op}</span></td><td class="mono">${fmtMoney(p.precio,p.moneda)}</td><td class="mono">${escapeHtml(p.com)}</td><td><span class="pill ${estadoClass}" style="${estadoStyle}">${p.estado}</span></td><td style="display:flex;gap:8px;">${propietarioWhatsappBtn(p)}<button class="btn btn-sm btn-editar-violeta" onclick="openEditPropModal('${p.id}')"><i class="fa-solid fa-pen"></i> Editar</button>${(p.estado==='Activo'||p.estado==='Pausada') ? `<button class="btn btn-sm" onclick="togglePausarPropiedad('${p.id}')"><i class="fa-solid fa-${p.estado==='Pausada'?'play':'pause'}"></i> ${p.estado==='Pausada'?'Reactivar':'Pausar'}</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">Eliminar</button></td></tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty-row">No tenés propiedades cargadas. Hacé clic en "Agregar propiedad" para comenzar.</td></tr>`}
     </tbody>
   </table>
 `,
@@ -5562,35 +6004,43 @@ clientes: ()=>{
   </div>`;
 
   const q = clientesSearchQuery.trim().toLowerCase();
+  const propietariosTodos = myProps.filter(p=>(p.propietario||'').toLowerCase().includes(q));
+  const propietariosCerrados = propietariosTodos.filter(p=>p.estado==='Vendida' || p.estado==='Alquilada');
+  const propietariosVisibles = clientesShowCerrados ? propietariosTodos : propietariosTodos.filter(p=>p.estado!=='Vendida' && p.estado!=='Alquilada');
   const propietariosBody = `
   <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px;">
-    <div class="kpi"><div class="lbl">Total propietarios</div><div class="val">${myProps.length}</div></div>
+    <div class="kpi"><div class="lbl">Total propietarios</div><div class="val">${propietariosVisibles.length}</div></div>
     <div class="kpi"><div class="lbl">Propiedades activas</div><div class="val brass">${myProps.filter(p=>p.estado==='Activo').length}</div></div>
     <div class="kpi"><div class="lbl">Con match activo</div><div class="val">${matches.filter(m=>m.mine==='prop').length}</div></div>
   </div>
   ${searchHTML}
+  ${propietariosCerrados.length ? `<div class="agency-filter-chip" style="margin-bottom:14px;">${clientesShowCerrados ? `Mostrando también ${propietariosCerrados.length} propiedad${propietariosCerrados.length>1?'es':''} ya vendida${propietariosCerrados.length>1?'s':''}/alquilada${propietariosCerrados.length>1?'s':''}` : `Hay ${propietariosCerrados.length} propiedad${propietariosCerrados.length>1?'es':''} ya vendida${propietariosCerrados.length>1?'s':''}/alquilada${propietariosCerrados.length>1?'s':''} oculta${propietariosCerrados.length>1?'s':''}`}<button onclick="toggleClientesShowCerrados()">${clientesShowCerrados ? 'Ocultarlas' : 'Mostrarlas'} <i class="fa-solid fa-${clientesShowCerrados?'eye-slash':'eye'}"></i></button></div>` : ''}
   <table>
-    <thead><tr><th>Propietario</th><th>Teléfono</th><th>Propiedad que busca</th><th>Operación</th><th>Precio</th><th></th></tr></thead>
+    <thead><tr><th>Propietario</th><th>Teléfono</th><th>Propiedad que busca</th><th>Operación</th><th>Precio</th><th>Estado</th><th></th></tr></thead>
     <tbody id="clientes-table-body">
-    ${propietarioRowsHTML(myProps.filter(p=>(p.propietario||'').toLowerCase().includes(q)))}
+    ${propietarioRowsHTML(propietariosVisibles)}
     </tbody>
   </table>`;
 
+  const buscadoresTodos = myClients.filter(c=>(c.nombre||'').toLowerCase().includes(q));
+  const buscadoresCerrados = buscadoresTodos.filter(c=>c.estado==='Cerrado');
+  const buscadoresVisibles = clientesShowCerrados ? buscadoresTodos : buscadoresTodos.filter(c=>c.estado!=='Cerrado');
   const buscadoresBody = `
   <div class="explore-purpose-note">
     <i class="fa-solid fa-circle-info"></i>
     <p><strong>Todo lo que cargues acá se publica en toda la red.</strong> Todas las búsquedas de propiedades que agregues para tus clientes van a aparecer en <a onclick="showApp('redbusca')">La Red está buscando</a>, visible para todas las inmobiliarias asociadas, que van a poder contactarte si tienen potencial cliente.</p>
   </div>
   <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px;">
-    <div class="kpi"><div class="lbl">Total clientes</div><div class="val">${myClients.length}</div></div>
+    <div class="kpi"><div class="lbl">Total clientes</div><div class="val">${buscadoresVisibles.length}</div></div>
     <div class="kpi"><div class="lbl">Con match activo</div><div class="val brass">${matches.filter(m=>m.mine==='client').length}</div></div>
-    <div class="kpi"><div class="lbl">Sin match aún</div><div class="val">${myClients.length - matches.filter(m=>m.mine==='client').length}</div></div>
+    <div class="kpi"><div class="lbl">Sin match aún</div><div class="val">${buscadoresVisibles.length - matches.filter(m=>m.mine==='client').length}</div></div>
   </div>
   ${searchHTML}
+  ${buscadoresCerrados.length ? `<div class="agency-filter-chip" style="margin-bottom:14px;">${clientesShowCerrados ? `Mostrando también ${buscadoresCerrados.length} cliente${buscadoresCerrados.length>1?'s':''} con la búsqueda ya cerrada` : `Hay ${buscadoresCerrados.length} cliente${buscadoresCerrados.length>1?'s':''} con la búsqueda ya cerrada, oculto${buscadoresCerrados.length>1?'s':''}`}<button onclick="toggleClientesShowCerrados()">${clientesShowCerrados ? 'Ocultarlos' : 'Mostrarlos'} <i class="fa-solid fa-${clientesShowCerrados?'eye-slash':'eye'}"></i></button></div>` : ''}
   <table>
     <thead><tr><th>Cliente</th><th>Teléfono</th><th>Busca</th><th>Presupuesto</th><th>Estado</th><th></th></tr></thead>
     <tbody id="clientes-table-body">
-    ${buscadorRowsHTML(myClients.filter(c=>(c.nombre||'').toLowerCase().includes(q)))}
+    ${buscadorRowsHTML(buscadoresVisibles)}
     </tbody>
   </table>`;
 
@@ -5599,6 +6049,36 @@ clientes: ()=>{
   ${header}</div>
   ${tabsHTML}
   ${clientesTab==='propietarios' ? propietariosBody : buscadoresBody}
+`;
+},
+
+leadsexternos: ()=>{
+  const q = leadsSearchQuery.trim().toLowerCase();
+  const leadsVisibles = externalLeads.filter(l=>(l.nombre||'').toLowerCase().includes(q));
+  const conteo = (temp)=> externalLeads.filter(l=>(l.temperatura||'Tibio')===temp).length;
+  return `
+  <div class="main-head"><div><h1>Leads Externos</h1><p class="sub">Clientes que te consultaron por una propiedad publicada en otra plataforma</p></div>
+  <button class="btn btn-solid" onclick="openNewLeadModal()"><i class="fa-solid fa-plus"></i> Agregar lead</button></div>
+  <div class="explore-purpose-note">
+    <i class="fa-solid fa-circle-info"></i>
+    <p><strong>Esto es 100% privado.</strong> No se comparte con la red ni genera matches — es solo para que lleves el seguimiento de consultas que te llegan desde otras plataformas (ZonaProp, MercadoLibre, redes sociales, etc.).</p>
+  </div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">
+    <div class="kpi"><div class="lbl">Total leads</div><div class="val">${externalLeads.length}</div></div>
+    <div class="kpi"><div class="lbl">🔵 Fríos</div><div class="val" style="color:#2563EB;">${conteo('Frío')}</div></div>
+    <div class="kpi"><div class="lbl">🟠 Tibios</div><div class="val" style="color:#B5892A;">${conteo('Tibio')}</div></div>
+    <div class="kpi"><div class="lbl">🔴 Calientes</div><div class="val" style="color:#B91C1C;">${conteo('Caliente')}</div></div>
+  </div>
+  <div class="agency-filter-chip" style="margin-bottom:16px;">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Buscar por nombre..." value="${escapeHtml(leadsSearchQuery)}" oninput="leadsSearchQuery=this.value; showApp('leadsexternos');" style="border:none;background:transparent;flex:1;font-size:13px;outline:none;">
+  </div>
+  <table>
+    <thead><tr><th>Cliente</th><th>Teléfono</th><th>Propiedad consultada</th><th>Tipo</th><th>Interés</th><th></th></tr></thead>
+    <tbody>
+    ${leadsVisibles.length ? leadsVisibles.map(l=>leadRowHTML(l)).join('') : `<tr><td colspan="6" class="empty-row">${leadsSearchQuery ? 'No se encontraron leads con ese nombre.' : 'Todavía no cargaste ningún lead externo. Hacé clic en "Agregar lead" para empezar.'}</td></tr>`}
+    </tbody>
+  </table>
 `;
 },
 
