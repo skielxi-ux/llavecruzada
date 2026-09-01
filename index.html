@@ -4778,6 +4778,24 @@ function propertyCoords(p){
   const jitter = (hash/1000 - 0.5) * 0.05;
   return [base[0]+jitter, base[1]+jitter*1.3];
 }
+// Arma la lista de comodidades a mostrar en el detalle, según qué sección
+// del formulario correspondía a este tipo de propiedad al cargarla.
+const AMENITY_LABELS = {
+  toilette:'Toilette', piscina:'Piscina', cochera:'Cochera', galeria:'Galería', parrilla:'Parrilla',
+  baulera:'Baulera', gimnasio:'Gimnasio', seguridad:'Seguridad', porteria:'Portería', asador:'Asador',
+  balcon:'Balcón', aptoMascotas:'Apto mascotas', bano:'Baño', quincho:'Quincho', lavadero:'Lavadero',
+  jardin:'Jardín', aptoCredito:'Apto crédito',
+};
+function propertyAmenitiesListHTML(p){
+  const fieldsByTipo = {
+    'Departamento': ['toilette','piscina','cochera','baulera','gimnasio','seguridad','porteria','asador','balcon','aptoMascotas'],
+    'Casa': ['toilette','bano','piscina','cochera','quincho','asador','galeria','porteria','lavadero','jardin','aptoCredito'],
+  };
+  const fields = fieldsByTipo[p.tipo] || ['toilette','piscina','cochera','galeria','parrilla'];
+  const list = fields.filter(f=>p[f]).map(f=>AMENITY_LABELS[f]);
+  if(p.tipo==='Departamento' && p.orientacion) list.push(p.orientacion);
+  return list;
+}
 function renderDetailModal(p, opts){
   opts = opts || {};
   const photoSection = opts.isSearch
@@ -4821,6 +4839,14 @@ function renderDetailModal(p, opts){
         ${p.op==='Alquiler' && p.expensas ? `<div><span class="lbl">Expensas</span><span class="val">${fmtMoney(p.expensas,'ARS')}/mes</span></div>` : ''}
         ${!opts.isSearch ? `<div><span class="lbl">Comisión referidora</span><span class="val">${escapeHtml(p.com)}</span></div>` : ''}
       </div>
+      ${!opts.isSearch && propertyAmenitiesListHTML(p).length ? `
+      <div class="propdetail-requisitos">
+        <div class="propdetail-map-label"><i class="fa-solid fa-list-check"></i> Comodidades</div>
+        <ul class="requisitos-list">
+          ${propertyAmenitiesListHTML(p).map(label=>`<li><i class="fa-solid fa-circle-check"></i> ${escapeHtml(label)}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
       <div class="propdetail-map-section">
         <div class="propdetail-map-label"><i class="fa-solid fa-map-location-dot"></i> Ubicación aproximada</div>
         <div class="propdetail-map-frame">
