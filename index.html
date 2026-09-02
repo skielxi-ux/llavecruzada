@@ -345,6 +345,8 @@
   .listing-photo{position:relative;height:180px;border-radius:14px 14px 0 0;overflow:hidden;background:var(--ink-3);}
   .listing-photo img{width:100%;height:100%;object-fit:cover;display:block;}
   .listing-type-pill{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);color:var(--brass);font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.03em;}
+  .listing-premium-badge{position:absolute;top:10px;left:10px;width:30px;height:30px;border-radius:50%;background:#FFF3D6;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+  .listing-premium-badge i{color:#F5A623;font-size:14px;}
   .listing-ribbon{
     position:absolute;left:0;top:165px;z-index:2;
     background:var(--brass);color:#fff;font-size:11.5px;font-weight:700;
@@ -663,7 +665,11 @@
       <div>Llave Cruzada<small>Red de Inmobiliarias · NOA</small></div>
     </div>
     <div class="landing-nav-actions">
-      <button class="btn" onclick="showMarketplace()"><i class="fa-solid fa-store"></i> Marketplace</button>
+      <!-- Marketplace público en pausa por decisión de producto (confunde el
+      posicionamiento B2B y compite con portales ya establecidos como
+      ZonaProp). Todo el código sigue andando (formulario, sincronización,
+      vista, consultas) — para reactivarlo, solo hay que volver a agregar
+      este botón: <button class="btn" onclick="showMarketplace()"><i class="fa-solid fa-store"></i> Marketplace</button> -->
       <button class="btn" onclick="openModal('login')">Iniciar sesión</button>
       <button class="btn btn-solid" onclick="openModal('activate')">Activar código</button>
     </div>
@@ -1086,10 +1092,10 @@
 </div>
 
 <!-- ================= MARKETPLACE PÚBLICO (sin login) ================= -->
-<div id="view-marketplace" class="hidden">
+<div id="view-marketplace" class="hidden" style="background:#f5f5f5;min-height:100vh;">
   <div class="landing-nav">
     <div class="brand" style="cursor:pointer;" onclick="closeMarketplace()">
-      <img class="key-mark" src="data:image/png;base64,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" alt="Llave Cruzada">
+      <img class="key-mark" src="data:image/png;base64,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" alt="Llave Cruzada">
       <div>Llave Cruzada<small>Marketplace público</small></div>
     </div>
     <div class="landing-nav-actions">
@@ -1175,7 +1181,11 @@
         <div class="nav-item" data-view="propiedades" onclick="showApp('propiedades')"><i class="fa-solid fa-building"></i> Mis Propiedades</div>
         <div class="nav-item" data-view="clientes" onclick="showApp('clientes')"><i class="fa-solid fa-users"></i> Búsquedas para Clientes</div>
         <div class="nav-item" data-view="leadsexternos" onclick="showApp('leadsexternos')"><i class="fa-solid fa-user-tag"></i> Leads Externos</div>
+        <!-- "Consultas Marketplace" se sacó del menú junto con el Marketplace
+             público (en pausa) — la vista, el listener y las notificaciones
+             siguen andando. Para reactivarlo, volver a agregar:
         <div class="nav-item" data-view="mktinquiries" onclick="showApp('mktinquiries')"><i class="fa-solid fa-store"></i> Consultas Marketplace <span class="dot" id="mktinquiriesdot"></span></div>
+        -->
         <!-- "Oportunidad Exclusiva" se sacó del menú a pedido explícito, pero la
              función (vista, formulario, colección exclusivas, panel de admin)
              sigue intacta en el código por si se quiere reactivar más adelante. -->
@@ -1359,7 +1369,12 @@
         </div>
         <label class="amenity-check" style="margin-top:10px;display:inline-flex;"><input type="checkbox" id="p-country"> Country / Barrio cerrado</label>
       </div>
-      <div class="field" style="background:var(--ink-3);border-radius:var(--radius);padding:12px 14px;">
+      <!-- Marketplace público en pausa: se oculta este bloque sin sacarlo
+           del DOM, porque el checkbox se lee en submitNewClient, en el reset
+           del formulario y al precargar una edición — sacarlo del todo
+           rompería esas funciones. Para reactivar, solo hay que sacar el
+           "display:none" de este div. -->
+      <div class="field" style="background:var(--ink-3);border-radius:var(--radius);padding:12px 14px;display:none;">
         <label class="amenity-check" style="display:inline-flex;"><input type="checkbox" id="p-public-marketplace"> Publicar también en el buscador público</label>
         <p style="font-size:11.5px;color:var(--paper-dim);margin:6px 0 0;">Además de verse en la red entre inmobiliarias, va a aparecer en "Marketplace" de la landing, visible para cualquier persona sin necesidad de estar registrada. Tu teléfono no se expone — las consultas de terceros te llegan por un formulario. Apagado por defecto.</p>
       </div>
@@ -1708,6 +1723,7 @@ function hashToRange(str, min, max){
   return min + (Math.abs(h) % (max-min));
 }
 function adaptPropForNetwork(p){
+  const ag = ADMIN_AGENCIES.find(a=>a.id===p.ownerUid);
   return {
     id:p.id, ownerUid:p.ownerUid, agency:p.ownerName, op:p.op, tipo:p.tipo, ciudad:p.ciudad, zona:p.zona,
     addr:p.direccion || '', m2:p.m2, beds:p.amb, baths:p.banos, estado:p.estado || 'Activo',
@@ -1718,6 +1734,7 @@ function adaptPropForNetwork(p){
     baulera:!!p.baulera, gimnasio:!!p.gimnasio, seguridad:!!p.seguridad, porteria:!!p.porteria, asador:!!p.asador,
     balcon:!!p.balcon, aptoMascotas:!!p.aptoMascotas, orientacion:p.orientacion || '',
     bano:!!p.bano, quincho:!!p.quincho, lavadero:!!p.lavadero, jardin:!!p.jardin, aptoCredito:!!p.aptoCredito,
+    plan: ag ? ag.plan : null,
   };
 }
 function adaptClientForNetwork(c){
@@ -1850,6 +1867,21 @@ function sortProps(list, sortKey){
   if(sortKey==='precio_asc') arr.sort((a,b)=>a.precio-b.precio);
   else if(sortKey==='precio_desc') arr.sort((a,b)=>b.precio-a.precio);
   else if(sortKey==='reciente') arr.reverse();
+  // Prioridad Premium: siempre primero, sin importar el orden elegido
+  // arriba. Entre varias inmobiliarias premium, gana la que tiene más
+  // propiedades activas en total (criterio de ZonaProp). Como Array.sort
+  // es estable, el orden elegido arriba se conserva dentro de cada grupo.
+  arr.sort((a,b)=>{
+    const aPremium = a.plan==='Premium' ? 1 : 0;
+    const bPremium = b.plan==='Premium' ? 1 : 0;
+    if(aPremium !== bPremium) return bPremium - aPremium;
+    if(aPremium && bPremium){
+      const aCount = agencyActivePropCount[a.ownerUid] || 0;
+      const bCount = agencyActivePropCount[b.ownerUid] || 0;
+      if(aCount !== bCount) return bCount - aCount;
+    }
+    return 0;
+  });
   return arr;
 }
 let exploreAgencyFilter = null;
@@ -3043,7 +3075,7 @@ async function syncPublicListing(propId, p){
   try{
     if(debePublicarse){
       await db.collection('publicListings').doc(propId).set({
-        ownerUid: AGENCY.uid, agencyName: AGENCY.name,
+        ownerUid: AGENCY.uid, agencyName: AGENCY.name, agencyLogo: AGENCY.logo || null,
         tipo:p.tipo, op:p.op, ciudad:p.ciudad, zona:p.zona,
         precio:p.precio, moneda:p.moneda, m2:p.m2, amb:p.amb, banos:p.banos, ant:p.ant,
         expensas:p.expensas || null, fotos:p.fotos || [], desc:p.desc || '',
@@ -3208,6 +3240,7 @@ function listingCard(p){
     <div class="listing-card">
       <div class="listing-photo">
         <img src="${p.fotos && p.fotos.length ? p.fotos[0] : `https://picsum.photos/id/${p.photo}/600/400`}" alt="${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}">
+        ${p.plan==='Premium' ? `<div class="listing-premium-badge" title="Inmobiliaria con Plan Premium"><i class="fa-solid fa-star"></i></div>` : ''}
         <span class="listing-type-pill">${escapeHtml(p.tipo)}</span>
         <span class="listing-agency-pill"><i class="fa-solid fa-building"></i> ${escapeHtml(p.agency)}</span>
       </div>
@@ -3513,6 +3546,7 @@ function newAgencies(){ return ADMIN_AGENCIES.filter(a=>daysSince(a.registeredAt
 function fmtARS(n){ return 'ARS ' + Math.round(n).toLocaleString('es-AR'); }
 
 let ADMIN_AGENCIES = [];
+let agencyActivePropCount = {}; // ownerUid -> cantidad de propiedades activas (venta+alquiler juntas)
 let ADMIN_MATCHES = [];
 let submittedReports = [];
 let inviteCodes = [];
@@ -5505,6 +5539,13 @@ function attachDataListeners(uid){
     const all = snap.docs.map(d=>({id:d.id, ...d.data()}));
     myProps = all.filter(p=>p.ownerUid===uid);
     applyMyPropertyContacts();
+    // Para desempatar entre varias inmobiliarias premium en "Explorar la
+    // Red": gana la que tiene más propiedades ACTIVAS en total (venta y
+    // alquiler juntas), mismo criterio que usa ZonaProp.
+    agencyActivePropCount = {};
+    all.forEach(p=>{
+      if(p.estado==='Activo') agencyActivePropCount[p.ownerUid] = (agencyActivePropCount[p.ownerUid]||0) + 1;
+    });
     networkProps.length = 0;
     networkProps.push(...all.filter(p=>p.ownerUid!==uid).map(adaptPropForNetwork));
     computeMatches();
@@ -6956,6 +6997,9 @@ function renderMarketplaceGrid(){
 }
 function mktListingCardHTML(p){
   const priceDisplay = p.op==='Alquiler' ? `${fmtMoney(p.precio,p.moneda)}<span class="unit">/mes</span>` : fmtMoney(p.precio,p.moneda);
+  const posterLogo = p.agencyLogo
+    ? `<img src="${p.agencyLogo}" alt="${escapeHtml(p.agencyName)}">`
+    : `<i class="fa-solid fa-building"></i>`;
   return `
     <div class="listing-card">
       <div class="listing-photo">
@@ -6970,7 +7014,7 @@ function mktListingCardHTML(p){
         <div class="listing-title">${escapeHtml(p.zona)}, ${escapeHtml(p.ciudad)}</div>
         ${p.country ? `<div class="listing-commission" style="color:var(--brass-bright);"><i class="fa-solid fa-tree-city"></i> Country / Barrio cerrado</div>` : ''}
         <div class="listing-poster">
-          <div class="listing-poster-logo"><i class="fa-solid fa-building"></i></div>
+          <div class="listing-poster-logo">${posterLogo}</div>
           <span>${escapeHtml(p.agencyName)}</span>
         </div>
         <div class="listing-divider"></div>
@@ -7009,7 +7053,10 @@ function openMarketplaceDetail(id){
       <ul class="requisitos-list">${amenities.map(label=>`<li><i class="fa-solid fa-circle-check"></i> ${escapeHtml(label)}</li>`).join('')}</ul>
     </div>` : ''}
     ${p.desc ? `<p style="font-size:13.5px;color:var(--ink);line-height:1.6;">${escapeHtml(p.desc)}</p>` : ''}
-    <p style="font-size:12px;color:var(--paper-dim);margin-top:14px;">Publicado por ${escapeHtml(p.agencyName)}</p>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:14px;">
+      ${p.agencyLogo ? `<img src="${p.agencyLogo}" alt="${escapeHtml(p.agencyName)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">` : `<i class="fa-solid fa-building" style="color:var(--paper-dim);"></i>`}
+      <p style="font-size:12px;color:var(--paper-dim);margin:0;">Publicado por ${escapeHtml(p.agencyName)}</p>
+    </div>
     <button class="btn btn-solid" style="width:100%;margin-top:14px;" onclick="closeModal('mktdetalle'); openMarketplaceInquiryModal('${p.id}');"><i class="fa-solid fa-envelope"></i> Consultar por esta propiedad</button>
   `;
   openModal('mktdetalle');
