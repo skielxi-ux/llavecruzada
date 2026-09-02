@@ -750,12 +750,12 @@
         <h3>Plan Pro</h3>
         <div class="price">$120.000<span> /mes</span></div>
         <ul>
-          <li>Incluye 2 usuarios</li>
-          <li>Carga de propiedades de forma independiente</li>
+          <li>2 usuarios</li>
           <li>20 propiedades</li>
+          <li>Carga de propiedades de forma independiente</li>
           <li>10 búsquedas</li>
           <li>Matches automáticos con toda la red</li>
-          <li>Contacto directo con todas las inmobiliarias</li>
+          <li>Contacto interno directo con todas las inmobiliarias</li>
         </ul>
         <button class="btn" style="width:100%;" onclick="openModal('activate')">Consultar este plan</button>
       </div>
@@ -765,13 +765,14 @@
         <h3>Plan Premium</h3>
         <div class="price">$400.000<span> /mes</span></div>
         <ul>
-          <li>Incluye 5 usuarios</li>
-          <li>Nuestro equipo carga tu cartera inicial (máximo 30 propiedades)</li>
+          <li>5 usuarios</li>
+          <li>Nuestro equipo carga tus primeras 20 propiedades</li>
           <li>Propiedades ilimitadas</li>
           <li>Búsquedas ilimitadas</li>
           <li>Matches automáticos con toda la red</li>
           <li>Contacto directo con todas las inmobiliarias</li>
           <li>Soporte prioritario</li>
+          <li>Anuncios destacados</li>
         </ul>
         <button class="btn btn-solid" style="width:100%;" onclick="openModal('activate')">Consultar este plan</button>
       </div>
@@ -3934,11 +3935,11 @@ const PLAN_INFO = {
     price: '$120.000 /mes',
     items: [
       {label:'2 usuarios', text:'Hasta dos personas de tu equipo pueden operar la cuenta de tu inmobiliaria en la red.'},
-      {label:'Carga de propiedades de forma independiente', text:'Vos y tu equipo cargan, editan y actualizan la cartera y las búsquedas cuando quieran, sin depender de nuestro equipo.'},
       {label:'20 propiedades', text:'Podés tener hasta 20 propiedades activas publicadas en la red al mismo tiempo (pausadas o cerradas no cuentan para el límite).'},
+      {label:'Carga de propiedades de forma independiente', text:'Vos y tu equipo cargan, editan y actualizan la cartera y las búsquedas cuando quieran, sin depender de nuestro equipo.'},
       {label:'10 búsquedas', text:'Hasta 10 búsquedas de clientes activas en simultáneo.'},
       {label:'Matches automáticos con toda la red', text:'Tu cartera y tus búsquedas se cruzan automáticamente contra las de todas las inmobiliarias asociadas de la red.'},
-      {label:'Contacto directo con todas las inmobiliarias', text:'Al surgir un match, podés iniciar el contacto directo (WhatsApp) con la inmobiliaria correspondiente, sin restricciones.'},
+      {label:'Contacto interno directo con todas las inmobiliarias', text:'Al surgir un match, podés iniciar el contacto directo (WhatsApp) con la inmobiliaria correspondiente, sin restricciones.'},
     ]
   },
   premium: {
@@ -3946,12 +3947,13 @@ const PLAN_INFO = {
     price: '$400.000 /mes',
     items: [
       {label:'5 usuarios', text:'Hasta cinco personas de tu equipo pueden operar la cuenta de tu inmobiliaria en la red.'},
-      {label:'Nuestro equipo carga tu cartera inicial (máximo 30 propiedades)', text:'Al activar el plan, nuestro equipo releva y carga por vos hasta 30 propiedades de tu cartera existente, para que arranques sin trabajo manual.'},
+      {label:'Nuestro equipo carga tus primeras 20 propiedades', text:'Al activar el plan, nuestro equipo releva y carga por vos hasta 20 propiedades de tu cartera existente, para que arranques sin trabajo manual.'},
       {label:'Propiedades ilimitadas', text:'Sin límite de propiedades activas publicadas en la red.'},
       {label:'Búsquedas ilimitadas', text:'Sin límite de búsquedas de clientes activas en simultáneo.'},
       {label:'Matches automáticos con toda la red', text:'Tu cartera y tus búsquedas se cruzan automáticamente contra las de todas las inmobiliarias asociadas de la red.'},
       {label:'Contacto directo con todas las inmobiliarias', text:'Al surgir un match, podés iniciar el contacto directo (WhatsApp) con la inmobiliaria correspondiente, sin restricciones.'},
       {label:'Soporte prioritario', text:'Atención directa por WhatsApp con tiempos de respuesta preferenciales frente a consultas del Plan Pro.'},
+      {label:'Anuncios destacados', text:'Tus propiedades aparecen primero en "Explorar la Red", marcadas con una estrella, por delante del resto de la red.'},
     ]
   }
 };
@@ -6877,12 +6879,12 @@ precios: ()=>`
       <button class="plan-vermas-btn" onclick="openPlanDetail('pro')" title="Ver más detalles">Ver más</button>
       <h3>Plan Pro</h3><div class="price">$120.000<span> /mes</span></div>
       <ul>
-        <li>Incluye 2 usuarios</li>
-        <li>Carga de propiedades de forma independiente</li>
+        <li>2 usuarios</li>
         <li>20 propiedades</li>
+        <li>Carga de propiedades de forma independiente</li>
         <li>10 búsquedas</li>
         <li>Matches automáticos con toda la red</li>
-        <li>Contacto directo con todas las inmobiliarias</li>
+        <li>Contacto interno directo con todas las inmobiliarias</li>
       </ul>
       ${AGENCY.plan==='Pro'?'<div class="plan-actual-label">Plan actual</div>':''}
     </div>
@@ -6890,13 +6892,14 @@ precios: ()=>`
       <button class="plan-vermas-btn" onclick="openPlanDetail('premium')" title="Ver más detalles">Ver más</button>
       <h3>Plan Premium</h3><div class="price">$400.000<span> /mes</span></div>
       <ul>
-        <li>Incluye 5 usuarios</li>
-        <li>Nuestro equipo carga tu cartera inicial (máximo 30 propiedades)</li>
+        <li>5 usuarios</li>
+        <li>Nuestro equipo carga tus primeras 20 propiedades</li>
         <li>Propiedades ilimitadas</li>
         <li>Búsquedas ilimitadas</li>
         <li>Matches automáticos con toda la red</li>
         <li>Contacto directo con todas las inmobiliarias</li>
         <li>Soporte prioritario</li>
+        <li>Anuncios destacados</li>
       </ul>
       ${AGENCY.plan==='Premium'?'<div class="plan-actual-label">Plan actual</div>':''}
     </div>
