@@ -663,6 +663,7 @@
       <div>Llave Cruzada<small>Red de Inmobiliarias · NOA</small></div>
     </div>
     <div class="landing-nav-actions">
+      <button class="btn" onclick="showMarketplace()"><i class="fa-solid fa-store"></i> Marketplace</button>
       <button class="btn" onclick="openModal('login')">Iniciar sesión</button>
       <button class="btn btn-solid" onclick="openModal('activate')">Activar código</button>
     </div>
@@ -1084,6 +1085,70 @@
   </div>
 </div>
 
+<!-- ================= MARKETPLACE PÚBLICO (sin login) ================= -->
+<div id="view-marketplace" class="hidden">
+  <div class="landing-nav">
+    <div class="brand" style="cursor:pointer;" onclick="closeMarketplace()">
+      <img class="key-mark" src="data:image/png;base64,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" alt="Llave Cruzada">
+      <div>Llave Cruzada<small>Marketplace público</small></div>
+    </div>
+    <div class="landing-nav-actions">
+      <button class="btn" onclick="closeMarketplace()"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+    </div>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:24px 20px 60px;">
+    <div class="main-head"><div><h1>Marketplace</h1><p class="sub">Propiedades que las inmobiliarias de la red eligieron publicar para consultas del público.</p></div></div>
+
+    <div class="filters" style="margin-bottom:20px;">
+      <div class="select-wrap">
+        <select id="mkt-filter-tipo" onchange="applyMarketplaceFilters()">
+          <option value="">Todos los tipos</option>
+          <option>Casa</option><option>Departamento</option><option>PH</option><option>Terreno</option><option>Local comercial</option><option>Oficina</option><option>Galpón / Depósito</option>
+        </select>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="select-wrap">
+        <select id="mkt-filter-op" onchange="applyMarketplaceFilters()">
+          <option value="">Venta y alquiler</option>
+          <option value="Venta">Solo venta</option>
+          <option value="Alquiler">Solo alquiler</option>
+        </select>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="select-wrap">
+        <input id="mkt-filter-ciudad" type="text" placeholder="Buscar por ciudad/zona..." oninput="applyMarketplaceFilters()" style="padding:10px 14px;border-radius:10px;border:1px solid #E2E1ED;width:100%;">
+      </div>
+    </div>
+
+    <div class="listing-grid" id="mkt-listing-grid">
+      <div class="card"><p style="color:var(--paper-dim);margin:0;">Cargando propiedades...</p></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-mktdetalle" class="modal-backdrop hidden">
+  <div class="modal" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('mktdetalle')"><i class="fa-solid fa-xmark"></i></button>
+    <div id="mktdetalle-content"></div>
+  </div>
+</div>
+
+<div id="modal-mktconsulta" class="modal-backdrop hidden">
+  <div class="modal" style="position:relative;">
+    <button class="avatar-modal-close" onclick="closeModal('mktconsulta')"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Consultar por esta propiedad</h3>
+    <p class="sub" id="mktconsulta-propiedad"></p>
+    <div class="field"><label>Tu nombre</label><input id="mkt-consulta-nombre" placeholder="Nombre completo"></div>
+    <div class="field"><label>Tu teléfono</label><input id="mkt-consulta-telefono" placeholder="381..."></div>
+    <div class="field"><label>Mensaje (opcional)</label><textarea id="mkt-consulta-mensaje" rows="3" placeholder="Contame qué te gustaría saber..."></textarea></div>
+    <div class="modal-close-row">
+      <button class="btn" onclick="closeModal('mktconsulta')">Cancelar</button>
+      <button class="btn btn-solid" onclick="submitMarketplaceInquiry()">Enviar consulta</button>
+    </div>
+  </div>
+</div>
+
 <!-- ================= APP ================= -->
 <div id="view-app">
   <div class="app-shell">
@@ -1110,6 +1175,7 @@
         <div class="nav-item" data-view="propiedades" onclick="showApp('propiedades')"><i class="fa-solid fa-building"></i> Mis Propiedades</div>
         <div class="nav-item" data-view="clientes" onclick="showApp('clientes')"><i class="fa-solid fa-users"></i> Búsquedas para Clientes</div>
         <div class="nav-item" data-view="leadsexternos" onclick="showApp('leadsexternos')"><i class="fa-solid fa-user-tag"></i> Leads Externos</div>
+        <div class="nav-item" data-view="mktinquiries" onclick="showApp('mktinquiries')"><i class="fa-solid fa-store"></i> Consultas Marketplace <span class="dot" id="mktinquiriesdot"></span></div>
         <!-- "Oportunidad Exclusiva" se sacó del menú a pedido explícito, pero la
              función (vista, formulario, colección exclusivas, panel de admin)
              sigue intacta en el código por si se quiere reactivar más adelante. -->
@@ -1292,6 +1358,10 @@
           <div class="field"></div>
         </div>
         <label class="amenity-check" style="margin-top:10px;display:inline-flex;"><input type="checkbox" id="p-country"> Country / Barrio cerrado</label>
+      </div>
+      <div class="field" style="background:var(--ink-3);border-radius:var(--radius);padding:12px 14px;">
+        <label class="amenity-check" style="display:inline-flex;"><input type="checkbox" id="p-public-marketplace"> Publicar también en el buscador público</label>
+        <p style="font-size:11.5px;color:var(--paper-dim);margin:6px 0 0;">Además de verse en la red entre inmobiliarias, va a aparecer en "Marketplace" de la landing, visible para cualquier persona sin necesidad de estar registrada. Tu teléfono no se expone — las consultas de terceros te llegan por un formulario. Apagado por defecto.</p>
       </div>
       <div class="row-2">
         <div class="field"><label>Precio</label><input id="p-precio" type="number" placeholder="85000"></div>
@@ -1644,6 +1714,10 @@ function adaptPropForNetwork(p){
     precio:p.precio, moneda:p.moneda, exc:p.exc || 'Captación abierta', com:p.com, expensas:p.expensas || null,
     popular:false, photo:hashToRange(p.id, 1020, 1080), fotos:p.fotos, requisitos:p.requisitos,
     lat:p.lat!=null?p.lat:null, lng:p.lng!=null?p.lng:null, country:!!p.country,
+    toilette:!!p.toilette, piscina:!!p.piscina, cochera:!!p.cochera, galeria:!!p.galeria, parrilla:!!p.parrilla,
+    baulera:!!p.baulera, gimnasio:!!p.gimnasio, seguridad:!!p.seguridad, porteria:!!p.porteria, asador:!!p.asador,
+    balcon:!!p.balcon, aptoMascotas:!!p.aptoMascotas, orientacion:p.orientacion || '',
+    bano:!!p.bano, quincho:!!p.quincho, lavadero:!!p.lavadero, jardin:!!p.jardin, aptoCredito:!!p.aptoCredito,
   };
 }
 function adaptClientForNetwork(c){
@@ -2830,6 +2904,7 @@ function resetNewClientFormFields(){
   document.getElementById('p-casa-jardin').checked = false;
   document.getElementById('p-casa-credito').checked = false;
   document.getElementById('p-country').checked = false;
+  document.getElementById('p-public-marketplace').checked = false;
   updateAmenitiesByTipo();
   document.getElementById('p-precio').value = '';
   document.getElementById('p-expensas').value = '';
@@ -2942,6 +3017,7 @@ function openEditPropModal(id){
   document.getElementById('p-casa-jardin').checked = !!p.jardin;
   document.getElementById('p-casa-credito').checked = !!p.aptoCredito;
   document.getElementById('p-country').checked = !!p.country;
+  document.getElementById('p-public-marketplace').checked = !!p.publicMarketplace;
   updateAmenitiesByTipo();
   REQUISITOS_MAP.forEach(r=>{
     document.getElementById(r.id).checked = p.requisitos ? p.requisitos.includes(r.label) : true;
@@ -2957,6 +3033,30 @@ function openEditPropModal(id){
   openModal('newclient');
   setPinGeocodeStatus('');
   setTimeout(()=>initPropPinMap(p.lat, p.lng), 50);
+}
+// Mantiene sincronizada la versión pública y reducida de una propiedad
+// (sin teléfono ni dirección exacta) — solo existe mientras la inmobiliaria
+// la tildó como "Publicar en el buscador público" Y la propiedad sigue
+// Activa. Se llama cada vez que algo de eso puede haber cambiado.
+async function syncPublicListing(propId, p){
+  const debePublicarse = !!p.publicMarketplace && p.estado==='Activo';
+  try{
+    if(debePublicarse){
+      await db.collection('publicListings').doc(propId).set({
+        ownerUid: AGENCY.uid, agencyName: AGENCY.name,
+        tipo:p.tipo, op:p.op, ciudad:p.ciudad, zona:p.zona,
+        precio:p.precio, moneda:p.moneda, m2:p.m2, amb:p.amb, banos:p.banos, ant:p.ant,
+        expensas:p.expensas || null, fotos:p.fotos || [], desc:p.desc || '',
+        toilette:!!p.toilette, piscina:!!p.piscina, cochera:!!p.cochera, galeria:!!p.galeria, parrilla:!!p.parrilla,
+        baulera:!!p.baulera, gimnasio:!!p.gimnasio, seguridad:!!p.seguridad, porteria:!!p.porteria, asador:!!p.asador,
+        balcon:!!p.balcon, aptoMascotas:!!p.aptoMascotas, orientacion:p.orientacion || '',
+        bano:!!p.bano, quincho:!!p.quincho, lavadero:!!p.lavadero, jardin:!!p.jardin, aptoCredito:!!p.aptoCredito,
+        country:!!p.country, updatedAt: new Date().toISOString(),
+      });
+    } else {
+      await db.collection('publicListings').doc(propId).delete();
+    }
+  }catch(err){ console.error('Error sincronizando publicListing:', err); }
 }
 async function submitNewClient(){
   const nombre = document.getElementById('c-nombre').value || 'Sin nombre';
@@ -3004,6 +3104,7 @@ async function submitNewClient(){
       jardin:document.getElementById('p-casa-jardin').checked,
       aptoCredito:document.getElementById('p-casa-credito').checked,
       country:document.getElementById('p-country').checked,
+      publicMarketplace:document.getElementById('p-public-marketplace').checked,
       requisitos: document.getElementById('p-op').value==='Alquiler' ? REQUISITOS_MAP.filter(r=>document.getElementById(r.id).checked).map(r=>r.label) : [],
       fotos: [...propPhotos],
       precio:Number(document.getElementById('p-precio').value)||0,
@@ -3035,6 +3136,7 @@ async function submitNewClient(){
         // sin tocar el conteo ya acumulado (propiedades cargadas antes de
         // esta función lo van a tener recién a partir de este guardado).
         await db.collection('propertyViews').doc(editingContext.id).set({ownerUid:AGENCY.uid}, {merge:true});
+        await syncPublicListing(editingContext.id, {...data, estado: myProps.find(x=>x.id===editingContext.id)?.estado || 'Activo'});
         toast('Propiedad actualizada');
       } else {
         data.estado = 'Activo';
@@ -3042,6 +3144,7 @@ async function submitNewClient(){
         const ref = await db.collection('properties').add(data);
         await db.collection('propertyContacts').doc(ref.id).set(contactData);
         await db.collection('propertyViews').doc(ref.id).set({ownerUid:AGENCY.uid, viewedByAgencies:[]});
+        await syncPublicListing(ref.id, data);
         toast('Propietario y propiedad publicados en la red');
       }
       closeModal('newclient');
@@ -3211,6 +3314,7 @@ const APP_VIEWS_TOGGLEABLE = [
   {key:'propiedades', label:'Mis Propiedades'},
   {key:'clientes', label:'Búsquedas para Clientes'},
   {key:'leadsexternos', label:'Leads Externos'},
+  {key:'mktinquiries', label:'Consultas Marketplace'},
   {key:'asociadas', label:'Inmobiliarias Asociadas'},
   {key:'perfil', label:'Mi Perfil'},
   {key:'usuarios', label:'Usuarios'},
@@ -4357,8 +4461,10 @@ function autoFinalizeVentaMatches(){
 async function finalizeVentaOperationNow(key, remote){
   const prop = myProps.find(x=>x.id===remote.propId);
   const nowIso = new Date().toISOString();
+  const nuevoEstado = (prop && prop.op==='Alquiler') ? 'Alquilada' : 'Vendida';
   await db.collection('matches').doc(key).update({status:'concretadas', closedAt:nowIso, updatedAt:nowIso});
-  await db.collection('properties').doc(remote.propId).update({estado: (prop && prop.op==='Alquiler') ? 'Alquilada' : 'Vendida'});
+  await db.collection('properties').doc(remote.propId).update({estado: nuevoEstado});
+  if(prop) await syncPublicListing(remote.propId, {...prop, estado: nuevoEstado});
   await db.collection('clients').doc(remote.searchId).update({estado:'Cerrado'});
   await db.collection('agencies').doc(remote.propOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
   await db.collection('agencies').doc(remote.searchOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
@@ -4675,6 +4781,7 @@ async function finalizeOperation(key){
       reviewableAfter: firebase.firestore.Timestamp.fromDate(reviewableDate),
     });
     await db.collection('properties').doc(m.prop.id).update({estado: m.prop.op==='Alquiler' ? 'Alquilada' : 'Vendida'});
+    await syncPublicListing(m.prop.id, {...m.prop, estado: m.prop.op==='Alquiler' ? 'Alquilada' : 'Vendida'});
     await db.collection('clients').doc(m.search.id).update({estado:'Cerrado'});
     await db.collection('agencies').doc(m.propOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
     await db.collection('agencies').doc(m.searchOwnerUid).update({ops: firebase.firestore.FieldValue.increment(1)});
@@ -4796,6 +4903,56 @@ function propertyAmenitiesListHTML(p){
   if(p.tipo==='Departamento' && p.orientacion) list.push(p.orientacion);
   return list;
 }
+// Arma el texto de un anuncio listo para pegar en Facebook Marketplace (no
+// hay forma de publicar ahí de manera automática y segura — Facebook no
+// tiene una API pública para Marketplace — así que esto solo prepara el
+// texto para copiar y pegar a mano en 10 segundos).
+function buildFacebookAdText(p){
+  const opLabel = p.op==='Venta' ? 'Venta' : 'Alquiler';
+  const lineas = [];
+  lineas.push(`🏠 ${opLabel} de ${p.tipo} en ${p.zona}, ${p.ciudad}`);
+  lineas.push('');
+  lineas.push(`💰 ${fmtMoney(p.precio, p.moneda)}${p.op==='Alquiler' && p.expensas ? ` + expensas ${fmtMoney(p.expensas,'ARS')}` : ''}`);
+  const datos = [];
+  if(p.m2 && p.m2!=='—') datos.push(`${p.m2} m²`);
+  if(p.amb && p.amb!=='—') datos.push(`${p.amb} ambientes`);
+  if(p.banos && p.banos!=='—') datos.push(`${p.banos} baños`);
+  if(datos.length) lineas.push(`📐 ${datos.join(' · ')}`);
+  const amenities = propertyAmenitiesListHTML(p);
+  if(amenities.length) lineas.push(`✨ ${amenities.join(', ')}`);
+  if(p.desc) { lineas.push(''); lineas.push(p.desc); }
+  lineas.push('');
+  lineas.push(`📲 Consultas: ${AGENCY.name}${AGENCY.whatsapp ? ' — '+AGENCY.whatsapp : ''}`);
+  return lineas.join('\n');
+}
+async function copyForFacebook(propId){
+  const p = myProps.find(x=>x.id===propId);
+  if(!p) return;
+  const texto = buildFacebookAdText(p);
+  try{
+    await navigator.clipboard.writeText(texto);
+    toast('Texto del anuncio copiado — pegalo directo en Facebook Marketplace');
+  }catch(err){
+    toast('No se pudo copiar automáticamente. Copiá el texto manualmente.');
+  }
+}
+function downloadPropertyPhotos(propId){
+  const p = myProps.find(x=>x.id===propId);
+  if(!p) return;
+  if(!p.fotos || !p.fotos.length){ toast('Esta propiedad no tiene fotos cargadas'); return; }
+  const base = `${(p.tipo||'propiedad').toLowerCase()}-${(p.zona||'').toLowerCase()}`.replace(/[^a-z0-9-]+/g,'-');
+  p.fotos.forEach((src, i)=>{
+    setTimeout(()=>{
+      const a = document.createElement('a');
+      a.href = src;
+      a.download = `${base}-${i+1}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }, i * 250); // espaciadas para que el navegador no las bloquee ni las mezcle
+  });
+  toast(`Descargando ${p.fotos.length} foto${p.fotos.length>1?'s':''}...`);
+}
 function renderDetailModal(p, opts){
   opts = opts || {};
   const photoSection = opts.isSearch
@@ -4868,7 +5025,9 @@ function renderDetailModal(p, opts){
       <div class="propdetail-actions">
         ${(() => {
           if(opts.isMine){
-            return `<button class="btn btn-solid" onclick="closeModal('propdetail'); openEditPropModal('${p.id}');"><i class="fa-solid fa-pen"></i> Editar propiedad</button>`;
+            return `<button class="btn btn-solid" onclick="closeModal('propdetail'); openEditPropModal('${p.id}');"><i class="fa-solid fa-pen"></i> Editar propiedad</button>
+            <button class="btn" onclick="copyForFacebook('${p.id}')" title="Copiar texto del anuncio para pegar en Facebook Marketplace" style="color:#1877F2;border-color:#1877F2;"><i class="fa-brands fa-facebook"></i></button>
+            <button class="btn" onclick="downloadPropertyPhotos('${p.id}')" title="Descargar todas las fotos para subirlas junto con el texto"><i class="fa-solid fa-download"></i></button>`;
           }
           const ag = ADMIN_AGENCIES.find(a=>a.id===p.ownerUid) || ADMIN_AGENCIES.find(a=>a.name===p.agency);
           const phone = ag && (ag.whatsapp || ag.phone);
@@ -5279,6 +5438,8 @@ function importSiteData(event){
 let unsubscribeProps = null;
 let unsubscribeClients = null;
 let unsubscribeExternalLeads = null;
+let unsubscribeMarketplaceInquiries = null;
+let marketplaceInquiries = [];
 let unsubscribePropContacts = null;
 let unsubscribePropertyViews = null;
 let unsubscribeClientContacts = null;
@@ -5363,6 +5524,21 @@ function attachDataListeners(uid){
     externalLeads = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
     refreshCurrentView();
   }, err=>console.error('Error escuchando leads externos:', err));
+  if(unsubscribeMarketplaceInquiries) unsubscribeMarketplaceInquiries();
+  let firstMktInquirySnapshot = true;
+  unsubscribeMarketplaceInquiries = db.collection('marketplaceInquiries').where('propOwnerUid','==',uid).onSnapshot(snap=>{
+    const prevIds = new Set(marketplaceInquiries.map(i=>i.id));
+    marketplaceInquiries = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+    if(!firstMktInquirySnapshot){
+      marketplaceInquiries.filter(i=>!prevIds.has(i.id)).forEach(i=>{
+        addNotification('fa-envelope','gold','Nueva consulta del Marketplace', `${i.nombre} preguntó por ${i.propDescripcion||'una propiedad'}.`);
+      });
+    }
+    firstMktInquirySnapshot = false;
+    const mktDotEl = document.getElementById('mktinquiriesdot');
+    if(mktDotEl) mktDotEl.style.display = marketplaceInquiries.some(i=>!i.read) ? 'block' : 'none';
+    refreshCurrentView();
+  }, err=>console.error('Error escuchando consultas del marketplace:', err));
   if(unsubscribePropContacts) unsubscribePropContacts();
   unsubscribePropContacts = db.collection('propertyContacts').where('ownerUid','==',uid).onSnapshot(snap=>{
     myPropertyContacts = {};
@@ -5444,6 +5620,8 @@ function detachDataListeners(){
   if(unsubscribeMatchesAsSearch){ unsubscribeMatchesAsSearch(); unsubscribeMatchesAsSearch=null; }
   if(unsubscribeAgencyUsers){ unsubscribeAgencyUsers(); unsubscribeAgencyUsers=null; }
   if(unsubscribeExternalLeads){ unsubscribeExternalLeads(); unsubscribeExternalLeads=null; }
+  if(unsubscribeMarketplaceInquiries){ unsubscribeMarketplaceInquiries(); unsubscribeMarketplaceInquiries=null; }
+  marketplaceInquiries = [];
   myProps = [];
   myClients = [];
   externalLeads = [];
@@ -5469,6 +5647,7 @@ async function deleteProp(id){
     await db.collection('properties').doc(id).delete();
     db.collection('propertyContacts').doc(id).delete().catch(()=>{});
     db.collection('propertyViews').doc(id).delete().catch(()=>{});
+    db.collection('publicListings').doc(id).delete().catch(()=>{});
     toast('Propiedad eliminada');
   }
   catch(err){ toast('Error al eliminar: '+err.message); }
@@ -5479,6 +5658,7 @@ async function togglePausarPropiedad(id){
   const nuevoEstado = p.estado==='Pausada' ? 'Activo' : 'Pausada';
   try{
     await db.collection('properties').doc(id).update({estado: nuevoEstado});
+    await syncPublicListing(id, {...p, estado: nuevoEstado});
     toast(nuevoEstado==='Pausada' ? 'Propiedad pausada — ya no se ve en Explorar la Red' : 'Propiedad reactivada — vuelve a verse en Explorar la Red');
   }catch(err){ toast('Error al actualizar: '+err.message); }
 }
@@ -5668,6 +5848,23 @@ async function addLeadInteraccion(){
     });
     openLeadDetalleModal(openLeadDetalleId); // refresca la lista en el mismo modal
   }catch(err){ toast('Error al guardar la nota: '+err.message); }
+}
+function mktInquiryRowHTML(i){
+  const phone = (i.telefono||'').replace(/\D/g,'');
+  const whatsappBtn = phone
+    ? `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm whatsapp-btn" style="text-decoration:none;" title="Responder por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`
+    : '';
+  return `<tr style="${i.read?'':'font-weight:600;'}">
+    <td>${escapeHtml(i.nombre)}</td>
+    <td>${escapeHtml(i.telefono)}</td>
+    <td>${escapeHtml(i.propDescripcion)||'—'}</td>
+    <td style="max-width:260px;">${escapeHtml(i.mensaje)||'—'}</td>
+    <td>${formatDateTime(i.createdAt)}</td>
+    <td style="display:flex;gap:8px;">${whatsappBtn}${!i.read ? `<button class="btn btn-sm" onclick="markMktInquiryRead('${i.id}')" title="Marcar como leída"><i class="fa-solid fa-check"></i></button>` : ''}</td>
+  </tr>`;
+}
+async function markMktInquiryRead(id){
+  try{ await db.collection('marketplaceInquiries').doc(id).update({read:true}); }catch(err){ toast('Error: '+err.message); }
 }
 function leadRowHTML(l){
   return `<tr>
@@ -6412,6 +6609,22 @@ leadsexternos: ()=>{
 `;
 },
 
+mktinquiries: ()=>{
+  return `
+  <div class="main-head"><div><h1>Consultas Marketplace</h1><p class="sub">Consultas de terceros que vieron tus propiedades publicadas en el buscador público, sin necesidad de estar registrados en la red</p></div></div>
+  <div class="explore-purpose-note">
+    <i class="fa-solid fa-circle-info"></i>
+    <p>Solo llegan consultas de propiedades que vos elegiste publicar en el Marketplace (checkbox "Publicar también en el buscador público" al cargar la propiedad).</p>
+  </div>
+  <table>
+    <thead><tr><th>Nombre</th><th>Teléfono</th><th>Propiedad</th><th>Mensaje</th><th>Fecha</th><th></th></tr></thead>
+    <tbody>
+    ${marketplaceInquiries.length ? marketplaceInquiries.map(i=>mktInquiryRowHTML(i)).join('') : `<tr><td colspan="6" class="empty-row">Todavía no recibiste ninguna consulta del Marketplace.</td></tr>`}
+    </tbody>
+  </table>
+`;
+},
+
 exclusiva: ()=>`
   <div class="main-head"><div><h1>Oportunidad Exclusiva</h1><p class="sub">Oportunidades especiales que solo se comparten dentro de la red</p></div>
   <button class="btn btn-solid" onclick="openExclusivaModal()"><i class="fa-solid fa-plus"></i> Publicar oportunidad</button></div>
@@ -6697,6 +6910,138 @@ function animateCount(el){
 // Trae las inmobiliarias YA verificadas (sin necesitar login: es una
 // colección pública aparte, sin datos sensibles) y reemplaza los chips de
 // ejemplo del marquee de la landing por nombres reales.
+/* ---------------- Marketplace público (sin login) ---------------- */
+let mktListings = [];
+let mktFilterTipo = '';
+let mktFilterOp = '';
+let mktFilterCiudad = '';
+let mktInquiryPropId = null;
+async function showMarketplace(){
+  document.getElementById('view-landing').style.display = 'none';
+  document.getElementById('view-marketplace').classList.remove('hidden');
+  await loadMarketplaceListings();
+}
+function closeMarketplace(){
+  document.getElementById('view-marketplace').classList.add('hidden');
+  document.getElementById('view-landing').style.display = 'block';
+}
+async function loadMarketplaceListings(){
+  const grid = document.getElementById('mkt-listing-grid');
+  try{
+    const snap = await db.collection('publicListings').get();
+    mktListings = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    renderMarketplaceGrid();
+  }catch(err){
+    grid.innerHTML = `<div class="card"><p style="color:var(--paper-dim);margin:0;">No pudimos cargar las propiedades. Probá de nuevo en un rato.</p></div>`;
+    console.error('Error cargando marketplace público:', err);
+  }
+}
+function applyMarketplaceFilters(){
+  mktFilterTipo = document.getElementById('mkt-filter-tipo').value;
+  mktFilterOp = document.getElementById('mkt-filter-op').value;
+  mktFilterCiudad = document.getElementById('mkt-filter-ciudad').value;
+  renderMarketplaceGrid();
+}
+function renderMarketplaceGrid(){
+  const q = mktFilterCiudad.trim().toLowerCase();
+  const filtered = mktListings.filter(p=>
+    (!mktFilterTipo || p.tipo===mktFilterTipo) &&
+    (!mktFilterOp || p.op===mktFilterOp) &&
+    (!q || (p.ciudad||'').toLowerCase().includes(q) || (p.zona||'').toLowerCase().includes(q))
+  );
+  const grid = document.getElementById('mkt-listing-grid');
+  grid.innerHTML = filtered.length
+    ? filtered.map(p=>mktListingCardHTML(p)).join('')
+    : `<div class="card"><p style="color:var(--paper-dim);margin:0;">No hay propiedades publicadas que coincidan con estos filtros.</p></div>`;
+}
+function mktListingCardHTML(p){
+  const priceDisplay = p.op==='Alquiler' ? `${fmtMoney(p.precio,p.moneda)}<span class="unit">/mes</span>` : fmtMoney(p.precio,p.moneda);
+  return `
+    <div class="listing-card">
+      <div class="listing-photo">
+        <img src="${p.fotos && p.fotos.length ? p.fotos[0] : 'https://picsum.photos/id/1041/600/400'}" alt="${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}">
+        <span class="listing-type-pill">${escapeHtml(p.tipo)}</span>
+        <span class="listing-agency-pill"><i class="fa-solid fa-building"></i> ${escapeHtml(p.agencyName)}</span>
+      </div>
+      <div class="listing-body">
+        <div class="listing-price-row">
+          <div class="listing-price">${priceDisplay}</div>
+        </div>
+        <div class="listing-title">${escapeHtml(p.zona)}, ${escapeHtml(p.ciudad)}</div>
+        ${p.country ? `<div class="listing-commission" style="color:var(--brass-bright);"><i class="fa-solid fa-tree-city"></i> Country / Barrio cerrado</div>` : ''}
+        <div class="listing-poster">
+          <div class="listing-poster-logo"><i class="fa-solid fa-building"></i></div>
+          <span>${escapeHtml(p.agencyName)}</span>
+        </div>
+        <div class="listing-divider"></div>
+        <div class="listing-specs">
+          ${p.amb && p.amb!=='—' ? `<div class="listing-spec">${icoBed} ${escapeHtml(p.amb)} Amb.</div>` : ''}
+          ${p.banos && p.banos!=='—' ? `<div class="listing-spec">${icoBath} ${escapeHtml(p.banos)} Baños</div>` : ''}
+          ${p.m2 && p.m2!=='—' ? `<div class="listing-spec">${icoArea} ${escapeHtml(p.m2)} m²</div>` : ''}
+        </div>
+        <button class="listing-detail-btn" onclick="openMarketplaceDetail('${p.id}')"><i class="fa-solid fa-eye"></i> Ver detalle</button>
+      </div>
+    </div>
+  `;
+}
+function openMarketplaceDetail(id){
+  const p = mktListings.find(x=>x.id===id);
+  if(!p) return;
+  const amenities = propertyAmenitiesListHTML(p);
+  const priceDisplay = p.op==='Alquiler' ? `${fmtMoney(p.precio,p.moneda)}/mes` : fmtMoney(p.precio,p.moneda);
+  const photos = (p.fotos && p.fotos.length) ? p.fotos : ['https://picsum.photos/id/1041/600/400'];
+  document.getElementById('mktdetalle-content').innerHTML = `
+    <img id="mktdetalle-mainphoto" src="${photos[0]}" style="width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius);">
+    ${photos.length>1 ? `<div style="display:flex;gap:8px;margin-top:8px;overflow-x:auto;">${photos.map(src=>`<img src="${src}" onclick="document.getElementById('mktdetalle-mainphoto').src='${src}'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer;flex-shrink:0;">`).join('')}</div>` : ''}
+    <h3 style="margin-top:16px;">${escapeHtml(p.tipo)} en ${escapeHtml(p.zona)}, ${escapeHtml(p.ciudad)}</h3>
+    <div class="listing-price" style="font-size:22px;margin-bottom:12px;">${priceDisplay}${p.op==='Alquiler' && p.expensas ? ` <span style="font-size:13px;color:var(--paper-dim);">+ expensas ${fmtMoney(p.expensas,'ARS')}</span>` : ''}</div>
+    <div class="propdetail-grid">
+      <div><span class="lbl">Operación</span><span class="val">${escapeHtml(p.op)}</span></div>
+      <div><span class="lbl">Tipo</span><span class="val">${escapeHtml(p.tipo)}</span></div>
+      ${p.m2 && p.m2!=='—' ? `<div><span class="lbl">Superficie</span><span class="val">${escapeHtml(p.m2)} m²</span></div>` : ''}
+      ${p.amb && p.amb!=='—' ? `<div><span class="lbl">Ambientes</span><span class="val">${escapeHtml(p.amb)}</span></div>` : ''}
+      ${p.banos && p.banos!=='—' ? `<div><span class="lbl">Baños</span><span class="val">${escapeHtml(p.banos)}</span></div>` : ''}
+      <div><span class="lbl">Ciudad</span><span class="val">${escapeHtml(p.ciudad)}</span></div>
+    </div>
+    ${amenities.length ? `
+    <div class="propdetail-requisitos">
+      <div class="propdetail-map-label"><i class="fa-solid fa-list-check"></i> Comodidades</div>
+      <ul class="requisitos-list">${amenities.map(label=>`<li><i class="fa-solid fa-circle-check"></i> ${escapeHtml(label)}</li>`).join('')}</ul>
+    </div>` : ''}
+    ${p.desc ? `<p style="font-size:13.5px;color:var(--ink);line-height:1.6;">${escapeHtml(p.desc)}</p>` : ''}
+    <p style="font-size:12px;color:var(--paper-dim);margin-top:14px;">Publicado por ${escapeHtml(p.agencyName)}</p>
+    <button class="btn btn-solid" style="width:100%;margin-top:14px;" onclick="closeModal('mktdetalle'); openMarketplaceInquiryModal('${p.id}');"><i class="fa-solid fa-envelope"></i> Consultar por esta propiedad</button>
+  `;
+  openModal('mktdetalle');
+}
+function openMarketplaceInquiryModal(propId){
+  const p = mktListings.find(x=>x.id===propId);
+  if(!p) return;
+  mktInquiryPropId = propId;
+  document.getElementById('mktconsulta-propiedad').textContent = `${p.tipo} en ${p.zona}, ${p.ciudad}`;
+  document.getElementById('mkt-consulta-nombre').value = '';
+  document.getElementById('mkt-consulta-telefono').value = '';
+  document.getElementById('mkt-consulta-mensaje').value = '';
+  openModal('mktconsulta');
+}
+async function submitMarketplaceInquiry(){
+  const p = mktListings.find(x=>x.id===mktInquiryPropId);
+  if(!p) return;
+  const nombre = document.getElementById('mkt-consulta-nombre').value.trim();
+  const telefono = document.getElementById('mkt-consulta-telefono').value.trim();
+  const mensaje = document.getElementById('mkt-consulta-mensaje').value.trim();
+  if(!nombre || !telefono){ toast('Completá tu nombre y teléfono'); return; }
+  try{
+    await db.collection('marketplaceInquiries').add({
+      propId: p.id, propOwnerUid: p.ownerUid, propDescripcion: `${p.tipo} en ${p.zona}, ${p.ciudad}`,
+      nombre, telefono, mensaje, createdAt: new Date().toISOString(), read:false,
+    });
+    closeModal('mktconsulta');
+    toast('¡Consulta enviada! La inmobiliaria se va a comunicar con vos.');
+  }catch(err){
+    toast('No se pudo enviar la consulta. Probá de nuevo.');
+  }
+}
 async function loadRealAgenciesMarquee(){
   try{
     const snap = await db.collection('publicAgencies').get();
