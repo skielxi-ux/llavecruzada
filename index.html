@@ -5159,15 +5159,23 @@ function openPropertyDetail(propId){
 // la propiedad, nunca el resto de la red (colección aparte, con sus propias
 // reglas de acceso).
 async function registerPropertyView(p){
+  const ref = db.collection('propertyViews').doc(p.id);
   try{
-    await db.collection('propertyViews').doc(p.id).update({
+    await ref.update({
       viewedByAgencies: firebase.firestore.FieldValue.arrayUnion(AGENCY.uid),
     });
   }catch(err){
-    // Si el documento todavía no existe (propiedad cargada antes de esta
-    // función, nunca editada desde entonces), no rompemos la vista del
-    // visitante — el conteo empieza a funcionar la próxima vez que el dueño
-    // edite y guarde esa propiedad.
+    // El documento puede no existir todavía (propiedad cargada antes de que
+    // existiera este contador, o nunca reeditada desde entonces desde su
+    // creación). En vez de perder esta vista, lo creamos acá mismo con la
+    // propia inmobiliaria como primera vista — así el conteo arranca a andar
+    // apenas alguien la mira, sin depender de que el dueño la reedite.
+    try{
+      await ref.set({ownerUid: p.ownerUid, viewedByAgencies:[AGENCY.uid]});
+    }catch(err2){
+      // Si tampoco se pudo crear (por ejemplo, reglas de Firestore todavía
+      // no actualizadas en la consola), no rompemos la vista del visitante.
+    }
   }
 }
 let contactClienteContext = {propId:null};
