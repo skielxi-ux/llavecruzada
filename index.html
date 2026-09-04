@@ -748,7 +748,7 @@
       <div class="plan-card">
         <button class="plan-vermas-btn" onclick="openPlanDetail('pro')" title="Ver más detalles">Ver más</button>
         <h3>Plan Pro</h3>
-        <div class="price">$120.000<span> /mes</span></div>
+        <div class="price">$150.000<span> /mes</span></div>
         <ul>
           <li>2 usuarios</li>
           <li>20 propiedades</li>
@@ -763,7 +763,7 @@
         <div class="badge">Más elegido</div>
         <button class="plan-vermas-btn" onclick="openPlanDetail('premium')" title="Ver más detalles">Ver más</button>
         <h3>Plan Premium</h3>
-        <div class="price">$400.000<span> /mes</span></div>
+        <div class="price">$490.000<span> /mes</span></div>
         <ul>
           <li>5 usuarios</li>
           <li>Nuestro equipo carga tus primeras 20 propiedades</li>
@@ -3990,7 +3990,7 @@ const KPI_INFO = {
 const PLAN_INFO = {
   pro: {
     title: 'Plan Pro',
-    price: '$120.000 /mes',
+    price: '$150.000 /mes',
     items: [
       {label:'2 usuarios', text:'Hasta dos personas de tu equipo pueden operar la cuenta de tu inmobiliaria en la red.'},
       {label:'20 propiedades', text:'Podés tener hasta 20 propiedades activas publicadas en la red al mismo tiempo (pausadas o cerradas no cuentan para el límite).'},
@@ -4002,7 +4002,7 @@ const PLAN_INFO = {
   },
   premium: {
     title: 'Plan Premium',
-    price: '$400.000 /mes',
+    price: '$490.000 /mes',
     items: [
       {label:'5 usuarios', text:'Hasta cinco personas de tu equipo pueden operar la cuenta de tu inmobiliaria en la red.'},
       {label:'Nuestro equipo carga tus primeras 20 propiedades', text:'Al activar el plan, nuestro equipo releva y carga por vos hasta 20 propiedades de tu cartera existente, para que arranques sin trabajo manual.'},
@@ -4044,8 +4044,8 @@ function adminKpi(key, iconClass, label, valHtml, valClass){
 
 /* ---------------- pagos pendientes (suscripción mensual por inmobiliaria) ---------------- */
 function planAmount(plan){
-  if(plan==='Pro') return 120000;
-  if(plan==='Premium') return 400000;
+  if(plan==='Pro') return 150000;
+  if(plan==='Premium') return 490000;
   return 0;
 }
 function monthPeriodKey(date){ return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0'); }
@@ -4110,7 +4110,7 @@ const adminRenderers = {
     const totalOps = ADMIN_AGENCIES.reduce((s,a)=>s+a.ops,0);
     const proCountDash = ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.plan==='Pro').length;
     const premiumCountDash = ADMIN_AGENCIES.filter(a=>a.status==='Verificada' && a.plan==='Premium').length;
-    const mrr = proCountDash*120000 + premiumCountDash*400000;
+    const mrr = proCountDash*150000 + premiumCountDash*490000;
     const atRisk = agenciesAtRisk();
     const nuevas = newAgencies();
     const opsPendientes = ADMIN_MATCHES.filter(m=>['nuevos','acordado','seguimiento','visita'].includes(m.status)).length;
@@ -4228,7 +4228,7 @@ const adminRenderers = {
     const verified = ADMIN_AGENCIES.filter(a=>a.status==='Verificada');
     const proCount = verified.filter(a=>a.plan==='Pro').length;
     const premiumCount = verified.filter(a=>a.plan==='Premium').length;
-    const mrrReal = proCount*120000 + premiumCount*400000;
+    const mrrReal = proCount*150000 + premiumCount*490000;
     return `
     <div class="main-head"><div><h1>Ingresos</h1><p class="sub">Facturación por suscripciones de la red</p></div></div>
     <div class="kpi-grid">
@@ -4241,7 +4241,7 @@ const adminRenderers = {
     <table>
       <thead><tr><th>Inmobiliaria</th><th>Plan</th><th>Ingreso mensual</th></tr></thead>
       <tbody>
-        ${verified.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${a.plan}</td><td class="mono">${fmtARS(a.plan==='Pro'?120000:400000)}</td></tr>`).join('')}
+        ${verified.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${a.plan}</td><td class="mono">${fmtARS(a.plan==='Pro'?150000:490000)}</td></tr>`).join('')}
       </tbody>
     </table>
     <p style="font-size:12.5px;color:var(--ink);margin-top:14px;display:flex;align-items:flex-start;gap:8px;"><i class="fa-solid fa-bell" style="margin-top:2px;color:var(--brass);"></i><span>MRR y el desglose por inmobiliaria se calculan en base a los planes reales asignados. "Ingresos totales" es un acumulado ilustrativo (6 meses de MRR), ya que el prototipo no lleva un historial de facturación real.</span></p>
@@ -6089,7 +6089,7 @@ function matchesFinalizadasSectionHTML(allList, dateField, emptyMsg){
       </div>
       <div class="select-wrap">
         <select id="matches-fin-year-select" onchange="changeMatchesFinMonth()" ${matchesFinMonth===0?'disabled style="opacity:.5;"':''}>
-          ${[currentYear, currentYear-1, currentYear-2].map(y=>`<option value="${y}" ${matchesFinYear===y?'selected':''}>${y}</option>`).join('')}
+          ${Array.from({length:25}, (_,i)=>currentYear+i).map(y=>`<option value="${y}" ${matchesFinYear===y?'selected':''}>${y}</option>`).join('')}
         </select>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
@@ -6576,7 +6576,7 @@ comisiones: ()=>{
       </div>
       <div class="select-wrap">
         <select id="comisiones-year-select" onchange="changeComisionesMonth()" ${comisionesMonth===0?'disabled style="opacity:.5;"':''}>
-          ${[new Date().getFullYear(), new Date().getFullYear()-1, new Date().getFullYear()-2].map(y=>`<option value="${y}" ${comisionesYear===y?'selected':''}>${y}</option>`).join('')}
+          ${Array.from({length:25}, (_,i)=>new Date().getFullYear()+i).map(y=>`<option value="${y}" ${comisionesYear===y?'selected':''}>${y}</option>`).join('')}
         </select>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
@@ -6947,7 +6947,7 @@ precios: ()=>`
   <div class="plans-grid">
     <div class="plan-card ${AGENCY.plan==='Pro'?'featured':''}">
       <button class="plan-vermas-btn" onclick="openPlanDetail('pro')" title="Ver más detalles">Ver más</button>
-      <h3>Plan Pro</h3><div class="price">$120.000<span> /mes</span></div>
+      <h3>Plan Pro</h3><div class="price">$150.000<span> /mes</span></div>
       <ul>
         <li>2 usuarios</li>
         <li>20 propiedades</li>
@@ -6960,7 +6960,7 @@ precios: ()=>`
     </div>
     <div class="plan-card ${AGENCY.plan==='Premium'?'featured':''}">
       <button class="plan-vermas-btn" onclick="openPlanDetail('premium')" title="Ver más detalles">Ver más</button>
-      <h3>Plan Premium</h3><div class="price">$400.000<span> /mes</span></div>
+      <h3>Plan Premium</h3><div class="price">$490.000<span> /mes</span></div>
       <ul>
         <li>5 usuarios</li>
         <li>Nuestro equipo carga tus primeras 20 propiedades</li>
