@@ -6111,7 +6111,11 @@ let dashboardYear = new Date().getFullYear();
 function changeDashboardMonth(){
   dashboardMonth = parseInt(document.getElementById('dashboard-month-select').value, 10);
   dashboardYear = parseInt(document.getElementById('dashboard-year-select').value, 10);
-  showApp('dashboard');
+  // Este selector de mes/año lo usan tanto el Dashboard como Performance —
+  // antes forzaba siempre a 'dashboard', así que cambiar de mes en Performance
+  // te sacaba de esa pestaña. Ahora se queda en la que esté activa.
+  const active = document.querySelector('.nav-item.active');
+  showApp(active ? active.dataset.view : 'dashboard');
 }
 function computeMonthlyStats(year, month){
   const inMonth = (isoStr)=>{
