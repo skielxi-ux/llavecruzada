@@ -1203,6 +1203,7 @@
         <div class="nav-item" data-view="usuarios" onclick="showApp('usuarios')"><i class="fa-solid fa-users-gear"></i> Usuarios</div>
         <div class="nav-item" data-view="faqapp" onclick="showApp('faqapp')"><i class="fa-solid fa-circle-question"></i> FAQs</div>
         <div class="nav-item" data-view="precios" onclick="showApp('precios')"><i class="fa-solid fa-tag"></i> Precios</div>
+        <div class="nav-item" data-view="instructivo" onclick="showApp('instructivo')"><i class="fa-solid fa-route"></i> Instructivo de uso</div>
         <div class="nav-item" data-view="soporte" onclick="showApp('soporte')"><i class="fa-solid fa-headset"></i> Soporte</div>
       </div>
 
@@ -2505,7 +2506,8 @@ function generateDescriptionAI(){
     if(document.getElementById('p-galeria').checked) amenities.push('galería');
     if(document.getElementById('p-parrilla').checked) amenities.push('parrilla');
   }
-  if(document.getElementById('p-country').checked) amenities.push('en country/barrio cerrado');
+  const isCountry = document.getElementById('p-country').checked;
+  if(isCountry) amenities.push('en country/barrio cerrado');
 
   let frase = `${tipo}${amb?' de '+amb+' ambientes':''}${op==='Venta'?' en venta':' en alquiler'}${zona?' en '+zona:''}${ciudad?', '+ciudad:''}.`;
 
@@ -2515,15 +2517,70 @@ function generateDescriptionAI(){
   if(banos) detalles.push(`${banos} baño${banos>1?'s':''}`);
   if(detalles.length) frase += ` Cuenta con ${detalles.join(', ')}.`;
 
-  if(amenities.length===1) frase += ` Dispone de ${amenities[0]}.`;
-  else if(amenities.length>1) frase += ` Dispone de ${amenities.slice(0,-1).join(', ')} y ${amenities[amenities.length-1]}.`;
+  // La lista de comodidades varía la forma de presentarlas en vez de repetir siempre "Dispone de"
+  if(amenities.length){
+    const listado = amenities.length===1 ? amenities[0] : amenities.slice(0,-1).join(', ')+' y '+amenities[amenities.length-1];
+    const conectores = ['Dispone de','Se destaca por tener','Cuenta además con','Entre sus comodidades incluye'];
+    const conector = conectores[amenities.length % conectores.length];
+    frase += ` ${conector} ${listado}.`;
+  }
 
   if(ant) frase += ` Antigüedad: ${ant} años.`;
 
-  if(amb>=3 || detalles.length>=2) frase += ' Ideal para familia, muy luminosa y en excelente estado general.';
-  else frase += ' Muy buena opción, luminosa y bien ubicada.';
+  // El cierre se arma según lo que efectivamente se marcó en el formulario, no con una
+  // frase fija — así no siempre termina en "ideal para familia" aunque no aplique.
+  const has = (k)=> amenities.includes(k);
+  const aireLibre = ['piscina','quincho','asador','parrilla','jardín','galería','balcón'].filter(has);
+  const seguridad = ['seguridad','portería'].filter(has);
+  const aptoMascotas = has('apto mascotas');
+  const aptoCredito = has('apto crédito');
+  const antNum = ant ? Number(ant) : null;
 
-  document.getElementById('p-desc').value = frase;
+  const angulos = [];
+
+  if(aireLibre.length){
+    angulos.push((tipo==='Casa' || amb>=3)
+      ? 'Con espacios al aire libre, ideal para recibir familia y amigos.'
+      : 'Con un espacio propio al aire libre, perfecto para el día a día.');
+  }
+
+  if(seguridad.length && isCountry){
+    angulos.push('Ubicada en un entorno de barrio cerrado con seguridad, pensada para quienes priorizan la tranquilidad.');
+  } else if(seguridad.length){
+    angulos.push('Cuenta con seguridad, para mayor tranquilidad en el día a día.');
+  } else if(isCountry){
+    angulos.push('Ubicada en un country/barrio cerrado, con la calidad de vida que eso implica.');
+  }
+
+  if(aptoCredito && op==='Venta'){
+    angulos.push('Apta para operaciones con crédito hipotecario, una alternativa a tener en cuenta para quienes buscan financiar la compra.');
+  }
+
+  if(aptoMascotas){
+    angulos.push('Apta para mascotas.');
+  }
+
+  // Si no hay ninguna comodidad que arme un ángulo propio, el cierre se arma según
+  // tipo de operación y tamaño en lugar de caer siempre en la misma frase genérica.
+  if(!angulos.length){
+    if(op==='Alquiler'){
+      angulos.push((amb && amb<=2)
+        ? 'Práctica y funcional, ideal para resolver una mudanza rápida.'
+        : 'Lista para mudarse, con buena distribución de espacios.');
+    } else {
+      angulos.push((amb && amb<=2)
+        ? 'Una opción interesante tanto para vivienda propia como para inversión.'
+        : 'Buena distribución de espacios y muy buena relación precio-ubicación.');
+    }
+  }
+
+  if(antNum===0) angulos.push('A estrenar.');
+  else if(antNum!==null && antNum<=5) angulos.push('De construcción reciente.');
+  else if(antNum!==null && antNum>=40) angulos.push('Con estructura sólida de otra época, ideal para refaccionar a gusto.');
+
+  frase += ' ' + angulos.slice(0,3).join(' ');
+
+  document.getElementById('p-desc').value = frase.trim();
   toast('Descripción generada');
 }
 const REQUISITOS_MAP = [
@@ -3354,6 +3411,7 @@ const APP_VIEWS_TOGGLEABLE = [
   {key:'usuarios', label:'Usuarios'},
   {key:'faqapp', label:'FAQs'},
   {key:'precios', label:'Precios'},
+  {key:'instructivo', label:'Instructivo de uso'},
   {key:'soporte', label:'Soporte'},
 ];
 const PUESTO_OPTIONS = ['Comercial','Otro'];
@@ -6903,6 +6961,62 @@ precios: ()=>`
       </ul>
       ${AGENCY.plan==='Premium'?'<div class="plan-actual-label">Plan actual</div>':''}
     </div>
+  </div>
+`,
+
+instructivo: ()=>`
+  <div class="main-head"><div><h1>Instructivo de uso</h1><p class="sub">Guía paso a paso para empezar a usar Llave Cruzada</p></div></div>
+  <div class="card" style="max-width:680px;">
+    <div class="steps-timeline">
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-key"></i></div>
+        <div class="timeline-content"><strong>1. Verificá tu cuenta</strong><p>Después de registrarte con tu código de invitación, tu cuenta queda pendiente de revisión por nuestro equipo. Te avisamos por mail cuando quede activa.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-user-gear"></i></div>
+        <div class="timeline-content"><strong>2. Completá tu perfil</strong><p>Cargá el logo, la ciudad y el sitio web de tu inmobiliaria en "Mi Perfil" para que el resto de la red te identifique.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-users-gear"></i></div>
+        <div class="timeline-content"><strong>3. Invitá a tu equipo (opcional)</strong><p>Desde "Usuarios" podés sumar colaboradores y elegir qué pestañas ve cada uno.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-building"></i></div>
+        <div class="timeline-content"><strong>4. Cargá tu primera propiedad</strong><p>Sumá tus propiedades en "Mis Propiedades" con fotos, precio y comodidades. Así empieza a cruzarse contra el resto de la red.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="timeline-content"><strong>5. Cargá una búsqueda de cliente</strong><p>Si tenés un cliente que busca algo que no tenés, cargalo en "Búsquedas para Clientes" para que la red te avise si aparece.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="timeline-content"><strong>6. Explorá la Red</strong><p>Mirá lo que publican otras inmobiliarias en "Explorar la Red" y filtrá por zona, tipo y operación.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-link"></i></div>
+        <div class="timeline-content"><strong>7. Gestioná un match</strong><p>Cuando aparece una coincidencia, contactá a la otra inmobiliaria desde "Mis Matches" y hacé seguimiento hasta que se concrete o se caiga.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+        <div class="timeline-content"><strong>8. Registrá tus comisiones</strong><p>Llevá el control de lo cobrado y lo pendiente en "Comisiones", filtrando por mes.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-user-tag"></i></div>
+        <div class="timeline-content"><strong>9. Usá Leads Externos</strong><p>Cargá los contactos que te llegan de otras plataformas (MercadoLibre, Zonaprop, redes) para no perderlos de vista.</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-icon"><i class="fa-solid fa-circle-question"></i></div>
+        <div class="timeline-content"><strong>10. ¿Tenés dudas?</strong><p>Revisá las FAQs o escribinos desde "Soporte".</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="explore-purpose-note" style="max-width:680px;margin-top:20px;margin-bottom:0;">
+    <i class="fa-solid fa-lightbulb"></i>
+    <p><strong>Posibilidad A:</strong> Es posible que un cliente te visite y te pida una búsqueda: por ejemplo, un departamento 3 dormitorios en Barrio Norte. En el caso que no tengas esa propiedad en cartera, lo primero que debés hacer es dirigirte al marketplace interno del sistema que se llama "Explorar la Red". Allí vas a poder ver todas las propiedades cargadas por las demás inmobiliarias. En el caso que una de esas cumpla con los requisitos de búsqueda de tu cliente, te contactás en forma directa con la otra inmobiliaria, generan un match manual (ya que vos iniciaste el contacto) que vas a poder ver en la pestaña "Mis Matches" y continuar la operación en conjunto.</p>
+  </div>
+  <div class="explore-purpose-note" style="max-width:680px;margin-top:14px;margin-bottom:0;">
+    <i class="fa-solid fa-lightbulb"></i>
+    <p><strong>Posibilidad B:</strong> Es posible que un cliente te visite y te pida una búsqueda: por ejemplo, una casa de 3 dormitorios en un country en Yerba Buena. En el caso que no tengas esa propiedad en cartera, lo primero que debés hacer es dirigirte al marketplace interno del sistema que se llama "Explorar la Red". Allí vas a poder ver todas las propiedades cargadas por las demás inmobiliarias. En el caso que en el marketplace interno no veas una propiedad que cumpla con las características que busca tu cliente, dirigite a la pestaña "La Red está buscando", cargá los datos y la búsqueda del cliente, y cuando otra inmobiliaria cargue en su cartera una propiedad que tenga lo que tu cliente requiere, se te va a generar un match automático con la otra inmobiliaria para poder continuar la operación en conjunto. En este caso no hacés nada más, solo cargás la búsqueda y esperás el match.</p>
   </div>
 `,
 
